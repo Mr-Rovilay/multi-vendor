@@ -272,7 +272,7 @@ export const categoriesData = [
     id: 7,
     title: "Pet Care",
     subTitle: "",
-    image_Url: "https://cdn.openpr.com/T/c/Tc15444071_g.jpg",
+    image_Url: "https://www.zoetis.com/_assets/img/og-images/products-and-services/petcare-do-cat-og.jpg",
   },
   {
     id: 8,
