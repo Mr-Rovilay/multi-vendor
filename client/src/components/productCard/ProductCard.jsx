@@ -1,10 +1,16 @@
+/* eslint-disable react/prop-types */
 import { useState } from "react";
 import { Link } from "react-router-dom";
-import { Heart, Eye, ShoppingCart, Star } from 'lucide-react';
+import { Heart, Eye, ShoppingCart, Star } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardFooter } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
 import ProductDetailsCard from "../ProductDetailsCard/ProductDetailsCard";
 
 const ProductCard = ({ data }) => {
@@ -13,9 +19,11 @@ const ProductCard = ({ data }) => {
   const productName = data.name.replace(/\s+/g, "-");
 
   const renderStars = () => {
-    return Array(5).fill().map((_, index) => (
-      <Star key={index} className="w-4 h-4 text-yellow-400 fill-current" />
-    ));
+    return Array(5)
+      .fill()
+      .map((_, index) => (
+        <Star key={index} className="w-4 h-4 text-yellow-400 fill-current" />
+      ));
   };
 
   return (
@@ -29,7 +37,7 @@ const ProductCard = ({ data }) => {
               className="object-cover w-full h-48 rounded-md"
             />
           </Link>
-          <div className="absolute flex flex-col space-y-2 top-2 right-2">
+          <div className="absolute flex flex-col space-y-2 top-2 right-1">
             <TooltipProvider>
               <Tooltip>
                 <TooltipTrigger asChild>
@@ -38,11 +46,17 @@ const ProductCard = ({ data }) => {
                     size="icon"
                     onClick={() => setIsFavorite(!isFavorite)}
                   >
-                    <Heart className={`w-4 h-4 ${isFavorite ? 'fill-red-500 text-red-500' : ''}`} />
+                    <Heart
+                      className={`w-4 h-4 ${
+                        isFavorite ? "fill-red-500 text-red-500" : ""
+                      }`}
+                    />
                   </Button>
                 </TooltipTrigger>
                 <TooltipContent>
-                  <p>{isFavorite ? 'Remove from wishlist' : 'Add to wishlist'}</p>
+                  <p>
+                    {isFavorite ? "Remove from wishlist" : "Add to wishlist"}
+                  </p>
                 </TooltipContent>
               </Tooltip>
             </TooltipProvider>
@@ -81,17 +95,20 @@ const ProductCard = ({ data }) => {
           </div>
         </div>
         <div className="mt-4">
-          <Link to={`/`} className="text-sm text-muted-foreground hover:underline">
+          <Link
+            to={`/`}
+            className="text-sm text-muted-foreground hover:underline"
+          >
             {data.shop.name}
           </Link>
           <Link to={`/product/${productName}`} className="block mt-1">
             <h3 className="text-lg font-semibold leading-tight">
-              {data.name.length > 30 ? `${data.name.slice(0, 30)}...` : data.name}
+              {data.name.length > 30
+                ? `${data.name.slice(0, 30)}...`
+                : data.name}
             </h3>
           </Link>
-          <div className="flex items-center mt-2">
-            {renderStars()}
-          </div>
+          <div className="flex items-center mt-2">{renderStars()}</div>
         </div>
       </CardContent>
       <CardFooter className="flex items-center justify-between pt-0">
@@ -107,10 +124,11 @@ const ProductCard = ({ data }) => {
         </div>
         <Badge variant="secondary">{data?.sold_out} sold</Badge>
       </CardFooter>
-      {isDetailsOpen && <ProductDetailsCard setOpen={setIsDetailsOpen} data={data} />}
+      {isDetailsOpen && (
+        <ProductDetailsCard setOpen={setIsDetailsOpen} data={data} />
+      )}
     </Card>
   );
 };
 
 export default ProductCard;
-

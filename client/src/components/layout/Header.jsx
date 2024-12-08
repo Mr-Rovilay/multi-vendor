@@ -60,7 +60,7 @@ const Header = () => {
 
   return (
     <header className="w-full bg-white shadow-sm">
-      <div className="px-4 mx-auto max-pad-container sm:px-6 lg:px-8">
+      <div className=" max-pad-container sm:px-6 lg:px-8">
         {/* Top Navigation */}
         <div className="flex items-center justify-between py-4">
           {/* Logo */}
@@ -156,11 +156,14 @@ const Header = () => {
           )}
         >
           {/* Desktop Navigation */}
-          <div className="items-center justify-between hidden mx-auto md:flex">
+          <div className="items-center justify-between mx-auto md:flex">
             {/* Categories Dropdown */}
-            <DropdownMenu>
+            <div className="mb-3 md:mb-0">
+
+            <DropdownMenu className="">
               <Dropdown categoriesData={categoriesData} setDropDown={setDropDown} />
             </DropdownMenu>
+            </div>
 
             {/* Navigation Links */}
             <div className="flex space-x-6">
