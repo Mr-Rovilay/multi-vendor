@@ -1,22 +1,21 @@
-/* eslint-disable no-unused-vars */
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { Mail, Lock, Eye, EyeOff, Loader2 } from 'lucide-react';
 import { Link, useNavigate } from 'react-router-dom';
+import { useDispatch } from 'react-redux';
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { loginSchema } from '../zod-schema/auth';
-import axios from "axios";
-import { server } from "@/server";
 import { toast } from "sonner";
+import { loginUser } from '@/redux/actions/user';
 
 export default function LoginForm() {
   const [showPassword, setShowPassword] = useState(false);
-  const [isLoading, setIsLoading] = useState(false);
-  const navigate = useNavigate()
+  const navigate = useNavigate();
+  const dispatch = useDispatch();
 
   const form = useForm({
     resolver: zodResolver(loginSchema),
@@ -26,42 +25,25 @@ export default function LoginForm() {
     }
   });
 
+  const { isSubmitting } = form.formState;
+
   const onSubmit = async (data) => {
-    setIsLoading(true); // Set loading state to true
-  
     try {
-      const response = await axios.post(`${server}/auth/login`, data, {
-        headers: { 'Content-Type': 'application/json' },
-        withCredentials: true, // This should be passed here for cookies, not in localStorage
-      });
-  
-      const { token, user } = response.data;
-  
-      // Store the token in localStorage correctly
-      localStorage.setItem('token', token);
-      localStorage.setItem('user', JSON.stringify(user));
-  
-      // Notify the user and navigate to the homepage
+     dispatch(loginUser(data));
       toast.success('Login successful');
       navigate('/');
     } catch (error) {
-      const errorMessage =
-        error.response?.data?.message || 'An error occurred. Please try again.';
+      const errorMessage = error.response?.data?.message || 'An error occurred. Please try again.';
       toast.error(errorMessage);
-    } finally {
-      setIsLoading(false); // Reset loading state
     }
   };
-  
 
-  const togglePasswordVisibility = () => {
-    setShowPassword(!showPassword);
-  };
+  const togglePasswordVisibility = () => setShowPassword(!showPassword);
 
   return (
     <div className="flex items-center justify-center min-h-screen bg-gray-100">
       <Card className="w-full max-w-md">
-        <CardHeader className="justify-center text-center">
+        <CardHeader className="text-center">
           <CardTitle>Login</CardTitle>
           <CardDescription>Enter your credentials to access your account</CardDescription>
         </CardHeader>
@@ -83,7 +65,7 @@ export default function LoginForm() {
                           placeholder="your-email@example.com" 
                           className="pl-10"
                           autoComplete="email" 
-                          disabled={isLoading}
+                          disabled={isSubmitting}
                         />
                       </div>
                     </FormControl>
@@ -106,16 +88,18 @@ export default function LoginForm() {
                           placeholder="Enter your password" 
                           className="pl-10 pr-10"
                           autoComplete="current-password" 
-                          disabled={isLoading}
+                          disabled={isSubmitting}
                         />
-                        <button
+                        <Button
                           type="button"
+                          variant="ghost"
+                          size="icon"
+                          className="absolute top-0 right-0 h-full px-3"
                           onClick={togglePasswordVisibility}
-                          className="absolute text-gray-400 transform -translate-y-1/2 right-3 top-1/2"
-                          disabled={isLoading}
+                          disabled={isSubmitting}
                         >
                           {showPassword ? <EyeOff size={20} /> : <Eye size={20} />}
-                        </button>
+                        </Button>
                       </div>
                     </FormControl>
                     <FormMessage />
@@ -133,9 +117,9 @@ export default function LoginForm() {
               <Button 
                 type="submit" 
                 className="w-full" 
-                disabled={isLoading}
+                disabled={isSubmitting}
               >
-                {isLoading ? (
+                {isSubmitting ? (
                   <>
                     <Loader2 className="w-4 h-4 mr-2 animate-spin" />
                     Logging in...
@@ -163,3 +147,4 @@ export default function LoginForm() {
     </div>
   );
 }
+

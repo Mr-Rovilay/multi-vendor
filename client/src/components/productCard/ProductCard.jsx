@@ -116,13 +116,13 @@ const ProductCard = ({ data }) => {
           <span className="text-lg font-bold">
             ${data.price === 0 ? data.price : data.discount_price}
           </span>
-          {data.originalPrice && (
-            <span className="ml-2 text-sm line-through text-muted-foreground">
-              ${data.originalPrice}
+          {data.discount_price && (
+            <span className="ml-2 text-sm text-red-500 line-through text-muted-foreground">
+              ${data.discount_price}
             </span>
           )}
         </div>
-        <Badge variant="secondary">{data?.sold_out} sold</Badge>
+        <Badge variant="secondary">{data.total_sell} sold</Badge>
       </CardFooter>
       {isDetailsOpen && (
         <ProductDetailsCard setOpen={setIsDetailsOpen} data={data} />
