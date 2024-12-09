@@ -4,6 +4,7 @@ import cookieParser from "cookie-parser";
 import bodyParser from "body-parser";
 import connectDB from "./db/db.js";
 import authRoutes from './routes/authRoutes.js';
+// import fileUpload from 'express-fileupload';
 
 
 
@@ -12,13 +13,15 @@ import authRoutes from './routes/authRoutes.js';
 const PORT = process.env.PORT || 5000;
 // Initialize the Express application
 const app = express();
-app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({extended:true}));
+// app.use(fileUpload({useTempFiles:true}))
 app.use(cookieParser());    
 
 // Set up middlewares
 app.use(cors(
   {
     origin: "http://localhost:5173", // allow requests from this origin
+    credentials:true, // allow cookies to be sent   
    
   } 
 ));

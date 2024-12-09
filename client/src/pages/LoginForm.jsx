@@ -3,19 +3,18 @@ import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { Mail, Lock, Eye, EyeOff, Loader2 } from 'lucide-react';
 import { Link, useNavigate } from 'react-router-dom';
-import { useDispatch } from 'react-redux';
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { loginSchema } from '../zod-schema/auth';
 import { toast } from "sonner";
-import { loginUser } from '@/redux/actions/user';
+import axios from 'axios';
+import { server } from '@/server';
 
 export default function LoginForm() {
   const [showPassword, setShowPassword] = useState(false);
   const navigate = useNavigate();
-  const dispatch = useDispatch();
 
   const form = useForm({
     resolver: zodResolver(loginSchema),
@@ -29,14 +28,47 @@ export default function LoginForm() {
 
   const onSubmit = async (data) => {
     try {
-     dispatch(loginUser(data));
+      // Make login request
+      const response = await axios.post(`${server}/auth/login`, data);
+      
+      // Extract token and user info from response
+      const { token, user } = response.data;
+
+      // Store token in localStorage
+      localStorage.setItem('userToken', token);
+      
+      // Store user info in localStorage
+      localStorage.setItem('userInfo', JSON.stringify(user));
+
+      // Optional: Store token in axios defaults for future requests
+      axios.defaults.headers.common['Authorization'] = `Bearer ${token}`;
+
       toast.success('Login successful');
-      navigate('/');
+      navigate('/'); // Redirect to dashboard or home page
     } catch (error) {
       const errorMessage = error.response?.data?.message || 'An error occurred. Please try again.';
       toast.error(errorMessage);
     }
   };
+
+  // // Function to retrieve token
+  // const getToken = () => {
+  //   return localStorage.getItem('userToken');
+  // };
+
+  // // Function to retrieve user info
+  // const getUserInfo = () => {
+  //   const userInfo = localStorage.getItem('userInfo');
+  //   return userInfo ? JSON.parse(userInfo) : null;
+  // };
+
+  // // Function to logout
+  // const logout = () => {
+  //   localStorage.removeItem('userToken');
+  //   localStorage.removeItem('userInfo');
+  //   delete axios.defaults.headers.common['Authorization'];
+  //   navigate('/login');
+  // };
 
   const togglePasswordVisibility = () => setShowPassword(!showPassword);
 
@@ -147,4 +179,3 @@ export default function LoginForm() {
     </div>
   );
 }
-
