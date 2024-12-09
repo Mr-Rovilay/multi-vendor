@@ -1,6 +1,6 @@
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { Mail, Lock, User, Phone, Eye, EyeOff, Upload } from "lucide-react";
+import { Mail, Lock, User, Phone, Eye, EyeOff, Upload, Loader2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import {
@@ -27,15 +27,17 @@ import {
 } from "@/components/ui/select";
 import { signupSchema } from "../zod-schema/auth";
 import { Link, useNavigate } from "react-router-dom";
-import axios from "axios";
-import { server } from "@/server";
 import { toast } from "sonner";
 import { useState } from "react";
+import { useDispatch } from "react-redux";
+import { signup } from "@/redux/actions/authActions";
 
 export default function Signup() {
-  const [loading, setLoading] = useState(false);
   const [avatarPreview, setAvatarPreview] = useState(null);
   const [showPassword, setShowPassword] = useState(false);
+  const dispatch = useDispatch();
+  const [isLoading, setIsLoading] = useState(false);
+
   const navigate = useNavigate();
 
   const form = useForm({
@@ -59,7 +61,7 @@ export default function Signup() {
   };
 
   const onSubmit = async (data) => {
-    setLoading(true);
+    setIsLoading(true);
     try {
       const formData = new FormData();
       formData.append("name", data.name);
@@ -70,21 +72,27 @@ export default function Signup() {
       if (data.avatar && data.avatar[0]) {
         formData.append("avatar", data.avatar[0]);
       }
-
-      await axios.post(`${server}/auth/signup`, formData);
-      toast.success("Signup successful! Please log in.");
-      navigate("/login")
+  
+      // Wait for the signup action to complete
+      const result = await dispatch(signup(formData)); 
+  
+      // Check if the action was successful
+      if (result?.type === "SignupSuccess") {
+        toast.success("Signup successful! Please log in.");
+        navigate("/login");
+      } else {
+        throw new Error(result?.payload || "Signup failed!");
+      }
     } catch (error) {
-      const errorMessage = error.response?.data?.message || "Signup failed!";
+      const errorMessage = error.response?.data?.message || error.message || "Signup failed!";
       toast.error(errorMessage);
     } finally {
-      setLoading(false);
+      setIsLoading(false);
     }
   };
+  
 
-  const togglePasswordVisibility = () => {
-    setShowPassword(!showPassword);
-  };
+  const togglePasswordVisibility = () => setShowPassword(!showPassword);
 
   return (
     <div className="flex items-center justify-center min-h-screen bg-gray-100">
@@ -158,20 +166,23 @@ export default function Signup() {
                           className="absolute text-gray-400 transform -translate-y-1/2 left-3 top-1/2"
                           size={20}
                         />
-                       <Input 
-                          {...field} 
-                          type={showPassword ? 'text' : 'password'}
-                          placeholder="Enter your password" 
+                        <Input
+                          {...field}
+                          type={showPassword ? "text" : "password"}
+                          placeholder="Enter your password"
                           className="pl-10 pr-10"
-                          autoComplete="current-password" 
+                          autoComplete="current-password"
                         />
-                        <button
+                        <Button
                           type="button"
+                          variant="ghost"
+                          size="icon"
+                          className="absolute top-0 right-0 h-full px-3"
                           onClick={togglePasswordVisibility}
-                          className="absolute text-gray-400 transform -translate-y-1/2 right-3 top-1/2"
+                          disabled={isLoading}
                         >
                           {showPassword ? <EyeOff size={20} /> : <Eye size={20} />}
-                        </button>
+                        </Button>
                       </div>
                     </FormControl>
                     <FormMessage />
@@ -264,10 +275,16 @@ export default function Signup() {
                   </FormItem>
                 )}
               />
-              <Button type="submit" className="w-full" disabled={loading}>
-                {loading ? "Creating Account..." : "Create Account"}
+              <Button type="submit" className="w-full" disabled={isLoading}>
+                {isLoading ? (
+                  <>
+                    <Loader2 className="w-4 h-4 mr-2 animate-spin" />
+                    Creating Account...
+                  </>
+                ) : (
+                  "Create Account"
+                )}
               </Button>
-
               <div className="mt-4 text-center">
                 <span className="text-sm text-gray-600">
                   Already have an account?{" "}

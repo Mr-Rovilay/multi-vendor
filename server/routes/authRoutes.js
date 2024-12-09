@@ -10,6 +10,10 @@ const router = express.Router();
 router.post('/signup', upload.single('avatar'), validateSignup, signup);
 router.post('/login', validateLogin, login);
 router.get('/user', verifyToken, getUser);
+router.post("/logout", (req, res) => {
+    res.clearCookie("token", { httpOnly: true, secure: true, sameSite: "Strict" });
+    res.status(200).json({ message: "Logged out successfully" });
+  });
 
 export default router;
 

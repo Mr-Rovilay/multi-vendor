@@ -1,74 +1,64 @@
-import { useState } from 'react';
-import { useForm } from 'react-hook-form';
-import { zodResolver } from '@hookform/resolvers/zod';
-import { Mail, Lock, Eye, EyeOff, Loader2 } from 'lucide-react';
-import { Link, useNavigate } from 'react-router-dom';
+/* eslint-disable no-unused-vars */
+import { useState, useEffect } from "react";
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { Mail, Lock, Eye, EyeOff, Loader2 } from "lucide-react";
+import { Link, useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { loginSchema } from '../zod-schema/auth';
+import {
+  Form,
+  FormControl,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from "@/components/ui/form";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
+import { loginSchema } from "../zod-schema/auth";
 import { toast } from "sonner";
-import axios from 'axios';
-import { server } from '@/server';
+import { useDispatch } from "react-redux";
+import { login } from "@/redux/actions/authActions";
 
 export default function LoginForm() {
   const [showPassword, setShowPassword] = useState(false);
+  const [loading, setLoading] = useState(false); // Local loading state
   const navigate = useNavigate();
+  const dispatch = useDispatch();
 
   const form = useForm({
     resolver: zodResolver(loginSchema),
     defaultValues: {
-      email: '',
-      password: ''
-    }
+      email: "",
+      password: "",
+    },
   });
 
-  const { isSubmitting } = form.formState;
-
+  // Handle form submission
   const onSubmit = async (data) => {
+    setLoading(true); // Set loading to true when submitting
     try {
-      // Make login request
-      const response = await axios.post(`${server}/auth/login`, data);
-      
-      // Extract token and user info from response
-      const { token, user } = response.data;
+      // Dispatch the login action
+      const result = await dispatch(login(data)); // Thunk-based action
 
-      // Store token in localStorage
-      localStorage.setItem('userToken', token);
-      
-      // Store user info in localStorage
-      localStorage.setItem('userInfo', JSON.stringify(user));
-
-      // Optional: Store token in axios defaults for future requests
-      axios.defaults.headers.common['Authorization'] = `Bearer ${token}`;
-
-      toast.success('Login successful');
-      navigate('/'); // Redirect to dashboard or home page
+      if (result?.error) {
+        toast.error(result.error.message || "Login failed");
+      } else {
+        toast.success("Login successful");
+        navigate("/"); // Redirect on successful login
+      }
     } catch (error) {
-      const errorMessage = error.response?.data?.message || 'An error occurred. Please try again.';
-      toast.error(errorMessage);
+      toast.error("An unexpected error occurred. Please try again.");
+    } finally {
+      setLoading(false); // Set loading to false after submission is complete
     }
   };
-
-  // // Function to retrieve token
-  // const getToken = () => {
-  //   return localStorage.getItem('userToken');
-  // };
-
-  // // Function to retrieve user info
-  // const getUserInfo = () => {
-  //   const userInfo = localStorage.getItem('userInfo');
-  //   return userInfo ? JSON.parse(userInfo) : null;
-  // };
-
-  // // Function to logout
-  // const logout = () => {
-  //   localStorage.removeItem('userToken');
-  //   localStorage.removeItem('userInfo');
-  //   delete axios.defaults.headers.common['Authorization'];
-  //   navigate('/login');
-  // };
 
   const togglePasswordVisibility = () => setShowPassword(!showPassword);
 
@@ -77,11 +67,14 @@ export default function LoginForm() {
       <Card className="w-full max-w-md">
         <CardHeader className="text-center">
           <CardTitle>Login</CardTitle>
-          <CardDescription>Enter your credentials to access your account</CardDescription>
+          <CardDescription>
+            Enter your credentials to access your account
+          </CardDescription>
         </CardHeader>
         <CardContent>
           <Form {...form}>
             <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
+              {/* Email Field */}
               <FormField
                 control={form.control}
                 name="email"
@@ -90,14 +83,17 @@ export default function LoginForm() {
                     <FormLabel>Email</FormLabel>
                     <FormControl>
                       <div className="relative">
-                        <Mail className="absolute text-gray-400 transform -translate-y-1/2 left-3 top-1/2" size={20} />
-                        <Input 
-                          {...field} 
-                          type="email" 
-                          placeholder="your-email@example.com" 
+                        <Mail
+                          className="absolute text-gray-400 transform -translate-y-1/2 left-3 top-1/2"
+                          size={20}
+                        />
+                        <Input
+                          {...field}
+                          type="email"
+                          placeholder="your-email@example.com"
                           className="pl-10"
-                          autoComplete="email" 
-                          disabled={isSubmitting}
+                          autoComplete="email"
+                          disabled={loading} // Disable input during loading
                         />
                       </div>
                     </FormControl>
@@ -105,6 +101,7 @@ export default function LoginForm() {
                   </FormItem>
                 )}
               />
+              {/* Password Field */}
               <FormField
                 control={form.control}
                 name="password"
@@ -113,14 +110,17 @@ export default function LoginForm() {
                     <FormLabel>Password</FormLabel>
                     <FormControl>
                       <div className="relative">
-                        <Lock className="absolute text-gray-400 transform -translate-y-1/2 left-3 top-1/2" size={20} />
-                        <Input 
-                          {...field} 
-                          type={showPassword ? 'text' : 'password'}
-                          placeholder="Enter your password" 
+                        <Lock
+                          className="absolute text-gray-400 transform -translate-y-1/2 left-3 top-1/2"
+                          size={20}
+                        />
+                        <Input
+                          {...field}
+                          type={showPassword ? "text" : "password"}
+                          placeholder="Enter your password"
                           className="pl-10 pr-10"
-                          autoComplete="current-password" 
-                          disabled={isSubmitting}
+                          autoComplete="current-password"
+                          disabled={loading} // Disable input during loading
                         />
                         <Button
                           type="button"
@@ -128,7 +128,7 @@ export default function LoginForm() {
                           size="icon"
                           className="absolute top-0 right-0 h-full px-3"
                           onClick={togglePasswordVisibility}
-                          disabled={isSubmitting}
+                          disabled={loading} // Disable button during loading
                         >
                           {showPassword ? <EyeOff size={20} /> : <Eye size={20} />}
                         </Button>
@@ -139,35 +139,24 @@ export default function LoginForm() {
                 )}
               />
               <div className="flex items-center justify-between">
-                <Link 
-                  to="/forgot-password" 
-                  className="text-sm text-blue-600 hover:underline"
-                >
+                <Link to="/forgot-password" className="text-sm text-blue-600 hover:underline">
                   Forgot your password?
                 </Link>
               </div>
-              <Button 
-                type="submit" 
-                className="w-full" 
-                disabled={isSubmitting}
-              >
-                {isSubmitting ? (
+              <Button type="submit" className="w-full" disabled={loading}>
+                {loading ? (
                   <>
                     <Loader2 className="w-4 h-4 mr-2 animate-spin" />
                     Logging in...
                   </>
                 ) : (
-                  'Login'
+                  "Login"
                 )}
               </Button>
-              
               <div className="mt-4 text-center">
                 <span className="text-sm text-gray-600">
-                  Don&#39;t have an account? {' '}
-                  <Link 
-                    to="/signup" 
-                    className="text-blue-600 hover:underline"
-                  >
+                  Don&#39;t have an account?{" "}
+                  <Link to="/signup" className="text-blue-600 hover:underline">
                     Sign up
                   </Link>
                 </span>

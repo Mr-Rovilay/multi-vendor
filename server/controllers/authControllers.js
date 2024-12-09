@@ -2,6 +2,7 @@ import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
 import User from "../models/UserModel.js";
 import fs from "fs";
+import path from "path";
 
 export const signup = async (req, res) => {
   try {
@@ -11,16 +12,17 @@ export const signup = async (req, res) => {
     // Check if user already exists
     const existingUser = await User.findOne({ email });
     if (existingUser) {
-      const avatar = req.file ? req.file.path : "";
-      const filePath = `uploads/${avatar}`;
-      fs.unlink(filePath, (err) => {
-        if (err) {
-          console.error(err);
-          console.log(`Deleted avatar: ${filePath}`);
-        } else {
-          console.log(`Failed to delete avatar: ${filePath}`);
-        }
-      });
+      // Delete uploaded avatar file if user exists
+      if (avatar) {
+        const filePath = path.resolve(avatar);
+        fs.unlink(filePath, (err) => {
+          if (err) {
+            console.error(`Failed to delete avatar: ${filePath}`, err);
+          } else {
+            console.log(`Deleted avatar: ${filePath}`);
+          }
+        });
+      }
       return res.status(400).json({ message: "User already exists" });
     }
 
@@ -51,7 +53,7 @@ export const signup = async (req, res) => {
         email: user.email,
         role: user.role,
       },
-      process.env.JWT_SECRET,
+      process.env.JWT_SECRET || "defaultsecret", // Fallback secret for development
       { expiresIn: "1d" }
     );
 
@@ -63,7 +65,7 @@ export const signup = async (req, res) => {
         name: user.name,
         email: user.email,
         role: user.role,
-        avatar: user.profile.avatar,
+        avatar: user.profile.avatar, // Adjust if public URL is needed
       },
     });
   } catch (error) {
@@ -96,9 +98,17 @@ export const login = async (req, res) => {
         email: user.email,
         role: user.role,
       },
-      process.env.JWT_SECRET,
+      process.env.JWT_SECRET || "defaultsecret", // Fallback secret for development
       { expiresIn: "1d" }
     );
+
+    // Set the token in an HttpOnly cookie
+    res.cookie("token", token, {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === "production",
+      sameSite: "Strict",
+      maxAge: 24 * 60 * 60 * 1000, // 1 day
+    });
 
     res.status(200).json({
       message: "Login successful",
@@ -108,7 +118,7 @@ export const login = async (req, res) => {
         name: user.name,
         email: user.email,
         role: user.role,
-        avatar: user.profile.avatar,
+        avatar: user.profile.avatar, // Adjust if public URL is needed
       },
     });
   } catch (error) {
@@ -117,10 +127,8 @@ export const login = async (req, res) => {
   }
 };
 
-// controllers/authController.js
 export const getUser = async (req, res) => {
   try {
-    // req.user.id comes from the verifyToken middleware
     const user = await User.findById(req.user.id).select("-password");
 
     if (!user) {
@@ -129,6 +137,7 @@ export const getUser = async (req, res) => {
 
     res.status(200).json(user);
   } catch (error) {
+    console.error("Get user error:", error);
     res.status(500).json({ message: error.message });
   }
 };

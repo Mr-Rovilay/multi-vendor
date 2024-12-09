@@ -5,7 +5,7 @@ const initialState = {
   loading: false,
   user: null,
   error: null,
-  successMessage: null
+  successMessage: null,
 };
 
 export const userReducer = createReducer(initialState, (builder) => {
@@ -22,6 +22,24 @@ export const userReducer = createReducer(initialState, (builder) => {
       state.loading = false;
       state.error = action.payload;
       state.isAuthenticated = false;
+    })
+    .addCase('SignupRequest', (state) => {
+      state.loading = true;
+    })
+    .addCase('SignupSuccess', (state, action) => {
+      state.loading = false;
+      state.isAuthenticated = true;
+      state.user = action.payload;
+    })
+    .addCase('SignupFail', (state, action) => {
+      state.loading = false;
+      state.error = action.payload;
+    })
+    .addCase('SetSuccessMessage', (state, action) => {
+      state.successMessage = action.payload;
+    })
+    .addCase('SetErrorMessage', (state, action) => {
+      state.error = action.payload;
     })
     .addCase('clearErrors', (state) => {
       state.error = null;
