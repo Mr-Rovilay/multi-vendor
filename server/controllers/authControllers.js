@@ -103,11 +103,13 @@ export const login = async (req, res) => {
     );
 
     // Set the token in an HttpOnly cookie
-    res.cookie("token", token, {
+    res.cookie('token', token, {
       httpOnly: true,
-      secure: process.env.NODE_ENV === "production",
-      sameSite: "Strict",
+      secure: process.env.NODE_ENV === 'production',
+      sameSite: 'Strict',
       maxAge: 24 * 60 * 60 * 1000, // 1 day
+      path: '/', // Ensure cookie is available across all routes
+  
     });
 
     res.status(200).json({
@@ -128,6 +130,9 @@ export const login = async (req, res) => {
 };
 
 export const getUser = async (req, res) => {
+  console.log("Cookies in request:", req.cookies);
+  console.log("Headers:", req.headers);
+
   try {
     const user = await User.findById(req.user.id).select("-password");
 
@@ -135,7 +140,7 @@ export const getUser = async (req, res) => {
       return res.status(404).json({ message: "User not found" });
     }
 
-    res.status(200).json(user);
+    res.status(200).json({ user });
   } catch (error) {
     console.error("Get user error:", error);
     res.status(500).json({ message: error.message });

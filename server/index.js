@@ -6,28 +6,21 @@ import connectDB from "./db/db.js";
 import authRoutes from './routes/authRoutes.js';
 // import fileUpload from 'express-fileupload';
 
-
-
-
-
 const PORT = process.env.PORT || 5000;
 // Initialize the Express application
 const app = express();
 app.use(bodyParser.urlencoded({extended:true}));
 // app.use(fileUpload({useTempFiles:true}))
+app.use(cors({
+  origin: "http://localhost:5173", // allow requests from this origin
+  credentials: true,
+  methods: ['GET', 'POST', 'PUT', 'DELETE'],
+  allowedHeaders: ['Content-Type', 'Authorization', 'Cookie']
+}));
+app.use(express.urlencoded({ extended: true }));
+app.use(express.json()); 
+
 app.use(cookieParser());    
-
-// Set up middlewares
-app.use(cors(
-  {
-    origin: "http://localhost:5173", // allow requests from this origin
-    credentials:true, // allow cookies to be sent   
-   
-  } 
-));
-  app.use(express.urlencoded({ extended: true }));
-  app.use(express.json()); 
-
 
   app.use('/auth', authRoutes);
   app.use("/", express.static("uploads"))

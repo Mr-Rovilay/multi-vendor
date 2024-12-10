@@ -79,7 +79,7 @@ export default function Signup() {
       // Check if the action was successful
       if (result?.type === "SignupSuccess") {
         toast.success("Signup successful! Please log in.");
-        navigate("/login");
+        navigate("");
       } else {
         throw new Error(result?.payload || "Signup failed!");
       }

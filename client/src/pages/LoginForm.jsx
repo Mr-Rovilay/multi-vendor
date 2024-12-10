@@ -46,19 +46,26 @@ export default function LoginForm() {
     try {
       // Dispatch the login action
       const result = await dispatch(login(data)); // Thunk-based action
-
+  
       if (result?.error) {
-        toast.error(result.error.message || "Login failed");
-      } else {
+        // Check if the error is defined and notify the user
+        toast.error(result.error.message || "Invalid credentials, please try again.");
+      } else if (result?.success) {
+        // Handle success case explicitly
         toast.success("Login successful");
         navigate("/"); // Redirect on successful login
+      } else {
+        // Handle unexpected cases
+        toast.error("Unexpected response from the server. Please try again.");
       }
     } catch (error) {
+      // Handle general errors (e.g., network issues)
       toast.error("An unexpected error occurred. Please try again.");
     } finally {
       setLoading(false); // Set loading to false after submission is complete
     }
   };
+  
 
   const togglePasswordVisibility = () => setShowPassword(!showPassword);
 

@@ -1,32 +1,19 @@
 import api from "@/utils/server";
 
-// Helper to extract error message
-const getErrorMessage = (error) => error.response?.data?.message || 'An error occurred';
-
-// Dispatch action with error or success messages
-const dispatchMessage = (dispatch, type, message) => {
-  dispatch({ type, payload: message });
-};
-
-// Login Action
 export const login = (loginData) => async (dispatch) => {
-  dispatch({ type: 'LoadUserRequest' });
   try {
-    const response = await api.post('/auth/login', loginData);
-
-    // Ensure response.data.user exists
-    if (!response.data?.user) {
-      throw new Error('Unexpected response format');
+    const response = await api.post('/auth/login', loginData); // Replace with actual API call
+    if (response.status === 200) {
+      dispatch({ type: "LoadUserRequest", payload: response.data });
+      return { success: true };
+    } else {
+      return { error: { message: "Invalid credentials" } };
     }
-
-    dispatch({ type: 'LoadUserSuccess', payload: response.data.user });
-    dispatchMessage(dispatch, 'SetSuccessMessage', 'Login successful');
   } catch (error) {
-    const errorMessage = getErrorMessage(error);
-    dispatch({ type: 'LoadUserFail', payload: errorMessage });
-    dispatchMessage(dispatch, 'SetErrorMessage', errorMessage);
+    return { error: { message: error.response?.data?.message || "Something went wrong" } };
   }
 };
+
 
 // Signup Action
 export const signup = (formData) => async (dispatch) => {

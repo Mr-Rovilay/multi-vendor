@@ -1,7 +1,8 @@
+/* eslint-disable no-unused-vars */
 import { useState, useEffect } from "react";
 import { Link, useLocation } from "react-router-dom";
 import { useDispatch, useSelector } from 'react-redux';
-import { Search, Heart, ShoppingCart, User, X, Store, Menu, DoorClosedIcon as Close } from 'lucide-react';
+import { Search, Heart, ShoppingCart, X, Store, Menu, DoorClosedIcon as Close } from 'lucide-react';
 import {
   NavigationMenu,
   NavigationMenuContent,
@@ -33,6 +34,9 @@ const Header = () => {
   useEffect(() => {
     dispatch(loadUser());
   }, [dispatch]);
+  console.log('Is Authenticated:', isAuthenticated); // Debug log
+  console.log('User:', user); // Debug log
+
 
   const handleSearchChange = (e) => {
     const term = e.target.value;
@@ -177,7 +181,7 @@ const Header = () => {
                     <NavigationMenuItem>
                       <NavigationMenuTrigger>
                         <Avatar>
-                          <AvatarImage src={user?.avatar} />
+                          <AvatarImage src={user?.profile?.avatar} />
                           <AvatarFallback>{user?.name?.charAt(0)}</AvatarFallback>
                         </Avatar>
                       </NavigationMenuTrigger>
@@ -195,9 +199,9 @@ const Header = () => {
                   </NavigationMenuList>
                 </NavigationMenu>
               ) : (
-                <Button variant="ghost" size="icon" asChild>
+                <Button   asChild>
                   <Link to="/login">
-                    <User className="w-5 h-5" />
+                  <Button variant="">Login</Button>
                   </Link>
                 </Button>
               )}
@@ -226,7 +230,7 @@ const Header = () => {
             </div>
 
             {/* Navigation Links */}
-            <div className="flex space-x-6">
+            <div className="flex space-x-5 md:space-x-6">
               <Link
                 to="/"
                 className={cn(
@@ -409,9 +413,11 @@ const Header = () => {
                         </NavigationMenuList>
                       </NavigationMenu>
                     ) : (
-                      <Button asChild variant="ghost">
-                        <Link to="/login">Login</Link>
-                      </Button>
+                      <Button   asChild>
+                  <Link to="/login">
+                  <Button variant="">Login</Button>
+                  </Link>
+                </Button>
                     )}
                   </div>
                 </div>
