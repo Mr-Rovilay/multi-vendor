@@ -5,9 +5,6 @@ export const loadUser = () => async (dispatch) => {
   try {
     dispatch({ type: "LoadUserRequest" });
     
-    // Log cookies before request
-    console.log("Cookies before request:", document.cookie);
-    
     const { data } = await api.get("/auth/user", { 
       withCredentials: true,
       headers: {
@@ -15,9 +12,6 @@ export const loadUser = () => async (dispatch) => {
         Cookie: document.cookie
       }
     });
-    
-    console.log("Full Response:", data);
-    console.log("User Data:", data.user);
     
     dispatch({ type: "LoadUserSuccess", payload: data.user });
   } catch (error) {

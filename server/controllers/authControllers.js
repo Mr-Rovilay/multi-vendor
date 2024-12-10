@@ -17,9 +17,7 @@ export const signup = async (req, res) => {
     const avatar = req.file
     ? `/uploads/${req.file.filename}`
     : "https://res.cloudinary.com/daqnlvhjm/image/upload/v1687428069/avatars/default_avatar_jkwatz.png";
-    
-    console.log("Request Body:", req.body);
-    console.log("Uploaded File:", req.file);
+
     // Check if user already exists
     const existingUser = await User.findOne({ email });
     if (existingUser) {
@@ -55,8 +53,6 @@ export const signup = async (req, res) => {
 
     // Save user to database
     await user.save();
-    // Log the saved user to verify
-    console.log("Saved User:", user);
 
     // Create and sign JWT token
     const token = jwt.sign(
@@ -145,8 +141,6 @@ export const login = async (req, res) => {
 };
 
 export const getUser = async (req, res) => {
-  console.log("Cookies in request:", req.cookies);
-  console.log("Headers:", req.headers);
 
   try {
     const user = await User.findById(req.user.id).select("-password");

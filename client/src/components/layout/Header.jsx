@@ -35,8 +35,6 @@ const Header = () => {
   useEffect(() => {
     dispatch(loadUser());
   }, [dispatch]);
-  console.log('Is Authenticated:', isAuthenticated); // Debug log
-  console.log('User:', user); // Debug log
 
 
   const handleSearchChange = (e) => {
@@ -133,7 +131,6 @@ const Header = () => {
               className="mr-2"
               onClick={() => {}}
             >
-              <Search className="w-5 h-5" />
             </Button>
             <Button variant="ghost" size="icon" onClick={toggleMobileMenu}>
               {mobileMenuOpen ? (
@@ -298,10 +295,30 @@ const Header = () => {
                     <X
                       className="absolute w-4 h-4 text-gray-500 -translate-y-1/2 cursor-pointer right-3 top-1/2"
                       onClick={clearSearch}
-                    />
+                    /> 
                   ) : (
                     <Search className="absolute w-4 h-4 text-gray-500 -translate-y-1/2 right-3 top-1/2" />
                   )}
+                      {searchData && searchData.length !== 0 && (
+              <div className="absolute z-10 w-full mt-1 bg-white border rounded-md shadow-lg">
+                {searchData.map((product, index) => (
+                  <Link
+                    key={index}
+                    to={`/product/${product.name.replace(/\s+/g, "-")}`}
+                    className="block hover:bg-gray-100"
+                  >
+                    <div className="flex items-center p-2">
+                      <img
+                        src={product.image_Url[0].url}
+                        alt={product.name}
+                        className="object-cover w-10 h-10 mr-3"
+                      />
+                      <span>{product.name}</span>
+                    </div>
+                  </Link>
+                ))}
+              </div>
+            )}
                 </div>
 
                 {/* Mobile Navigation Links */}

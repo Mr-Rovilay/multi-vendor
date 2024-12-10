@@ -20,7 +20,6 @@ export const signup = (formData) => async (dispatch) => {
   dispatch({ type: "SignupRequest" });
   try {
     const { data } = await api.post("/auth/signup", formData);
-    console.log(data)
     dispatch({ type: "SignupSuccess", payload: data.user });
     return { type: "SignupSuccess", payload: data.user }; // Return result
   } catch (error) {

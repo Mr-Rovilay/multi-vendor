@@ -73,14 +73,7 @@ export default function Signup() {
 
       if (data.avatar && data.avatar.length > 0) {
         formData.append("avatar", data.avatar[0]);
-        console.log('Uploading file:', data.avatar[0].name);
-      }
-  
-      console.log('Form Data:', Object.fromEntries(formData));
-      
-      console.log('Form Data Contents:');
-      for (let [key, value] of formData.entries()) {
-        console.log(key, value);
+     
       }
   
       // Wait for the signup action to complete

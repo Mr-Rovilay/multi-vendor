@@ -54,6 +54,7 @@ export default function LoginForm() {
         // Handle success case explicitly
         toast.success("Login successful");
         navigate("/"); // Redirect on successful login
+        window.location.reload()
       } else {
         // Handle unexpected cases
         toast.error("Unexpected response from the server. Please try again.");
