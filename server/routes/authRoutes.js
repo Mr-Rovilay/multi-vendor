@@ -1,5 +1,4 @@
 import express from 'express';
-
 import { upload } from '../middleware/uploadMiddleware.js';
 import { validateLogin, validateSignup } from '../validation/validationMiddleware.js';
 import { getUser, login, signup } from '../controllers/authControllers.js';

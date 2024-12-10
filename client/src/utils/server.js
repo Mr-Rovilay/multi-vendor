@@ -10,3 +10,5 @@ const api = axios.create({
 });
 
 export default api;
+
+export const backend_url = "http://localhost:5000/"

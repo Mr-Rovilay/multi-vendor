@@ -48,7 +48,7 @@ export default function Signup() {
       password: "",
       role: "customer",
       contact: "",
-      avatar: null,
+      avatar: undefined,
     },
   });
 
@@ -56,8 +56,8 @@ export default function Signup() {
     const file = e.target.files?.[0];
     if (file) {
       setAvatarPreview(URL.createObjectURL(file));
+      form.setValue("avatar", file); // Set the single file, not FileList
     }
-    form.setValue("avatar", e.target.files);
   };
 
   const onSubmit = async (data) => {
@@ -69,8 +69,18 @@ export default function Signup() {
       formData.append("password", data.password);
       formData.append("role", data.role);
       formData.append("contact", data.contact);
-      if (data.avatar && data.avatar[0]) {
+
+
+      if (data.avatar && data.avatar.length > 0) {
         formData.append("avatar", data.avatar[0]);
+        console.log('Uploading file:', data.avatar[0].name);
+      }
+  
+      console.log('Form Data:', Object.fromEntries(formData));
+      
+      console.log('Form Data Contents:');
+      for (let [key, value] of formData.entries()) {
+        console.log(key, value);
       }
   
       // Wait for the signup action to complete
@@ -79,7 +89,7 @@ export default function Signup() {
       // Check if the action was successful
       if (result?.type === "SignupSuccess") {
         toast.success("Signup successful! Please log in.");
-        navigate("");
+        navigate("/login");
       } else {
         throw new Error(result?.payload || "Signup failed!");
       }

@@ -7,8 +7,19 @@ import path from "path";
 export const signup = async (req, res) => {
   try {
     const { name, email, password, role, contact } = req.body;
-    const avatar = req.file ? req.file.path : "";
 
+    
+    const uploadsDir = path.join(process.cwd(), "uploads");
+    if (!fs.existsSync(uploadsDir)) {
+      fs.mkdirSync(uploadsDir, { recursive: true });
+    }
+    
+    const avatar = req.file
+    ? `/uploads/${req.file.filename}`
+    : "https://res.cloudinary.com/daqnlvhjm/image/upload/v1687428069/avatars/default_avatar_jkwatz.png";
+    
+    console.log("Request Body:", req.body);
+    console.log("Uploaded File:", req.file);
     // Check if user already exists
     const existingUser = await User.findOne({ email });
     if (existingUser) {
@@ -44,6 +55,8 @@ export const signup = async (req, res) => {
 
     // Save user to database
     await user.save();
+    // Log the saved user to verify
+    console.log("Saved User:", user);
 
     // Create and sign JWT token
     const token = jwt.sign(
@@ -52,6 +65,7 @@ export const signup = async (req, res) => {
         name: user.name,
         email: user.email,
         role: user.role,
+        avatar: user.profile.avatar, // Adjust if public URL is needed
       },
       process.env.JWT_SECRET || "defaultsecret", // Fallback secret for development
       { expiresIn: "1d" }
@@ -65,6 +79,7 @@ export const signup = async (req, res) => {
         name: user.name,
         email: user.email,
         role: user.role,
+        contact: user.profile.contact,
         avatar: user.profile.avatar, // Adjust if public URL is needed
       },
     });
@@ -103,13 +118,12 @@ export const login = async (req, res) => {
     );
 
     // Set the token in an HttpOnly cookie
-    res.cookie('token', token, {
+    res.cookie("token", token, {
       httpOnly: true,
-      secure: process.env.NODE_ENV === 'production',
-      sameSite: 'Strict',
+      secure: process.env.NODE_ENV === "production",
+      sameSite: "Strict",
       maxAge: 24 * 60 * 60 * 1000, // 1 day
-      path: '/', // Ensure cookie is available across all routes
-  
+      path: "/", // Ensure cookie is available across all routes
     });
 
     res.status(200).json({
@@ -120,6 +134,7 @@ export const login = async (req, res) => {
         name: user.name,
         email: user.email,
         role: user.role,
+        contact: user.profile.contact,
         avatar: user.profile.avatar, // Adjust if public URL is needed
       },
     });

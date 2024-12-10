@@ -20,6 +20,7 @@ import { categoriesData, productData } from "../../static/data";
 import { cn } from "@/lib/utils";
 import Dropdown from "./Dropdown";
 import { loadUser } from "@/redux/actions/user";
+import { backend_url } from "@/utils/server";
 
 const Header = () => {
   const dispatch = useDispatch();
@@ -181,7 +182,7 @@ const Header = () => {
                     <NavigationMenuItem>
                       <NavigationMenuTrigger>
                         <Avatar>
-                          <AvatarImage src={user?.profile?.avatar} />
+                          <AvatarImage src={`${backend_url}${user.profile.avatar}`} />
                           <AvatarFallback>{user?.name?.charAt(0)}</AvatarFallback>
                         </Avatar>
                       </NavigationMenuTrigger>
