@@ -15,18 +15,8 @@ body{
   scroll-behavior: smooth;
 }
 
-.batch_heart{
-  background: tomato;
-  width: 15px;
-  height: 15px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  border-radius: 100%;
-  position: absolute;
-  right: -24%;
-  top: -9%;
-  cursor: pointer;
+.transition-transform {
+  transition: transform 0.3s ease-in-out;
 }
 /* Chrome, Safari, Edge, Opera */
 input::-webkit-outer-spin-button,

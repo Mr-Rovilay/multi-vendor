@@ -21,6 +21,8 @@ import { cn } from "@/lib/utils";
 import Dropdown from "./Dropdown";
 import { loadUser } from "@/redux/actions/user";
 import { backend_url } from "@/utils/server";
+import CartSidebar from "../cart/CartSidebar";
+import WishlistSidebar from "../wishList/WishlistSidebar";
 
 const Header = () => {
   const dispatch = useDispatch();
@@ -155,24 +157,8 @@ const Header = () => {
             </Button>
 
             <div className="flex space-x-3">
-              <Button variant="ghost" size="icon" className="relative">
-                <Heart className="w-5 h-5" />
-                <Badge
-                  className="absolute bg-green-500 -top-2 -right-2"
-                  variant="secondary"
-                >
-                  3
-                </Badge>
-              </Button>
-              <Button variant="ghost" size="icon" className="relative">
-                <ShoppingCart className="w-5 h-5" />
-                <Badge
-                  className="absolute bg-green-500 -top-2 -right-2"
-                  variant="secondary"
-                >
-                  5
-                </Badge>
-              </Button>
+             <WishlistSidebar/>
+              <CartSidebar/>
               {isAuthenticated ? (
                 <NavigationMenu>
                   <NavigationMenuList>
@@ -389,24 +375,8 @@ const Header = () => {
                   </Button>
 
                   <div className="flex justify-between">
-                    <Button variant="ghost" size="icon" className="relative">
-                      <Heart className="w-5 h-5" />
-                      <Badge
-                        className="absolute bg-green-500 -top-2 -right-2"
-                        variant="secondary"
-                      >
-                        3
-                      </Badge>
-                    </Button>
-                    <Button variant="ghost" size="icon" className="relative">
-                      <ShoppingCart className="w-5 h-5" />
-                      <Badge
-                        className="absolute bg-green-500 -top-2 -right-2"
-                        variant="secondary"
-                      >
-                        5
-                      </Badge>
-                    </Button>
+                  <WishlistSidebar/>
+                    <CartSidebar/>
                     {isAuthenticated ? (
                       <NavigationMenu>
                         <NavigationMenuList>

@@ -10,6 +10,9 @@ import BestSellingPage from "./pages/BestSellingPage";
 import FAQ from "./pages/FAQ";
 import AboutUs from "./pages/AboutUs";
 import { Loader } from "./components/layout/Loader";
+import ProductDetailsPage from "./pages/ProductDetailsPage";
+import OrderSuccessPage from "./pages/OrderSuccessPage";
+import ProfilePage from "./pages/ProfilePage";
 
 export default function Home() {
   const [loading, setLoading] = useState(true);
@@ -18,9 +21,9 @@ export default function Home() {
     const fetchUser = async () => {
       try {
         await Store.dispatch(loadUser());
-        setLoading(false);
       } catch (error) {
         console.error("Failed to load user", error);
+      } finally {
         setLoading(false);
       }
     };
@@ -28,8 +31,10 @@ export default function Home() {
     fetchUser();
   }, []);
 
+
+
   return (
-    <div className="">
+    <div>
       {loading ? (
         <Loader />
       ) : (
@@ -38,7 +43,10 @@ export default function Home() {
           <Route path="/login" element={<LoginForm />} />
           <Route path="/signup" element={<SignupForm />} />
           <Route path="/products" element={<ProductsPage />} />
+          <Route path="/product/:name" element={<ProductDetailsPage />} />
+          <Route path="/order/success/:id" element={<OrderSuccessPage />} />
           <Route path="/faq" element={<FAQ />} />
+          <Route path="/profile" element={<ProfilePage />} />
           <Route path="/about-us" element={<AboutUs />} />
           <Route path="/best-selling" element={<BestSellingPage />} />
         </Routes>

@@ -23,7 +23,7 @@ import {
 } from "@/components/ui/card";
 import { loginSchema } from "../zod-schema/auth";
 import { toast } from "sonner";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { login } from "@/redux/actions/authActions";
 
 export default function LoginForm() {
@@ -31,6 +31,13 @@ export default function LoginForm() {
   const [loading, setLoading] = useState(false); // Local loading state
   const navigate = useNavigate();
   const dispatch = useDispatch();
+  const { isAuthenticated } = useSelector((state) => state.user);
+
+  useEffect(() => {
+    if (isAuthenticated === true ) {
+      navigate("/");
+    } 
+  }, []);
 
   const form = useForm({
     resolver: zodResolver(loginSchema),
@@ -54,7 +61,7 @@ export default function LoginForm() {
         // Handle success case explicitly
         toast.success("Login successful");
         navigate("/"); // Redirect on successful login
-        window.location.reload()
+        window.location.reload(true)
       } else {
         // Handle unexpected cases
         toast.error("Unexpected response from the server. Please try again.");

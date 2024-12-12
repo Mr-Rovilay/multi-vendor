@@ -28,8 +28,8 @@ import {
 import { signupSchema } from "../zod-schema/auth";
 import { Link, useNavigate } from "react-router-dom";
 import { toast } from "sonner";
-import { useState } from "react";
-import { useDispatch } from "react-redux";
+import { useEffect, useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
 import { signup } from "@/redux/actions/authActions";
 
 export default function Signup() {
@@ -39,6 +39,15 @@ export default function Signup() {
   const [isLoading, setIsLoading] = useState(false);
 
   const navigate = useNavigate();
+
+
+  const { isAuthenticated } = useSelector((state) => state.user);
+
+  useEffect(() => {
+    if (isAuthenticated === true ) {
+      navigate("/");
+    } 
+  }, []);
 
   const form = useForm({
     resolver: zodResolver(signupSchema),
