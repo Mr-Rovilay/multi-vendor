@@ -13,9 +13,12 @@ import { Loader } from "./components/layout/Loader";
 import ProductDetailsPage from "./pages/ProductDetailsPage";
 import OrderSuccessPage from "./pages/OrderSuccessPage";
 import ProfilePage from "./pages/ProfilePage";
+import { useSelector } from "react-redux";
+import ProtectedRoute from "./ProtectedRoute";
 
 export default function Home() {
   const [loading, setLoading] = useState(true);
+  const { isAuthenticated } = useSelector((state) => state.user);
 
   useEffect(() => {
     const fetchUser = async () => {
@@ -31,8 +34,6 @@ export default function Home() {
     fetchUser();
   }, []);
 
-
-
   return (
     <div>
       {loading ? (
@@ -46,7 +47,14 @@ export default function Home() {
           <Route path="/product/:name" element={<ProductDetailsPage />} />
           <Route path="/order/success/:id" element={<OrderSuccessPage />} />
           <Route path="/faq" element={<FAQ />} />
-          <Route path="/profile" element={<ProfilePage />} />
+          <Route
+            path="/profile"
+            element={
+              <ProtectedRoute isAuthenticated={isAuthenticated}>
+                <ProfilePage />
+              </ProtectedRoute>
+            }
+          />
           <Route path="/about-us" element={<AboutUs />} />
           <Route path="/best-selling" element={<BestSellingPage />} />
         </Routes>

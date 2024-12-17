@@ -68,11 +68,6 @@ const Header = () => {
     setMobileMenuOpen(!mobileMenuOpen);
   };
 
-  const handleLogout = () => {
-    // Implement logout functionality
-    console.log("Logout");
-  };
-
   return (
     <header className="w-full bg-white shadow-sm">
       <div className="max-pad-container sm:px-6 lg:px-8">
@@ -173,9 +168,6 @@ const Header = () => {
                         <ul className="p-2">
                           <li>
                             <NavigationMenuLink href="/profile">Profile</NavigationMenuLink>
-                          </li>
-                          <li>
-                            <Button variant="ghost" onClick={handleLogout}>Logout</Button>
                           </li>
                         </ul>
                       </NavigationMenuContent>
@@ -391,9 +383,6 @@ const Header = () => {
                               <ul className="p-2">
                                 <li>
                                   <NavigationMenuLink href="/profile">Profile</NavigationMenuLink>
-                                </li>
-                                <li>
-                                  <Button variant="ghost" onClick={handleLogout}>Logout</Button>
                                 </li>
                               </ul>
                             </NavigationMenuContent>

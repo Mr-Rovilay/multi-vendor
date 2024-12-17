@@ -1,5 +1,5 @@
 import Header from "@/components/layout/Header"
-// import ProfileContent from "@/components/profile/ProfileContent"
+import ProfileContent from "@/components/profile/ProfileContent"
 import ProfileSidebar from "@/components/profile/ProfileSidebar"
 import { useState } from "react"
 
@@ -14,7 +14,7 @@ const ProfilePage = () => {
           <ProfileSidebar active={active} setActive={setActive}/>
         </div>
         <div className="flex-1">
-          {/* <ProfileContent active={active} /> */}
+          <ProfileContent active={active} />
         </div>
       </div>
     </div>

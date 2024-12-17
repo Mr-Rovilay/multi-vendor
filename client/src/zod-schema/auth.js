@@ -23,8 +23,7 @@ export const signupSchema = z.object({
     .regex(strongPasswordRegex, 'Password must include at least one uppercase letter, one lowercase letter, one number, and one special character'),
   role: z.enum(["customer", "vendor", "admin"]),
   contact: z.string()
-    .min(10, "Contact number must be at least 10 digits")
-    .max(15, "Contact number must be less than 15 digits")
+  .regex(/^\d{11}$/, { message: "Phone number must be 11 Nigerian digits" })
     .optional(),
   avatar: z
     .any()
@@ -36,3 +35,15 @@ export const signupSchema = z.object({
     )
     .optional(),
 });
+
+export const profileSchema = z.object({
+  name: z.string().min(2, { message: "Name must be at least 2 characters" }),
+  email: z.string().email({ message: "Invalid email address" }),
+  phoneNumber: z.string()
+    .regex(/^\d{11}$/, { message: "Phone number must be 11 Nigerian digits" }),
+  password: z.string()
+    .min(8, { message: "Password must be at least 8 characters" })
+    .optional()
+    .or(z.literal(''))
+});
+

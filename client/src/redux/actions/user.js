@@ -5,13 +5,7 @@ export const loadUser = () => async (dispatch) => {
   try {
     dispatch({ type: "LoadUserRequest" });
     
-    const { data } = await api.get("/auth/user", { 
-      withCredentials: true,
-      headers: {
-        // Explicitly pass cookie if needed
-        Cookie: document.cookie
-      }
-    });
+    const { data } = await api.get("/auth/user");
     
     dispatch({ type: "LoadUserSuccess", payload: data.user });
   } catch (error) {
@@ -26,7 +20,7 @@ export const loadUser = () => async (dispatch) => {
 
 export const logout = () => async (dispatch) => {
   try {
-    await api.post("/auth/logout");
+    await api.get("/auth/logout");
 
     dispatch({ type: "LogoutSuccess" });
   } catch (error) {
