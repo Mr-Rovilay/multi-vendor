@@ -95,7 +95,7 @@ const ProfileContent = ({ active }) => {
                     <div className="relative cursor-pointer group">
                       <Avatar className="w-[150px] h-[150px] border-4 border-primary/50 group-hover:opacity-70 transition-opacity">
                         <AvatarImage 
-                          // src={avatarPreview || `${backend_url}${user.profile.avatar}`} 
+                          src={avatarPreview || `${backend_url}${user.profile.avatar}`} 
                           alt="Profile avatar" 
                         />
                         <AvatarFallback>{user?.name?.charAt(0)}</AvatarFallback>
