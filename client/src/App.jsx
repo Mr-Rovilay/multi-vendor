@@ -15,6 +15,7 @@ import OrderSuccessPage from "./pages/OrderSuccessPage";
 import ProfilePage from "./pages/ProfilePage";
 import { useSelector } from "react-redux";
 import ProtectedRoute from "./ProtectedRoute";
+import PageNotFound from "./pages/PageNotFound";
 
 export default function Home() {
   const [loading, setLoading] = useState(true);
@@ -57,6 +58,7 @@ export default function Home() {
           />
           <Route path="/about-us" element={<AboutUs />} />
           <Route path="/best-selling" element={<BestSellingPage />} />
+          <Route path="*" element={<PageNotFound />} />
         </Routes>
       )}
     </div>

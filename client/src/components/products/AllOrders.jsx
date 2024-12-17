@@ -39,6 +39,12 @@ import {
   SelectTrigger, 
   SelectValue 
 } from "@/components/ui/select";
+import { 
+  Accordion, 
+  AccordionContent, 
+  AccordionItem, 
+  AccordionTrigger 
+} from "@/components/ui/accordion";
 
 const getStatusVariant = (status) => {
   switch(status.toLowerCase()) {
@@ -110,10 +116,57 @@ const AllOrders = () => {
 
   const totalPages = Math.ceil(orders.length / ordersPerPage);
 
+  // Mobile view using Accordion
+  const MobileOrderView = () => (
+    <Accordion type="single" collapsible className="w-full md:hidden">
+      {currentOrders.map((order) => (
+        <AccordionItem key={order._id} value={`item-${order._id}`}>
+          <AccordionTrigger className="px-4">
+            <div className="flex items-center justify-between w-full">
+              <span>Order #{order._id.slice(-8)}</span>
+              <Badge variant={getStatusVariant(order.orderStatus)}>
+                {order.orderStatus}
+              </Badge>
+            </div>
+          </AccordionTrigger>
+          <AccordionContent className="px-4 pb-4">
+            <div className="space-y-2">
+              <div>
+                <span className="font-medium">Items:</span>
+                {order.orderItems.map((item, index) => (
+                  <div key={index} className="text-sm text-muted-foreground">
+                    {item.name}
+                  </div>
+                ))}
+              </div>
+              <div className="flex justify-between">
+                <div>
+                  <span className="font-medium">Total:</span>
+                  <p className="text-sm">${order.totalPrice.toLocaleString()}</p>
+                </div>
+                <div>
+                  <span className="font-medium">Date:</span>
+                  <p className="text-sm">{order.orderDate}</p>
+                </div>
+              </div>
+              <div className="flex items-center justify-between mt-2">
+                <Link to={`/order/${order._id}`}>
+                  <Button variant="outline" size="sm">
+                    View Details <ArrowRight className="w-4 h-4 ml-2" />
+                  </Button>
+                </Link>
+              </div>
+            </div>
+          </AccordionContent>
+        </AccordionItem>
+      ))}
+    </Accordion>
+  );
+
   return (
     <Card className="w-full">
       <CardHeader>
-        <div className="flex items-center justify-between">
+        <div className="flex flex-col items-start justify-between space-y-2 md:flex-row md:items-center md:space-y-0">
           <CardTitle>
             <div className="flex items-center">
               <ClipboardList className="w-6 h-6 mr-2" />
@@ -141,52 +194,58 @@ const AllOrders = () => {
         </div>
       </CardHeader>
       <CardContent>
-        <Table>
-          <TableHeader>
-            <TableRow>
-              <TableHead>Order ID</TableHead>
-              <TableHead>Items</TableHead>
-              <TableHead>Total Price</TableHead>
-              <TableHead>Order Date</TableHead>
-              <TableHead>Status</TableHead>
-              <TableHead>Actions</TableHead>
-            </TableRow>
-          </TableHeader>
-          <TableBody>
-            {currentOrders.map((order) => (
-              <TableRow key={order._id}>
-                <TableCell className="font-medium">
-                  #{order._id.slice(-8)}
-                </TableCell>
-                <TableCell>
-                  {order.orderItems.map((item, index) => (
-                    <div key={index}>{item.name}</div>
-                  ))}
-                </TableCell>
-                <TableCell>
-                  ${order.totalPrice.toLocaleString()}
-                </TableCell>
-                <TableCell>{order.orderDate}</TableCell>
-                <TableCell>
-                  <Badge variant={getStatusVariant(order.orderStatus)}>
-                    {getStatusIcon(order.orderStatus)}
-                    {order.orderStatus}
-                  </Badge>
-                </TableCell>
-                <TableCell>
-                  <Link to={`/order/${order._id}`}>
-                    <Button variant="outline" size="icon">
-                      <ArrowRight className="w-4 h-4" />
-                    </Button>
-                  </Link>
-                </TableCell>
+        {/* Desktop Table View */}
+        <div className="hidden overflow-x-auto md:block">
+          <Table>
+            <TableHeader>
+              <TableRow>
+                <TableHead>Order ID</TableHead>
+                <TableHead>Items</TableHead>
+                <TableHead>Total Price</TableHead>
+                <TableHead>Order Date</TableHead>
+                <TableHead>Status</TableHead>
+                <TableHead>Actions</TableHead>
               </TableRow>
-            ))}
-          </TableBody>
-        </Table>
+            </TableHeader>
+            <TableBody>
+              {currentOrders.map((order) => (
+                <TableRow key={order._id}>
+                  <TableCell className="font-medium">
+                    #{order._id.slice(-8)}
+                  </TableCell>
+                  <TableCell>
+                    {order.orderItems.map((item, index) => (
+                      <div key={index}>{item.name}</div>
+                    ))}
+                  </TableCell>
+                  <TableCell>
+                    ${order.totalPrice.toLocaleString()}
+                  </TableCell>
+                  <TableCell>{order.orderDate}</TableCell>
+                  <TableCell>
+                    <Badge variant={getStatusVariant(order.orderStatus)}>
+                      {getStatusIcon(order.orderStatus)}
+                      {order.orderStatus}
+                    </Badge>
+                  </TableCell>
+                  <TableCell>
+                    <Link to={`/order/${order._id}`}>
+                      <Button variant="outline" size="icon">
+                        <ArrowRight className="w-4 h-4" />
+                      </Button>
+                    </Link>
+                  </TableCell>
+                </TableRow>
+              ))}
+            </TableBody>
+          </Table>
+        </div>
+
+        {/* Mobile Accordion View */}
+        <MobileOrderView />
 
         {/* Pagination */}
-        <div className="flex items-center justify-between mt-4">
+        <div className="flex flex-col items-center justify-between mt-4 space-y-2 md:flex-row md:space-y-0">
           <Pagination>
             <PaginationContent>
               <PaginationItem>

@@ -7,16 +7,14 @@ import {
   RailSymbol,
   LockKeyhole, 
   LogOut, 
+  CreditCard,
   LayoutDashboard 
 } from "lucide-react";
 import { Link, useNavigate } from "react-router-dom";
 import { useSelector } from "react-redux";
 
 import { Button } from "@/components/ui/button";
-import {
-  Card,
-  CardContent,
-} from "@/components/ui/card";
+import { Card, CardContent } from "@/components/ui/card";
 import api from "@/utils/server";
 import { toast } from "sonner";
 
@@ -32,21 +30,23 @@ const ProfileSidebarItem = ({
   <Button
     variant={active === activeNumber ? "secondary" : "ghost"}
     className={`
-      w-full justify-start flex items-center
+      w-full justify-center md:justify-start flex items-center gap-2 transition-all duration-300 
+      ${active === activeNumber ? 'bg-gray-100' : 'hover:bg-gray-50'}
       ${className}
     `}
     onClick={onClick}
   >
+    {/* Icon with responsive size */}
     <Icon 
       className={`
-        w-6 h-6 
+        w-5 h-5 sm:w-6 sm:h-6 
         ${active === activeNumber ? 'text-primary' : 'text-muted-foreground'}
       `} 
     />
     {/* Label hidden on small screens */}
     <span 
       className={`
-        hidden md:inline-block ml-2
+        hidden sm:inline-block text-sm font-medium
         ${active === activeNumber ? 'text-primary' : 'text-muted-foreground'}
       `}
     >
@@ -88,12 +88,12 @@ const ProfileSidebar = ({ setActive, active }) => {
     { icon: RailSymbol, label: "Track Order", activeNumber: 5, action: () => setActive(5) },
     { icon: LockKeyhole, label: "Change Password", activeNumber: 6, action: () => setActive(6) },
     { icon: MapPin, label: "Address", activeNumber: 7, action: () => setActive(7) },
-    { icon: MapPin, label: "Payment Methods", activeNumber: 8, action: () => setActive(8) }
+    { icon: CreditCard, label: "Payment Methods", activeNumber: 8, action: () => setActive(8) }
   ];
 
   return (
-    <Card>
-      <CardContent className="pt-6 space-y-2">
+    <Card className="w-full">
+      <CardContent className="pt-6 space-y-3">
         {sidebarItems.map((item) => (
           <ProfileSidebarItem
             key={item.activeNumber}

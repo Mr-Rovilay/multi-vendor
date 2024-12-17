@@ -101,7 +101,7 @@ const ProfileContent = ({ active }) => {
                         <AvatarFallback>{user?.name?.charAt(0)}</AvatarFallback>
                       </Avatar>
                       <div className="absolute inset-0 flex items-center justify-center transition-opacity opacity-0 group-hover:opacity-100">
-                        <Camera className="w-8 h-8 text-white" />
+                        <Camera className="w-8 h-8 text-stone-300" />
                       </div>
                     </div>
                   </DialogTrigger>
