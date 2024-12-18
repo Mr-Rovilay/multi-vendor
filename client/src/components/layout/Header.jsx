@@ -2,7 +2,7 @@
 import { useState, useEffect } from "react";
 import { Link, useLocation } from "react-router-dom";
 import { useDispatch, useSelector } from 'react-redux';
-import { Search, Heart, ShoppingCart, X, Store, Menu, DoorClosedIcon as Close } from 'lucide-react';
+import { Search, X, Store, Menu,  } from 'lucide-react';
 import {
   NavigationMenu,
   NavigationMenuContent,
@@ -13,8 +13,7 @@ import {
 } from "@/components/ui/navigation-menu";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Badge } from "@/components/ui/badge";
-import { DropdownMenu } from "@/components/ui/dropdown-menu";
+import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from "@/components/ui/sheet";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { categoriesData, productData } from "../../static/data";
 import { cn } from "@/lib/utils";
@@ -23,6 +22,7 @@ import { loadUser } from "@/redux/actions/user";
 import { backend_url } from "@/utils/server";
 import CartSidebar from "../cart/CartSidebar";
 import WishlistSidebar from "../wishList/WishlistSidebar";
+import { DropdownMenu } from "../ui/dropdown-menu";
 
 const Header = () => {
   const dispatch = useDispatch();
@@ -37,7 +37,6 @@ const Header = () => {
   useEffect(() => {
     dispatch(loadUser());
   }, [dispatch]);
-
 
   const handleSearchChange = (e) => {
     const term = e.target.value;
@@ -63,10 +62,6 @@ const Header = () => {
   }, []);
 
   const isLinkActive = (path) => location.pathname === path;
-
-  const toggleMobileMenu = () => {
-    setMobileMenuOpen(!mobileMenuOpen);
-  };
 
   return (
     <header className="w-full bg-white shadow-sm">
@@ -120,22 +115,134 @@ const Header = () => {
             )}
           </div>
 
-          {/* Mobile Search Toggle - Visible on mobile */}
+          {/* Mobile Menu Toggle - Visible on mobile */}
           <div className="flex items-center space-x-2 md:hidden">
-            <Button
-              variant="ghost"
-              size="icon"
-              className="mr-2"
-              onClick={() => {}}
-            >
-            </Button>
-            <Button variant="ghost" size="icon" onClick={toggleMobileMenu}>
-              {mobileMenuOpen ? (
-                <Close className="w-5 h-5" />
-              ) : (
-                <Menu className="w-5 h-5" />
-              )}
-            </Button>
+            <Sheet open={mobileMenuOpen} onOpenChange={setMobileMenuOpen}>
+              <SheetTrigger asChild>
+                <Button variant="ghost" size="icon" onClick={() => setMobileMenuOpen(true)}>
+                  <Menu className="w-5 h-5" />
+                </Button>
+              </SheetTrigger>
+              <SheetContent side="left" className="w-[400px]">
+                <SheetHeader>
+                  <SheetTitle>
+                    <Link to="/" className="text-xl font-bold text-primary">MultiVendor</Link>
+                  </SheetTitle>
+                </SheetHeader>
+                
+                {/* Mobile Search */}
+                <div className="relative my-4">
+                  <Input
+                    type="text"
+                    placeholder="Search products..."
+                    className="w-full"
+                    value={searchTerm}
+                    onChange={handleSearchChange}
+                  />
+                  {searchTerm ? (
+                    <X
+                      className="absolute w-4 h-4 text-gray-500 -translate-y-1/2 cursor-pointer right-3 top-1/2"
+                      onClick={clearSearch}
+                    /> 
+                  ) : (
+                    <Search className="absolute w-4 h-4 text-gray-500 -translate-y-1/2 right-3 top-1/2" />
+                  )}
+                  {searchData && searchData.length !== 0 && (
+                    <div className="absolute z-10 w-full mt-1 bg-white border rounded-md shadow-lg">
+                      {searchData.map((product, index) => (
+                        <Link
+                          key={index}
+                          to={`/product/${product.name.replace(/\s+/g, "-")}`}
+                          className="block hover:bg-gray-100"
+                          onClick={() => setMobileMenuOpen(false)}
+                        >
+                          <div className="flex items-center p-2">
+                            <img
+                              src={product.image_Url[0].url}
+                              alt={product.name}
+                              className="object-cover w-10 h-10 mr-3"
+                            />
+                            <span>{product.name}</span>
+                          </div>
+                        </Link>
+                      ))}
+                    </div>
+                  )}
+                </div>
+
+                {/* Mobile Navigation Links */}
+                <div className="space-y-4">
+                  {[
+                    { path: "/", label: "Home" },
+                    { path: "/best-selling", label: "Best Selling" },
+                    { path: "/products", label: "Products" },
+                    { path: "/about-us", label: "About Us" },
+                    { path: "/faq", label: "FAQ" }
+                  ].map(({ path, label }) => (
+                    <Link
+                      key={path}
+                      to={path}
+                      className={cn(
+                        "block py-2 text-lg",
+                        isLinkActive(path) && "text-green-500 font-semibold"
+                      )}
+                      onClick={() => setMobileMenuOpen(false)}
+                    >
+                      {label}
+                    </Link>
+                  ))}
+                </div>
+
+                {/* Mobile Additional Actions */}
+                <div className="mt-6 space-y-4">
+                  <Button 
+                    asChild 
+                    variant="outline" 
+                    className="w-full"
+                    onClick={() => setMobileMenuOpen(false)}
+                  >
+                    <Link
+                      to="/sell"
+                      className="flex items-center justify-center"
+                    >
+                      <Store className="mr-2" /> Become a Seller
+                    </Link>
+                  </Button>
+
+                  <div className="flex justify-between items-center">
+                    <WishlistSidebar />
+                    <CartSidebar />
+                    {isAuthenticated ? (
+                      <NavigationMenu>
+                        <NavigationMenuList>
+                          <NavigationMenuItem>
+                            <NavigationMenuTrigger>
+                              <Avatar>
+                                <AvatarImage src={`${backend_url}${user.profile.avatar}`} />
+                                <AvatarFallback>{user?.name?.charAt(0)}</AvatarFallback>
+                              </Avatar>
+                            </NavigationMenuTrigger>
+                            <NavigationMenuContent>
+                              <ul className="p-2">
+                                <li>
+                                  <NavigationMenuLink href="/profile">Profile</NavigationMenuLink>
+                                </li>
+                              </ul>
+                            </NavigationMenuContent>
+                          </NavigationMenuItem>
+                        </NavigationMenuList>
+                      </NavigationMenu>
+                    ) : (
+                      <Button asChild>
+                        <Link to="/login" onClick={() => setMobileMenuOpen(false)}>
+                          Login
+                        </Link>
+                      </Button>
+                    )}
+                  </div>
+                </div>
+              </SheetContent>
+            </Sheet>
           </div>
 
           {/* Become Seller & Icons - Adjust for responsiveness */}
@@ -146,13 +253,13 @@ const Header = () => {
               size="lg"
               className="hidden lg:flex"
             >
-              <Link to="/sell" className="flex items-center">
+              <Link to="/seller" className="flex items-center">
                 <Store className="mr-2" /> Become a Seller
               </Link>
             </Button>
 
             <div className="flex space-x-3">
-             <WishlistSidebar/>
+              <WishlistSidebar/>
               <CartSidebar/>
               {isAuthenticated ? (
                 <NavigationMenu>
@@ -175,10 +282,8 @@ const Header = () => {
                   </NavigationMenuList>
                 </NavigationMenu>
               ) : (
-                <Button   asChild>
-                  <Link to="/login">
-                  <Button variant="">Login</Button>
-                  </Link>
+                <Button asChild>
+                  <Link to="/login">Login</Link>
                 </Button>
               )}
             </div>
@@ -207,200 +312,26 @@ const Header = () => {
 
             {/* Navigation Links */}
             <div className="flex space-x-5 md:space-x-6">
-              <Link
-                to="/"
-                className={cn(
-                  "hover:text-green-500",
-                  isLinkActive("/") && "text-green-500 font-semibold"
-                )}
-              >
-                Home
-              </Link>
-              <Link
-                to="/best-selling"
-                className={cn(
-                  "hover:text-green-500",
-                  isLinkActive("/best-selling") &&
-                    "text-green-500 font-semibold"
-                )}
-              >
-                Best Selling
-              </Link>
-              <Link
-                to="/products"
-                className={cn(
-                  "hover:text-green-500",
-                  isLinkActive("/products") && "text-green-500 font-semibold"
-                )}
-              >
-                Products
-              </Link>
-              <Link
-                to="/about-us"
-                className={cn(
-                  "hover:text-green-500",
-                  isLinkActive("/about-us") && "text-green-500 font-semibold"
-                )}
-              >
-                About us
-              </Link>
-              <Link
-                to="/faq"
-                className={cn(
-                  "hover:text-green-500",
-                  isLinkActive("/faq") && "text-green-500 font-semibold"
-                )}
-              >
-                FAQ
-              </Link>
+              {[
+                { path: "/", label: "Home" },
+                { path: "/best-selling", label: "Best Selling" },
+                { path: "/products", label: "Products" },
+                { path: "/about-us", label: "About us" },
+                { path: "/faq", label: "FAQ" }
+              ].map(({ path, label }) => (
+                <Link
+                  key={path}
+                  to={path}
+                  className={cn(
+                    "hover:text-green-500",
+                    isLinkActive(path) && "text-green-500 font-semibold"
+                  )}
+                >
+                  {label}
+                </Link>
+              ))}
             </div>
           </div>
-
-          {/* Mobile Navigation Drawer */}
-          {mobileMenuOpen && (
-            <div className="fixed inset-0 z-50 overflow-y-auto bg-white md:hidden">
-              <div className="p-4">
-                {/* Mobile Search */}
-                <div className="relative mb-4">
-                  <Input
-                    type="text"
-                    placeholder="Search products..."
-                    className="w-full"
-                    value={searchTerm}
-                    onChange={handleSearchChange}
-                  />
-                  {searchTerm ? (
-                    <X
-                      className="absolute w-4 h-4 text-gray-500 -translate-y-1/2 cursor-pointer right-3 top-1/2"
-                      onClick={clearSearch}
-                    /> 
-                  ) : (
-                    <Search className="absolute w-4 h-4 text-gray-500 -translate-y-1/2 right-3 top-1/2" />
-                  )}
-                      {searchData && searchData.length !== 0 && (
-              <div className="absolute z-10 w-full mt-1 bg-white border rounded-md shadow-lg">
-                {searchData.map((product, index) => (
-                  <Link
-                    key={index}
-                    to={`/product/${product.name.replace(/\s+/g, "-")}`}
-                    className="block hover:bg-gray-100"
-                  >
-                    <div className="flex items-center p-2">
-                      <img
-                        src={product.image_Url[0].url}
-                        alt={product.name}
-                        className="object-cover w-10 h-10 mr-3"
-                      />
-                      <span>{product.name}</span>
-                    </div>
-                  </Link>
-                ))}
-              </div>
-            )}
-                </div>
-
-                {/* Mobile Navigation Links */}
-                <div className="space-y-4">
-                  <Link
-                    to="/"
-                    className={cn(
-                      "block py-2 text-lg",
-                      isLinkActive("/") && "text-green-500 font-semibold"
-                    )}
-                    onClick={toggleMobileMenu}
-                  >
-                    Home
-                  </Link>
-                  <Link
-                    to="/best-selling"
-                    className={cn(
-                      "block py-2 text-lg",
-                      isLinkActive("/best-selling") &&
-                        "text-green-500 font-semibold"
-                    )}
-                    onClick={toggleMobileMenu}
-                  >
-                    Best Selling
-                  </Link>
-                  <Link
-                    to="/products"
-                    className={cn(
-                      "block py-2 text-lg",
-                      isLinkActive("/products") &&
-                        "text-green-500 font-semibold"
-                    )}
-                    onClick={toggleMobileMenu}
-                  >
-                    Products
-                  </Link>
-                  <Link
-                    to="/about-us"
-                    className={cn(
-                      "block py-2 text-lg",
-                      isLinkActive("/about-us") && "text-green-500 font-semibold"
-                    )}
-                    onClick={toggleMobileMenu}
-                  >
-                    About Us
-                  </Link>
-                  <Link
-                    to="/faq"
-                    className={cn(
-                      "block py-2 text-lg",
-                      isLinkActive("/faq") && "text-green-500 font-semibold"
-                    )}
-                    onClick={toggleMobileMenu}
-                  >
-                    FAQ
-                  </Link>
-                </div>
-
-                {/* Mobile Additional Actions */}
-                <div className="mt-6 space-y-4">
-                  <Button asChild variant="outline" className="w-full">
-                    <Link
-                      to="/sell"
-                      className="flex items-center justify-center"
-                    >
-                      <Store className="mr-2" /> Become a Seller
-                    </Link>
-                  </Button>
-
-                  <div className="flex justify-between">
-                  <WishlistSidebar/>
-                    <CartSidebar/>
-                    {isAuthenticated ? (
-                      <NavigationMenu>
-                        <NavigationMenuList>
-                          <NavigationMenuItem>
-                            <NavigationMenuTrigger>
-                              <Avatar>
-                                <AvatarImage src={user?.avatar} />
-                                <AvatarFallback>{user?.name?.charAt(0)}</AvatarFallback>
-                              </Avatar>
-                            </NavigationMenuTrigger>
-                            <NavigationMenuContent>
-                              <ul className="p-2">
-                                <li>
-                                  <NavigationMenuLink href="/profile">Profile</NavigationMenuLink>
-                                </li>
-                              </ul>
-                            </NavigationMenuContent>
-                          </NavigationMenuItem>
-                        </NavigationMenuList>
-                      </NavigationMenu>
-                    ) : (
-                      <Button   asChild>
-                  <Link to="/login">
-                  <Button variant="">Login</Button>
-                  </Link>
-                </Button>
-                    )}
-                  </div>
-                </div>
-              </div>
-            </div>
-          )}
         </nav>
       </div>
     </header>
@@ -408,4 +339,3 @@ const Header = () => {
 };
 
 export default Header;
-

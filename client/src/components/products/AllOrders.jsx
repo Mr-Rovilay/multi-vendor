@@ -10,7 +10,6 @@ import {
 
 import { 
   Card, 
-  CardContent, 
   CardHeader, 
   CardTitle 
 } from "@/components/ui/card";
@@ -193,7 +192,7 @@ const AllOrders = () => {
           </div>
         </div>
       </CardHeader>
-      <CardContent>
+     
         {/* Desktop Table View */}
         <div className="hidden overflow-x-auto md:block">
           <Table>
@@ -276,7 +275,7 @@ const AllOrders = () => {
             Page {currentPage} of {totalPages}
           </div>
         </div>
-      </CardContent>
+     
     </Card>
   );
 };

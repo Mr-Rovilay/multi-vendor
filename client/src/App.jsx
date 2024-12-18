@@ -16,6 +16,9 @@ import ProfilePage from "./pages/ProfilePage";
 import { useSelector } from "react-redux";
 import ProtectedRoute from "./ProtectedRoute";
 import PageNotFound from "./pages/PageNotFound";
+import Payment from "./pages/Payment";
+import CheckOutPage from "./pages/CheckOutPage";
+import SellersPage from "./pages/SellersPage";
 
 export default function Home() {
   const [loading, setLoading] = useState(true);
@@ -48,6 +51,15 @@ export default function Home() {
           <Route path="/product/:name" element={<ProductDetailsPage />} />
           <Route path="/order/success/:id" element={<OrderSuccessPage />} />
           <Route path="/faq" element={<FAQ />} />
+          <Route path="/payment" element={<Payment />} />
+          <Route
+            path="/checkout"
+            element={
+              <ProtectedRoute isAuthenticated={isAuthenticated}>
+                <CheckOutPage />
+              </ProtectedRoute>
+            }
+          />
           <Route
             path="/profile"
             element={
@@ -57,6 +69,7 @@ export default function Home() {
             }
           />
           <Route path="/about-us" element={<AboutUs />} />
+          <Route path="/seller" element={<SellersPage />} />
           <Route path="/best-selling" element={<BestSellingPage />} />
           <Route path="*" element={<PageNotFound />} />
         </Routes>

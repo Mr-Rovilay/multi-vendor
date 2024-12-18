@@ -11,6 +11,7 @@ import {
   TableHeader, 
   TableRow 
 } from '@/components/ui/table';
+import { Link } from 'react-router-dom';
 
 const CartSidebar = () => {
   const [openCart, setOpenCart] = useState(false);
@@ -176,8 +177,11 @@ const CartSidebar = () => {
                   <span className="font-bold">Total:</span>
                   <span className="font-bold">${calculateTotal()}</span>
                 </div>
-                <Button className="w-full" disabled={cartItems.length === 0}>
+                <Button  className="w-full" disabled={cartItems.length === 0}>
+                  <Link to={"/checkout"}>
+                  
                   Proceed to Checkout
+                  </Link>
                 </Button>
               </div>
             </motion.div>
