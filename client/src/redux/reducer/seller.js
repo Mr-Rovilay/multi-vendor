@@ -3,7 +3,7 @@ import { createReducer } from "@reduxjs/toolkit";
 const initialState = {
 authenticateShop: false,
   loading: false,
-  user: null,
+  // user: null,
   error: null,
   successMessage: null,
 };

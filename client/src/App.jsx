@@ -23,6 +23,8 @@ import ShopLogin from "./components/shop/ShopLogin";
 import ShopHomePage from "./pages/Shop/ShopHomePage";
 import SellerProtectedRoute from "./routes/SellerProtectedRoute";
 import ShopDashBoardPage from "./pages/Shop/ShopDashBoardPage";
+import ShopCreateProduct from "./pages/Shop/ShopCreateProduct";
+import ShopAllProducts from "./pages/Shop/ShopAllProducts";
 
 export default function Home() {
   const [loading, setLoading] = useState(true);
@@ -83,6 +85,22 @@ export default function Home() {
             element={
               <SellerProtectedRoute authenticateShop={authenticateShop}>
                 <ShopHomePage />
+              </SellerProtectedRoute>
+            }
+          />
+            <Route
+            path="/dashboard-create-product"
+            element={
+              <SellerProtectedRoute authenticateShop={authenticateShop}>
+                <ShopCreateProduct />
+              </SellerProtectedRoute>
+            }
+          />
+            <Route
+            path="/dashboard-products"
+            element={
+              <SellerProtectedRoute authenticateShop={authenticateShop}>
+                <ShopAllProducts />
               </SellerProtectedRoute>
             }
           />

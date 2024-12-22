@@ -1,14 +1,25 @@
 import axios from "axios";
 
+// Get the backend URL from environment variables or use a default
+const baseURL = "http://localhost:5000";
+
+// Create an Axios instance
 const api = axios.create({
-  baseURL: "http://localhost:5000",
+  baseURL: baseURL,
   withCredentials: true,
-  headers: {
-    'Content-Type': 'application/json',
-    'Accept': 'application/json'
+});
+
+// Helper for backend URL
+export const backend_url = baseURL;
+
+// Example of setting Content-Type dynamically during requests
+api.interceptors.request.use((config) => {
+  if (config.data instanceof FormData) {
+    config.headers['Content-Type'] = 'multipart/form-data';
+  } else {
+    config.headers['Content-Type'] = 'application/json';
   }
+  return config;
 });
 
 export default api;
-
-export const backend_url = "http://localhost:5000"

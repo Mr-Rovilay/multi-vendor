@@ -57,6 +57,7 @@ export default function ShopLogin() {
       if (response.data.success) {
         toast.success(response.data.message || "Login successful!");
         navigate("/dashboard");
+        window.location.reload(true); 
       } else {
         toast.error(response.data.message || "Login failed");
       }

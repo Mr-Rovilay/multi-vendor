@@ -1,5 +1,5 @@
 /* eslint-disable react/prop-types */
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { useSelector } from "react-redux";
 import {
   Gift,
@@ -29,6 +29,8 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import api from "@/utils/server";
+import { toast } from "sonner";
 
 const navItems = [
   { icon: Gift, label: "Coupons", path: "/dashboard/cupouns" },
@@ -47,8 +49,23 @@ const NavLink = ({ icon: Icon, label, path }) => (
   </Link>
 );
 
+
 export default function ShopDashBoardHeader() {
   const { seller } = useSelector((state) => state.seller);
+  const navigate = useNavigate()
+
+  const logoutHandler = () => {
+    api
+      .get(`/shop/logout`)
+      .then((res) => {
+        navigate("/");
+        toast.success(res.data.message);
+        window.location.reload(); 
+      })
+      .catch((error) => {
+        toast.error(error.response.data.message);
+      });
+  };
 
   return (
     <header className="sticky top-0 z-50 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
@@ -100,13 +117,11 @@ export default function ShopDashBoardHeader() {
             </Button>
           </DropdownMenuTrigger>
           <DropdownMenuContent align="end" className="cursor-pointer">
-            <DropdownMenuLabel>My Account</DropdownMenuLabel>
-            <DropdownMenuSeparator />
-            <DropdownMenuItem asChild className="cursor-pointer">
+            <DropdownMenuLabel asChild className="cursor-pointer">
               <Link to={`/shop/${seller._id}`}>View Shop</Link>
-            </DropdownMenuItem>
-            <DropdownMenuItem className="cursor-pointer">Settings</DropdownMenuItem>
-            <DropdownMenuItem className="cursor-pointer">Log out</DropdownMenuItem>
+            </DropdownMenuLabel>
+            <DropdownMenuSeparator />
+            <DropdownMenuItem className="cursor-pointer"  onClick={logoutHandler}>Log out</DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>
       </div>

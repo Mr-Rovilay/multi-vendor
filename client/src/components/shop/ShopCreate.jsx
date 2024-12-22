@@ -72,12 +72,9 @@ const ShopCreate = () => {
       formData.append("address", data.address);
       formData.append("zipCode", data.zipCode);
   
-      // Log both the original data and FormData entries
-      console.log("Form Data:", data);
-      console.log("FormData entries:");
-      for (let pair of formData.entries()) {
-        console.log(pair[0], pair[1]);
-      }
+      // for (let pair of formData.entries()) {
+      //   console.log(pair[0], pair[1]);
+      // }
   
       if (!data.avatar) {
         toast.error("Please upload an avatar");
