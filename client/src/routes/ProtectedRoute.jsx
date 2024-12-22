@@ -6,8 +6,6 @@ function ProtectedRoute({ isAuthenticated, children }) {
   if (!isAuthenticated) {
     return <Navigate to="/login" replace />;
   }
-
-  // If authenticated, render the children components
   return children;
 }
 

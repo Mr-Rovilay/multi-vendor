@@ -11,7 +11,7 @@ authenticateShop: false,
 export const sellerReducer = createReducer(initialState, (builder) => {
   builder
     .addCase('LoadSellerRequest', (state) => {
-      state.isLoading = true;
+      state.loading = true;
     })
     .addCase('LoadSellerSuccess', (state, action) => {
       state.authenticateShop = true;
@@ -19,7 +19,7 @@ export const sellerReducer = createReducer(initialState, (builder) => {
       state.seller = action.payload;
     })
     .addCase('LoadSellerFail', (state, action) => {
-      state.isLoading = false;
+      state.loading = false;
       state.error = action.payload;
       state.authenticateShop = false;
       state.seller = null;

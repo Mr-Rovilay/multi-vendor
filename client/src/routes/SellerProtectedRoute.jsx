@@ -5,6 +5,7 @@ import { Navigate } from "react-router-dom";
 
 const SellerProtectedRoute = ({ children }) => {
   const {  authenticateShop } = useSelector((state) => state.seller);
+  console.log(authenticateShop)
     if (!authenticateShop) {
       return <Navigate to={`/shop-login`} replace />;
     }

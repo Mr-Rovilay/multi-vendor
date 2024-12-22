@@ -36,7 +36,7 @@ export default function ShopLogin() {
     if (authenticateShop === true) {
       navigate(`/dashboard`);
     }
-  }, [authenticateShop]);
+  }, []);
 
   // Configure axios to include credentials
   api.defaults.withCredentials = true;
