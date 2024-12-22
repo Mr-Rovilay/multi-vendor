@@ -19,7 +19,6 @@ import { categoriesData, productData } from "../../static/data";
 import { cn } from "@/lib/utils";
 import Dropdown from "./Dropdown";
 import { loadUser } from "@/redux/actions/user";
-import { backend_url } from "@/utils/server";
 import CartSidebar from "../cart/CartSidebar";
 import WishlistSidebar from "../wishList/WishlistSidebar";
 import { DropdownMenu } from "../ui/dropdown-menu";
@@ -202,14 +201,14 @@ const Header = () => {
                     onClick={() => setMobileMenuOpen(false)}
                   >
                     <Link
-                      to="/sell"
+                      to="/shop-create"
                       className="flex items-center justify-center"
                     >
                       <Store className="mr-2" /> Become a Seller
                     </Link>
                   </Button>
 
-                  <div className="flex justify-between items-center">
+                  <div className="flex items-center justify-between">
                     <WishlistSidebar />
                     <CartSidebar />
                     {isAuthenticated ? (
@@ -218,7 +217,7 @@ const Header = () => {
                           <NavigationMenuItem>
                             <NavigationMenuTrigger>
                               <Avatar>
-                                <AvatarImage src={`${backend_url}${user.profile.avatar}`} />
+                                {/* <AvatarImage src={user.profile?.avatar} /> */}
                                 <AvatarFallback>{user?.name?.charAt(0)}</AvatarFallback>
                               </Avatar>
                             </NavigationMenuTrigger>
@@ -251,9 +250,9 @@ const Header = () => {
               asChild
               variant="outline"
               size="lg"
-              className="hidden lg:flex"
+              className="hidden md:ml-3 md:flex"
             >
-              <Link to="/seller" className="flex items-center">
+              <Link  to="/shop-create" className="flex items-center">
                 <Store className="mr-2" /> Become a Seller
               </Link>
             </Button>
@@ -267,7 +266,7 @@ const Header = () => {
                     <NavigationMenuItem>
                       <NavigationMenuTrigger>
                         <Avatar>
-                          <AvatarImage src={`${backend_url}${user.profile.avatar}`} />
+                          {/* <AvatarImage src={user.profile?.avatar} /> */}
                           <AvatarFallback>{user?.name?.charAt(0)}</AvatarFallback>
                         </Avatar>
                       </NavigationMenuTrigger>

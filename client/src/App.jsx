@@ -3,7 +3,7 @@ import { useEffect, useState } from "react";
 import LoginForm from "./pages/LoginForm";
 import SignupForm from "./pages/SignUpForm";
 import Store from "./redux/store";
-import { loadUser } from "./redux/actions/user";
+import { loadSeller, loadUser } from "./redux/actions/user";
 import HomePage from "./pages/HomePage";
 import ProductsPage from "./pages/ProductsPage";
 import BestSellingPage from "./pages/BestSellingPage";
@@ -14,20 +14,26 @@ import ProductDetailsPage from "./pages/ProductDetailsPage";
 import OrderSuccessPage from "./pages/OrderSuccessPage";
 import ProfilePage from "./pages/ProfilePage";
 import { useSelector } from "react-redux";
-import ProtectedRoute from "./ProtectedRoute";
+import ProtectedRoute from "./routes/ProtectedRoute";
 import PageNotFound from "./pages/PageNotFound";
 import Payment from "./pages/Payment";
 import CheckOutPage from "./pages/CheckOutPage";
-import SellersPage from "./pages/SellersPage";
+import ShopCreate from "./components/shop/ShopCreate";
+import ShopLogin from "./components/shop/ShopLogin";
+import ShopHomePage from "./pages/Shop/ShopHomePage";
+import SellerProtectedRoute from "./routes/SellerProtectedRoute";
+import ShopDashBoardPage from "./pages/Shop/ShopDashBoardPage";
 
 export default function Home() {
   const [loading, setLoading] = useState(true);
   const { isAuthenticated } = useSelector((state) => state.user);
+  const { authenticateShop } = useSelector((state) => state.seller);
 
   useEffect(() => {
     const fetchUser = async () => {
       try {
         await Store.dispatch(loadUser());
+        await Store.dispatch(loadSeller());
       } catch (error) {
         console.error("Failed to load user", error);
       } finally {
@@ -69,7 +75,25 @@ export default function Home() {
             }
           />
           <Route path="/about-us" element={<AboutUs />} />
-          <Route path="/seller" element={<SellersPage />} />
+
+          <Route path="/shop-create" element={<ShopCreate />} />
+          <Route path="/shop-login" element={<ShopLogin />} />
+          <Route
+            path="/shop/:id"
+            element={
+              <SellerProtectedRoute authenticateShop={authenticateShop}>
+                <ShopHomePage />
+              </SellerProtectedRoute>
+            }
+          />
+          <Route
+            path="/dashboard"
+            element={
+              <SellerProtectedRoute authenticateShop={authenticateShop}>
+                <ShopDashBoardPage />
+              </SellerProtectedRoute>
+            }
+          />
           <Route path="/best-selling" element={<BestSellingPage />} />
           <Route path="*" element={<PageNotFound />} />
         </Routes>

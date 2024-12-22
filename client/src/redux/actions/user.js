@@ -18,6 +18,23 @@ export const loadUser = () => async (dispatch) => {
   }
 };
 
+export const loadSeller = () => async (dispatch) => {
+  try {
+    dispatch({ type: "LoadSellerRequest" });
+    
+    const { data } = await api.get("/shop/get-shop");
+    
+    dispatch({ type: "LoadSellerSuccess", payload: data.seller });
+  } catch (error) {
+    console.error("Load User Error:", error);
+    console.error("Error Response:", error.response?.data);
+    dispatch({
+      type: "LoadSellerFail",
+      payload: error.response?.data?.message || "An error occurred",
+    });
+  }
+};
+
 export const logout = () => async (dispatch) => {
   try {
     await api.get("/auth/logout");

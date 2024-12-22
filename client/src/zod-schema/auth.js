@@ -47,3 +47,20 @@ export const profileSchema = z.object({
     .or(z.literal(''))
 });
 
+export const shopCreateSchema = z.object({
+  name: z.string().min(2, { message: "Shop name must be at least 2 characters" }),
+  email: z.string().email({ message: "Invalid email address" }),
+  phoneNumber: z.string()
+    .regex(/^\d{11}$/, { message: "Phone number must be 11 Nigerian digits" }),
+  address: z.string().min(5, { message: "Address must be at least 5 characters" }),
+  zipCode: z.string().regex(/^\d{5}$/, { message: "Zip code must be 5 digits" }),
+  password: z.string()
+    .min(8, { message: "Password must be at least 8 characters" })
+    .regex(/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/, {
+      message: "Password must include uppercase, lowercase, number, and special character"
+    }),
+    avatar: z.any().refine((file) => file instanceof File, {
+      message: "Please upload a valid file",
+    }),
+});
+

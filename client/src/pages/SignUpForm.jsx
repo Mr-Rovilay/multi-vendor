@@ -280,7 +280,7 @@ export default function Signup() {
                       <img
                         src={avatarPreview}
                         alt="Avatar Preview"
-                        className="w-16 h-16 mt-2 rounded-full"
+                        className="object-cover w-16 h-16 mt-2 rounded-full"
                       />
                     )}
                     <FormMessage />
