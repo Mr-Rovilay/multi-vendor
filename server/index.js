@@ -6,11 +6,16 @@ import connectDB from "./db/db.js";
 import authRoutes from "./routes/authRoutes.js";
 import shopRoutes from "./routes/shopRoutes.js";
 import productRoutes from "./routes/productRoutes.js";  
+import eventRoutes from "./routes/eventRoutes.js";  
+
 
 const PORT = process.env.PORT || 5000;
 // Initialize the Express application
 const app = express();
-app.use(bodyParser.urlencoded({ extended: true }));
+app.use(bodyParser.json({limit: '50mb'}));
+app.use(bodyParser.urlencoded({limit: '50mb', extended: true}));
+app.use(express.urlencoded({ extended: true }));
+app.use(express.json());
 
 app.use(
   cors({
@@ -20,14 +25,13 @@ app.use(
     allowedHeaders: ["Content-Type", "Authorization", "Cookie"],
   })
 );
-app.use(express.urlencoded({ extended: true }));
-app.use(express.json());
 
 app.use(cookieParser());
 
 app.use("/auth", authRoutes);
 app.use("/shop", shopRoutes);
 app.use("/product", productRoutes);
+app.use("/event", eventRoutes);
 
 app.use("/", express.static("uploads"));
 

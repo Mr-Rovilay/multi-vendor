@@ -253,6 +253,13 @@ export const categoriesData = [
   },
   {
     id: 10,
+    title: "Electronics",
+    subTitle: "",
+    image_Url:
+      "https://searchspring.com/wp-content/uploads/2022/10/Hero-Image-Platform-Others-2.png",
+  },
+  {
+    id: 11,
     title: "Others",
     subTitle: "",
     image_Url:
