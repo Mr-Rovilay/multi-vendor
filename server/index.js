@@ -12,6 +12,7 @@ import conversationRoutes from "./routes/conversationRoutes.js";
 import messageRoutes from "./routes/messageRoutes.js";
 import orderRoutes from "./routes/orderRoutes.js";
 import withdrawRoutes from "./routes/withdrawRoutes.js";
+import paymentRoutes from "./routes/paymentRoutes.js";
 
 
 const PORT = process.env.PORT || 5000;
@@ -40,7 +41,8 @@ app.use("/event", eventRoutes);
 app.use("/coupon", couponRoutes);
 app.use("/conversation", conversationRoutes);
 app.use("/message", messageRoutes);
-app.use("/orders", orderRoutes);
+app.use("/order", orderRoutes);
+app.use("/payment", paymentRoutes);
 app.use("/withdraw", withdrawRoutes);
 
 
