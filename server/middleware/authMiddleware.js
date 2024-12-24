@@ -35,5 +35,12 @@ export const authenticateShop = async (req, res, next) => {
   }
 };
 
+export const isAdmin = (role) => (req, res, next) => {  
+ if(!role.includes(req.user.role)){
+    return res.status(403).json({ message: `${req.user.role} can not access this resources!` })
+  };
+  next(); 
+}
+
 
 

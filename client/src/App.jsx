@@ -27,6 +27,7 @@ import ShopCreateProduct from "./pages/Shop/ShopCreateProduct";
 import ShopAllProducts from "./pages/Shop/ShopAllProducts";
 import ShopDashBoardEventPage from "./pages/Shop/ShopDashBoardEventPage";
 import ShopAllEvents from "./pages/Shop/ShopAllEvents";
+import ShopAllCoupons from "./pages/Shop/ShopAllCoupons";
 
 export default function Home() {
   const [loading, setLoading] = useState(true);
@@ -127,6 +128,14 @@ export default function Home() {
             element={
               <SellerProtectedRoute authenticateShop={authenticateShop}>
                 <ShopAllEvents />
+              </SellerProtectedRoute>
+            }
+          />
+               <Route
+            path="/dashboard-coupons"
+            element={
+              <SellerProtectedRoute authenticateShop={authenticateShop}>
+                <ShopAllCoupons />
               </SellerProtectedRoute>
             }
           />

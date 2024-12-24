@@ -6,7 +6,12 @@ import connectDB from "./db/db.js";
 import authRoutes from "./routes/authRoutes.js";
 import shopRoutes from "./routes/shopRoutes.js";
 import productRoutes from "./routes/productRoutes.js";  
-import eventRoutes from "./routes/eventRoutes.js";  
+import eventRoutes from "./routes/eventRoutes.js"; 
+import couponRoutes from "./routes/couponRoutes.js";
+import conversationRoutes from "./routes/conversationRoutes.js";
+import messageRoutes from "./routes/messageRoutes.js";
+import orderRoutes from "./routes/orderRoutes.js";
+import withdrawRoutes from "./routes/withdrawRoutes.js";
 
 
 const PORT = process.env.PORT || 5000;
@@ -32,6 +37,13 @@ app.use("/auth", authRoutes);
 app.use("/shop", shopRoutes);
 app.use("/product", productRoutes);
 app.use("/event", eventRoutes);
+app.use("/coupon", couponRoutes);
+app.use("/conversation", conversationRoutes);
+app.use("/message", messageRoutes);
+app.use("/orders", orderRoutes);
+app.use("/withdraw", withdrawRoutes);
+
+
 
 app.use("/", express.static("uploads"));
 

@@ -1,7 +1,7 @@
 import cloudinary from "../middleware/cloudinary.js";
+import Order from "../models/Order.js";
 import Product from "../models/ProductModel.js";
 import Shop from "../models/ShopModel.js";
-// import Order from "../models/ShopOrder.js";
 
 // Create Product
 export const createProduct = async (req, res) => {
@@ -111,77 +111,77 @@ export const getAllProduct = async (req, res) => {
 };
 
 // Create/Update Review
-// export const createNewReview = async (req, res) => {
-//   try {
-//     const { user, rating, comment, productId, orderId } = req.body;
+export const createNewReview = async (req, res) => {
+  try {
+    const { user, rating, comment, productId, orderId } = req.body;
 
-//     if (!user || !rating || !productId) {
-//       return res.status(400).json({
-//         success: false,
-//         message: "Missing required fields",
-//       });
-//     }
+    if (!user || !rating || !productId) {
+      return res.status(400).json({
+        success: false,
+        message: "Missing required fields",
+      });
+    }
 
-//     const product = await Product.findById(productId);
+    const product = await Product.findById(productId);
     
-//     if (!product) {
-//       return res.status(404).json({
-//         success: false,
-//         message: "Product not found",
-//       });
-//     }
+    if (!product) {
+      return res.status(404).json({
+        success: false,
+        message: "Product not found",
+      });
+    }
 
-//     const review = {
-//       user,
-//       rating,
-//       comment,
-//       productId,
-//     };
+    const review = {
+      user,
+      rating,
+      comment,
+      productId,
+    };
 
-//     const reviewIndex = product.reviews.findIndex(
-//       (rev) => rev.user._id.toString() === user._id.toString()
-//     );
+    const reviewIndex = product.reviews.findIndex(
+      (rev) => rev.user._id.toString() === user._id.toString()
+    );
 
-//     if (reviewIndex >= 0) {
-//       // Update existing review
-//       product.reviews[reviewIndex] = review;
-//     } else {
-//       // Add new review
-//       product.reviews.push(review);
-//     }
+    if (reviewIndex >= 0) {
+      // Update existing review
+      product.reviews[reviewIndex] = review;
+    } else {
+      // Add new review
+      product.reviews.push(review);
+    }
 
-//     // Calculate average rating
-//     const avgRating = product.reviews.reduce((acc, item) => item.rating + acc, 0) / 
-//                      product.reviews.length;
+    // Calculate average rating
+    const avgRating = product.reviews.reduce((acc, item) => item.rating + acc, 0) / 
+                     product.reviews.length;
     
-//     product.ratings = Number(avgRating.toFixed(1));
+    product.ratings = Number(avgRating.toFixed(1));
 
-//     await product.save({ validateBeforeSave: false });
+    await product.save({ validateBeforeSave: false });
 
-//     if (orderId) {
-//       await Order.findByIdAndUpdate(
-//         orderId,
-//         { 
-//           $set: { "cart.$[elem].isReviewed": true } 
-//         },
-//         { 
-//           arrayFilters: [{ "elem._id": productId }], 
-//           new: true 
-//         }
-//       );
-//     }
+    if (orderId) {
+      await Order.findByIdAndUpdate(
+        orderId,
+        { 
+          $set: { "cart.$[elem].isReviewed": true } 
+        },
+        { 
+          arrayFilters: [{ "elem._id": productId }], 
+          new: true 
+        }
+      );
+    }
 
-//     res.status(200).json({
-//       success: true,
-//       message: "Review submitted successfully!",
-//     });
-//   } catch (error) {
-//     res.status(500).json({ 
-//       success: false, 
-//       message: error.message 
-//     });
-//   }
-// };
+    res.status(200).json({
+      success: true,
+      message: "Review submitted successfully!",
+    });
+  } catch (error) {
+    res.status(500).json({ 
+      success: false, 
+      message: error.message 
+    });
+  }
+};
 
 // Admin Get All Products
 export const adminGetAllProduct = async (req, res) => {

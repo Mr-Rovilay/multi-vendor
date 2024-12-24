@@ -70,7 +70,7 @@ const sidebarItems = [
     id: 9,
     icon: Gift,
     label: "Discount Codes",
-    path: "/dashboard-coupouns",
+    path: "/dashboard-coupons",
   },
   {
     id: 10,
