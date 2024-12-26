@@ -1,19 +1,32 @@
-/* eslint-disable react/prop-types */
 import { useState, useEffect } from "react"
-import {  Heart, ShoppingCart, MessageSquare } from "lucide-react"
+import { Heart, ShoppingCart, MessageSquare } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Dialog, DialogContent } from "@/components/ui/dialog"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { toast } from "sonner"
+import { addToCart } from "@/redux/actions/cartActions"
+import { addToWishlist, removeFromWishlist } from "@/redux/actions/wishlistActions"
+import { useDispatch, useSelector } from "react-redux"
 
 const ProductDetailsCard = ({ setOpen, data }) => {
-  const [count, setCount] = useState(1)
-  const [click, setClick] = useState(false)
+  const { cart } = useSelector((state) => state.cart);
+  const { wishlist } = useSelector((state) => state.wishlist);
+  const dispatch = useDispatch();
+  const [count, setCount] = useState(1);
+  const [isFavorite, setIsFavorite] = useState(false);
 
-  // Placeholder for Redux dispatches and cart/wishlist state
-  const dispatch = null // Replace with actual Redux dispatch
-  const cart = [] // Replace with actual cart state
-  const wishlist = [] // Replace with actual wishlist state
+  useEffect(() => {
+    if (wishlist && wishlist.find((i) => i._id === data._id)) {
+      setIsFavorite(true);
+    } else {
+      setIsFavorite(false);
+    }
+  }, [wishlist, data._id]);
+
+  const handleMessageSubmit = () => {
+    // Implement message submission logic
+    toast.info("Message feature coming soon!");
+  };
 
   const decrementCount = () => {
     if (count > 1) {
@@ -22,49 +35,37 @@ const ProductDetailsCard = ({ setOpen, data }) => {
   };
 
   const incrementCount = () => {
-    setCount(count + 1);
+    if (count < data.stock) {
+      setCount(count + 1);
+    } else {
+      toast.warning("Cannot exceed available stock!");
+    }
   };
 
-  const addToCartHandler = (id) => {
-    const isItemExists = cart.find((i) => i._id === id);
+  const handleWishlistToggle = () => {
+    if (isFavorite) {
+      dispatch(removeFromWishlist(data));
+    } else {
+      dispatch(addToWishlist(data));
+    }
+    setIsFavorite(!isFavorite);
+  };
+
+  const handleAddToCart = () => {
+    const isItemExists = cart && cart.find((i) => i._id === data._id);
     if (isItemExists) {
       toast.error("Item already in cart!");
-    } else {
-      if (data.stock < count) {
-        toast.error("Product stock limited!");
-      } else {
-        const cartData = { ...data, qty: count };
-        // Uncomment and replace with actual Redux action
-        // dispatch(addTocart(cartData));
-        toast.success("Item added to cart successfully!");
-      }
+      return;
     }
-  };
-
-  useEffect(() => {
-    if (wishlist.find((i) => i._id === data._id)) {
-      setClick(true);
-    } else {
-      setClick(false);
+    
+    if (data.stock < count) {
+      toast.error("Product stock limited!");
+      return;
     }
-  }, [wishlist, data._id]);
-
-  const toggleWishlistHandler = () => {
-    setClick(!click);
-    if (click) {
-      // Uncomment and replace with actual Redux action
-      // dispatch(removeFromWishlist(data));
-      toast.success("Removed from wishlist");
-    } else {
-      // Uncomment and replace with actual Redux action
-      // dispatch(addToWishlist(data));
-      toast.success("Added to wishlist");
-    }
-  };
-
-  const handleMessageSubmit = () => {
-    // Implement message submission logic
-    toast.info("Message feature coming soon");
+    
+    const cartData = { ...data, qty: count };
+    dispatch(addToCart(cartData));
+    toast.success("Item added to cart successfully!");
   };
 
   return (
@@ -74,19 +75,21 @@ const ProductDetailsCard = ({ setOpen, data }) => {
           {/* Left Column - Product Image and Shop Info */}
           <div className="space-y-4">
             <img 
-              src={data.image_Url[0].url} 
+              src={data.images?.[0]?.url}
               alt={data.name} 
               className="object-cover w-full rounded-lg h-96"
             />
             
             <div className="flex items-center space-x-4">
               <Avatar>
-                <AvatarImage src={data.shop.shop_avatar.url} alt={data.shop.name} />
-                <AvatarFallback>{data.shop.name.charAt(0)}</AvatarFallback>
+                <AvatarImage src={data.shop?.shop_avatar?.url} alt={data.shop?.name} />
+                <AvatarFallback>{data.shop?.name?.charAt(0)}</AvatarFallback>
               </Avatar>
               <div>
-                <h3 className="font-semibold">{data.shop.name}</h3>
-                <p className="text-sm text-muted-foreground">({data.shop.ratings}) Ratings</p>
+                <h3 className="font-semibold">{data.shop?.name}</h3>
+                <p className="text-sm text-muted-foreground">
+                  {data?.ratings || 0} Ratings
+                </p>
               </div>
             </div>
 
@@ -98,7 +101,9 @@ const ProductDetailsCard = ({ setOpen, data }) => {
               <MessageSquare className="w-4 h-4 mr-2" /> Send Message
             </Button>
 
-            <p className="text-destructive">(50) Sold out</p>
+            <p className="text-destructive">
+              {data?.sold_out || 0} Sold out
+            </p>
           </div>
 
           {/* Right Column - Product Details */}
@@ -108,11 +113,11 @@ const ProductDetailsCard = ({ setOpen, data }) => {
 
             <div className="flex items-center space-x-4">
               <span className="text-2xl font-bold text-primary">
-                ${data.discount_price}
+                ${data.discountPrice}
               </span>
-              {data.price && (
+              {data.originalPrice > data.discountPrice && (
                 <span className="text-lg text-red-500 line-through">
-                  ${data.price}
+                  ${data.originalPrice}
                 </span>
               )}
             </div>
@@ -123,6 +128,7 @@ const ProductDetailsCard = ({ setOpen, data }) => {
                   variant="outline" 
                   size="icon" 
                   onClick={decrementCount}
+                  disabled={count <= 1}
                 >
                   -
                 </Button>
@@ -131,6 +137,7 @@ const ProductDetailsCard = ({ setOpen, data }) => {
                   variant="outline" 
                   size="icon" 
                   onClick={incrementCount}
+                  disabled={count >= data.stock}
                 >
                   +
                 </Button>
@@ -139,19 +146,23 @@ const ProductDetailsCard = ({ setOpen, data }) => {
               <Button 
                 variant="ghost" 
                 size="icon"
-                onClick={toggleWishlistHandler}
+                onClick={handleWishlistToggle}
               >
-                <Heart 
-                  className={`h-6 w-6 ${click ? 'text-red-500 fill-red-500' : 'text-gray-500'}`} 
-                />
+                 <Heart
+                      className={`w-4 h-4 ${
+                        isFavorite ? "fill-red-500 text-red-500" : ""
+                      }`}
+                    />
               </Button>
             </div>
 
             <Button 
               className="w-full" 
-              onClick={() => addToCartHandler(data._id)}
+              onClick={handleAddToCart}
+              disabled={data.stock < 1}
             >
-              <ShoppingCart className="w-4 h-4 mr-2" /> Add to Cart
+              <ShoppingCart className="w-4 h-4 mr-2" /> 
+              {data.stock < 1 ? 'Out of Stock' : 'Add to Cart'}
             </Button>
           </div>
         </div>

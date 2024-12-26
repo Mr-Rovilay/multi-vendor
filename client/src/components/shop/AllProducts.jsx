@@ -22,10 +22,11 @@ import {
 import { Trash2, Eye } from "lucide-react";
 import { deleteProduct, getAllProductsShop } from "@/redux/actions/productAction";
 import { toast } from "sonner";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 
 const AllProducts = () => {
   const { products, isLoading } = useSelector((state) => state.products);
+  console.log(products)
   const { seller } = useSelector((state) => state.seller);
   const dispatch = useDispatch();
 
@@ -54,9 +55,9 @@ const AllProducts = () => {
   }
 
   return (
-    <Card className="w-full mx-auto">
+    <div className="w-full mx-auto">
       <CardHeader>
-        <CardTitle>All Products</CardTitle>
+        <CardTitle className="font-bold">All Products</CardTitle>
       </CardHeader>
       {products?.length > 0 ? (
         <CardContent>
@@ -129,7 +130,7 @@ const AllProducts = () => {
       ) : (
         <div className="text-center text-gray-500">No products found</div>
       )}
-    </Card>
+    </div>
   );
 };
 

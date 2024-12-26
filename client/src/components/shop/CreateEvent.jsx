@@ -24,9 +24,7 @@ const CreateEvent = () => {
   const { error, success } = useSelector((state) => state.events);
   const [loading, setLoading] = useState(false);
   const [images, setImages] = useState([]);
-  const [startDate, setStartDate] = useState(null);
-  const [endDate, setEndDate] = useState(null);
-  
+
   const [formData, setFormData] = useState({
     name: "",
     description: "",
@@ -35,8 +33,8 @@ const CreateEvent = () => {
     originalPrice: "",
     discountPrice: "",
     stock: "",
-    startDate: null,
-    endDate: null
+    startDate: "", // Changed from start_Date
+    endDate: "", // Changed from finish_Date
   });
 
   useEffect(() => {
@@ -46,30 +44,29 @@ const CreateEvent = () => {
     if (success) {
       toast.success("Event created successfully!");
       navigate("/dashboard-events");
+      window.location.reload();
     }
   }, [error, success, navigate]);
 
   const handleStartDateChange = (e) => {
-    const newStartDate = new Date(e.target.value);
-    setStartDate(newStartDate);
-    setFormData(prev => ({
+    const date = e.target.value;
+    setFormData((prev) => ({
       ...prev,
-      startDate: e.target.value
+      startDate: date, // Changed from start_Date
     }));
   };
 
   const handleEndDateChange = (e) => {
-    const newEndDate = new Date(e.target.value);
-    setEndDate(newEndDate);
-    setFormData(prev => ({
+    const date = e.target.value;
+    setFormData((prev) => ({
       ...prev,
-      endDate: e.target.value
+      endDate: date, // Changed from finish_Date
     }));
   };
 
   const today = new Date().toISOString().slice(0, 10);
-  const minEndDate = startDate
-    ? new Date(startDate.getTime() + 3 * 24 * 60 * 60 * 1000)
+  const minEndDate = formData.startDate
+    ? new Date(new Date(formData.startDate).getTime() + 3 * 24 * 60 * 60 * 1000)
         .toISOString()
         .slice(0, 10)
     : today;
@@ -108,9 +105,16 @@ const CreateEvent = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    
-    if (!formData.name || !formData.description || !formData.category || 
-        !formData.discountPrice || !formData.stock || !startDate || !endDate) {
+
+    if (
+      !formData.name ||
+      !formData.description ||
+      !formData.category ||
+      !formData.discountPrice ||
+      !formData.stock ||
+      !formData.startDate ||
+      !formData.endDate
+    ) {
       toast.error("Please fill in all required fields");
       return;
     }
@@ -122,15 +126,14 @@ const CreateEvent = () => {
 
     setLoading(true);
     try {
-      await dispatch(
-        createEvent({
-          ...formData,
-          shopId: seller._id,
-          images,
-          startDate: startDate.toISOString(),
-          endDate: endDate.toISOString()
-        })
-      );
+      const eventData = {
+        ...formData,
+        shopId: seller._id,
+        images,
+      };
+
+      console.log("Submitting event data:", eventData);
+      await dispatch(createEvent(eventData));
     } catch (error) {
       toast.error(error.message || "Failed to create event");
     } finally {
@@ -139,8 +142,8 @@ const CreateEvent = () => {
   };
 
   return (
-    <div className="container max-w-2xl p-6 mx-auto bg-white rounded-lg shadow-md">
-      <h1 className="mb-6 text-2xl font-semibold text-center">Create Event</h1>
+    <div className="container max-w-2xl p-6 mx-auto rounded-lg shadow-md">
+      <h1 className="mb-6 text-2xl font-bold text-center">Create Event</h1>
 
       <form onSubmit={handleSubmit} className="space-y-4">
         {/* Name */}
@@ -245,12 +248,12 @@ const CreateEvent = () => {
 
         {/* Event Dates */}
         <div>
-          <Label htmlFor="start-date">Event Start Date</Label>
+          <Label htmlFor="startDate">Event Start Date</Label>
           <Input
             type="date"
             id="startDate"
             name="startDate"
-            value={formData.startDate || ''}
+            value={formData.startDate}
             onChange={handleStartDateChange}
             min={today}
             required
@@ -258,16 +261,16 @@ const CreateEvent = () => {
         </div>
 
         <div>
-          <Label htmlFor="end-date">Event End Date</Label>
+          <Label htmlFor="endDate">Event End Date</Label>
           <Input
             type="date"
             id="endDate"
             name="endDate"
-            value={formData.endDate || ''}
+            value={formData.endDate}
             onChange={handleEndDateChange}
             min={minEndDate}
             required
-            disabled={!startDate}
+            disabled={!formData.startDate}
           />
         </div>
 
@@ -305,11 +308,7 @@ const CreateEvent = () => {
         </div>
 
         {/* Submit Button */}
-        <Button
-          type="submit"
-          className="w-full"
-          disabled={loading}
-        >
+        <Button type="submit" className="w-full" disabled={loading}>
           {loading ? "Creating..." : "Create Event"}
         </Button>
       </form>

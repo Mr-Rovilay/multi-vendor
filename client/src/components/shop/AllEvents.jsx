@@ -55,7 +55,7 @@ const AllEvents = () => {
   return (
     <Card className="w-full mx-auto ">
       <CardHeader>
-        <CardTitle>All Events</CardTitle>
+        <CardTitle className="font-bold">All Events</CardTitle>
       </CardHeader>
       <CardContent>
         <div className="border rounded-md">

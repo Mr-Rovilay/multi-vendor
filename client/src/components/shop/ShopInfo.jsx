@@ -1,6 +1,6 @@
-import { useState } from "react";
-import { Link } from "react-router-dom";
-import { useSelector } from "react-redux";
+import { useEffect, useState } from "react";
+import { Link, useParams } from "react-router-dom";
+import { useDispatch, useSelector } from "react-redux";
 import { Calendar, MapPin, Phone, Package, Star } from "lucide-react";
 import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
@@ -17,6 +17,8 @@ import {
   TooltipProvider,
   TooltipTrigger,
 } from "@/components/ui/tooltip";
+import api from "@/utils/server";
+import { getAllProductsShop } from "@/redux/actions/productAction";
 
 const InfoItem = ({ icon: Icon, label, value }) => (
   <div className="flex items-start p-3 space-x-3">
@@ -48,8 +50,44 @@ const LoadingSkeleton = () => (
 );
 
 export default function ShopInfo({ isOwner }) {
+  const [data,setData] = useState({});
+  const {products} = useSelector((state) => state.products);
+
   const [isLoading, setIsLoading] = useState(false);
-  const { seller } = useSelector((state) => state.seller);
+
+  const {id} = useParams();
+  const dispatch = useDispatch();
+
+  useEffect(() => {
+    const fetchShopInfo = async () => {
+      try {
+        setIsLoading(true);
+        // Dispatching the action to get all products
+        dispatch(getAllProductsShop(id));
+  
+        // Fetching shop info
+        const response = await api.get(`/shop/get-shop-info/${id}`);
+        setData(response.data.shop);
+  
+      } catch (error) {
+        console.error("Error fetching shop info:", error);
+      } finally {
+        setIsLoading(false);
+      }
+    };
+  
+    fetchShopInfo();
+  }, [dispatch, id]);
+   
+
+  const totalReviewsLength =
+  products &&
+  products.reduce((acc, product) => acc + product.reviews.length, 0);
+
+const totalRatings = products && products.reduce((acc,product) => acc + product.reviews.reduce((sum,review) => sum + review.rating, 0),0);
+
+const averageRating = totalRatings / totalReviewsLength || 0;
+
 
   if (isLoading) {
     return <LoadingSkeleton />;
@@ -63,17 +101,17 @@ export default function ShopInfo({ isOwner }) {
             <Tooltip>
               <TooltipTrigger asChild>
                 <Avatar className="w-20 h-20">
-                  <AvatarImage src={seller.avatar?.url} alt={seller.name} className="object-cover" />
-                  <AvatarFallback>{seller.name?.[0]}</AvatarFallback>
+                  <AvatarImage src={data.avatar?.url} alt={data.name} className="object-cover" />
+                  <AvatarFallback>{data.name?.[0]}</AvatarFallback>
                 </Avatar>
               </TooltipTrigger>
               <TooltipContent>Shop Avatar</TooltipContent>
             </Tooltip>
           </TooltipProvider>
         </div>
-        <CardTitle className="mt-4">{seller.name}</CardTitle>
+        <CardTitle className="mt-4">{data.name}</CardTitle>
         <CardDescription className="text-sm text-muted-foreground">
-          {seller.description}
+          {data.description}
         </CardDescription>
       </CardHeader>
       
@@ -81,28 +119,27 @@ export default function ShopInfo({ isOwner }) {
         <InfoItem
           icon={MapPin}
           label="Address"
-          value={seller.address}
+          value={data.address}
         />
         <InfoItem
           icon={Phone}
           label="Phone Number"
-          value={seller.phoneNumber}
+          value={data.phoneNumber}
         />
-        {/* <InfoItem
+        <InfoItem
           icon={Package}
           label="Total Products"
           value={products?.length || 0}
-        /> */}
+        />
         <InfoItem
           icon={Star}
           label="Shop Ratings"
-          value="4/5"
-        //   value={`${averageRating}/5`}
+          value={`${averageRating}/5`}
         />
         <InfoItem
           icon={Calendar}
           label="Joined On"
-          value={seller?.createdAt?.slice(0, 10)}
+          value={data?.createdAt?.slice(0, 10)}
         />
 
         {isOwner && (

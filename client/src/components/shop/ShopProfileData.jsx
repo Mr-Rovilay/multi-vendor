@@ -1,13 +1,26 @@
-import { useState } from "react";
-import { Link } from "react-router-dom";
+import { useEffect } from "react";
+import { Link, useParams } from "react-router-dom";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"; // ShadCN Tabs
 import { Button } from "@/components/ui/button"; 
-import { productData } from "@/static/data";
-import Events from "../Events/Events";
 import ProductCard from "../productCard/ProductCard";
+import { useDispatch, useSelector } from "react-redux";
+import { getAllProductsShop } from "@/redux/actions/productAction";
+import { getAllEventsShop } from "@/redux/actions/eventAction";
 
 const ShopProfileData = ({ isOwner }) => {
-  const [allReviews, setAllReviews] = useState([]); // Example review state
+  const { products } = useSelector((state) => state.products);
+  const { events } = useSelector((state) => state.events);
+  const { id } = useParams();
+  const dispatch = useDispatch();
+
+  useEffect(() => {
+    dispatch(getAllProductsShop(id));
+    dispatch(getAllEventsShop(id));
+  }, [dispatch]);
+
+
+  const allReviews =
+    products && products.map((product) => product.reviews).flat();
 
   return (
     <div className="">
@@ -31,16 +44,16 @@ const ShopProfileData = ({ isOwner }) => {
 
         {/* Shop Products Tab */}
         <TabsContent value="products" className="grid grid-cols-1 gap-6 mt-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
-          {productData?.map((product, index) => (
+          {products?.map((product, index) => (
             <ProductCard key={index} data={product} isShop />
           ))}
         </TabsContent>
 
         {/* Running Events Tab */}
         <TabsContent value="events" className="mt-4">
-          {Events?.length > 0 ? (
+          {events?.length > 0 ? (
             <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
-              {Events.map((event, index) => (
+              {events.map((event, index) => (
                 <ProductCard key={index} data={event} isShop isEvent />
               ))}
             </div>

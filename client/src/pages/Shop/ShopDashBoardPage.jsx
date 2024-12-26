@@ -7,8 +7,8 @@ const ShopDashBoardPage = () => {
   return (
     <div>
     <ShopDashBoardHeader/>
-    <div className="flex items-center justify-between w-full">
-      <div className="w-[60px] md:w-[330px]">
+    <div className="flex">
+    <div className="w-[60px] md:w-[330px] fixed top-16 bottom-0">
         <DashBoardSideBar active={1}/>
       </div>
     </div>

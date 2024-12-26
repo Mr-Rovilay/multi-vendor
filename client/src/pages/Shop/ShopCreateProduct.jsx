@@ -6,11 +6,11 @@ const ShopCreateProduct = () => {
   return (
     <div>
         <ShopDashBoardHeader/>
-        <div className="flex items-center justify-between w-full">
-      <div className="w-[60px] md:w-[330px]">
+        <div className="flex">
+        <div className="w-[60px] md:w-[330px] fixed top-16 bottom-0">
         <DashboardSidebar active={4}/>
       </div>
-      <div className="flex justify-center w-full">
+      <div className="flex-1 ml-[60px] md:ml-[330px] pt-4 overflow-y-auto">
         <CreateProduct/>
       </div>
     </div>

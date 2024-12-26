@@ -1,17 +1,27 @@
 import { useEffect, useState } from "react";
 import ProductCard from "../productCard/ProductCard";
-import { productData } from "@/static/data";
 import { CardHeader, CardTitle } from "@/components/ui/card";
+import { useDispatch, useSelector } from "react-redux";
+import { getAllProducts } from "@/redux/actions/productAction";
 
 const BestDeals = () => {
   const [data, setData] = useState([]);
+  const { allProducts } = useSelector((state) => state.products);
+  const dispatch = useDispatch();
 
   useEffect(() => {
-    const d =
-      productData && productData.sort((a, b) => b.total_sell - a.total_sell);
-    const first_five = d.slice(0, 5);
-    setData(first_five);
-  }, []);
+    dispatch(getAllProducts());
+  }, [dispatch]);
+
+  useEffect(() => {
+    if (allProducts && allProducts.length > 0) {
+      const sortedData = [...allProducts].sort(
+        (a, b) => b.sold_out - a.sold_out
+      );
+      const firstFive = sortedData.slice(0, 5);
+      setData(firstFive);
+    }
+  }, [allProducts]);
 
   return (
     <div className="bg-gradient-to-br from-blue-50 to-white">
@@ -21,11 +31,13 @@ const BestDeals = () => {
             Best Deals
           </CardTitle>
         </CardHeader>
-        <div className="grid grid-cols-1 gap-[20px] md:grid-cols-2 md:gap-[25px] lg:grid-cols-4 lg:gap-[25px] xl:grid-cols-5 xl:gap-[30px] mb-12 border-0">
+        <div className="grid grid-cols-1 gap-[20px] md:grid-cols-3 md:gap-[25px] lg:grid-cols-4 lg:gap-[25px] xl:grid-cols-5 xl:gap-[30px] mb-12 border-0">
           {
             <>
               {data &&
-                data.map((i, index) => <ProductCard data={i} key={index} />)}
+                data.map((i, index) => {
+                  return <ProductCard data={i} key={index} />;
+                })}
             </>
           }
         </div>

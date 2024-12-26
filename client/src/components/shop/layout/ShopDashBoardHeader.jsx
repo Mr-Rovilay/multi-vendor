@@ -32,35 +32,39 @@ import {
 import api from "@/utils/server";
 import { toast } from "sonner";
 
+// Navigation items
 const navItems = [
-  { icon: Gift, label: "Coupons", path: "/dashboard/cupouns" },
+  { icon: Gift, label: "Coupons", path: "/dashboard/coupons" },
   { icon: Tag, label: "Events", path: "/dashboard-events" },
   { icon: ShoppingBag, label: "Products", path: "/dashboard-products" },
   { icon: Package, label: "Orders", path: "/dashboard-orders" },
   { icon: MessageSquare, label: "Messages", path: "/dashboard-messages" },
 ];
 
+// NavLink Component
 const NavLink = ({ icon: Icon, label, path }) => (
   <Link to={path}>
     <Button variant="ghost" className="justify-start w-full gap-2">
       <Icon className="w-4 h-4" />
-      <span className="hidden md:inline">{label}</span>
+      {/* Labels are visible on all screen sizes */}
+      <span>{label}</span>
     </Button>
   </Link>
 );
 
-
+// Main Component
 export default function ShopDashBoardHeader() {
   const { seller } = useSelector((state) => state.seller);
-  const navigate = useNavigate()
+  const navigate = useNavigate();
 
+  // Logout Handler
   const logoutHandler = () => {
     api
       .get(`/shop/logout`)
       .then((res) => {
         navigate("/");
         toast.success(res.data.message);
-        window.location.reload(); 
+        window.location.reload();
       })
       .catch((error) => {
         toast.error(error.response.data.message);
@@ -70,7 +74,9 @@ export default function ShopDashBoardHeader() {
   return (
     <header className="sticky top-0 z-50 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
       <div className="flex items-center justify-between h-16 max-pad-container">
+        {/* Mobile Menu and Logo */}
         <div className="flex items-center gap-4">
+          {/* Mobile Navigation Menu */}
           <Sheet>
             <SheetTrigger asChild>
               <Button variant="ghost" size="icon" className="md:hidden">
@@ -85,14 +91,14 @@ export default function ShopDashBoardHeader() {
               </div>
             </SheetContent>
           </Sheet>
-          
 
+          {/* Logo */}
           <Link to="/dashboard" className="text-xl font-bold sm:text-2xl text-primary">
             MultiVendor
           </Link>
-       
         </div>
 
+        {/* Desktop Navigation Menu */}
         <NavigationMenu className="hidden md:flex">
           <NavigationMenuList>
             {navItems.map((item) => (
@@ -107,11 +113,12 @@ export default function ShopDashBoardHeader() {
           </NavigationMenuList>
         </NavigationMenu>
 
+        {/* User Dropdown Menu */}
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
             <Button variant="ghost" className="relative w-10 h-10 rounded-full">
               <Avatar className="w-10 h-10">
-                <AvatarImage src={seller.avatar?.url} alt={seller.name} className="object-cover"/>
+                <AvatarImage src={seller.avatar?.url} alt={seller.name} className="object-cover" />
                 <AvatarFallback>{seller.name?.[0]}</AvatarFallback>
               </Avatar>
             </Button>
@@ -121,7 +128,9 @@ export default function ShopDashBoardHeader() {
               <Link to={`/shop/${seller._id}`}>View Shop</Link>
             </DropdownMenuLabel>
             <DropdownMenuSeparator />
-            <DropdownMenuItem className="cursor-pointer"  onClick={logoutHandler}>Log out</DropdownMenuItem>
+            <DropdownMenuItem className="cursor-pointer" onClick={logoutHandler}>
+              Log out
+            </DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>
       </div>

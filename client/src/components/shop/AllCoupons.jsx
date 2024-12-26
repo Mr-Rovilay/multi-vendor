@@ -25,7 +25,7 @@ import {
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Card, CardContent } from "@/components/ui/card";
+import { CardContent } from "@/components/ui/card";
 import api from "@/utils/server";
 import { toast } from "sonner";
 
@@ -102,7 +102,7 @@ const AllCoupons = () => {
   }
 
   return (
-    <Card className="w-full max-w-5xl mx-auto mt-8">
+    <div className="w-full mx-auto mt-8">
       <CardContent className="p-6">
         <div className="flex items-center justify-between mb-6">
           <h2 className="text-2xl font-bold">Coupon Management</h2>
@@ -219,7 +219,7 @@ const AllCoupons = () => {
           </DialogContent>
         </Dialog>
       </CardContent>
-    </Card>
+    </div>
   );
 };
 

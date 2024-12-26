@@ -84,7 +84,7 @@ export default function ShopLogin() {
     <div className="flex items-center justify-center min-h-screen bg-gray-100">
       <Card className="w-full max-w-md">
         <CardHeader className="text-center">
-          <CardTitle>Shop Login</CardTitle>
+          <CardTitle className="font-bold">Shop Login</CardTitle>
           <CardDescription>
             Enter your credentials to access your account
           </CardDescription>

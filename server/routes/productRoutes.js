@@ -8,7 +8,7 @@ const router = express.Router();
 router.post('/create-product', upload, createProduct);
 router.get('/get-all-products-shop/:id',getAllProductShop);
 router.delete('/delete-shop-product/:id',authenticateShop, deleteShopProductId);
-router.get('/get-all-product', getAllProduct);
+router.get('/get-all-products', getAllProduct);
 router.get('/admin-all-product',verifyToken, adminGetAllProduct);
  router.put('/create-new-review', verifyToken, createNewReview);
 

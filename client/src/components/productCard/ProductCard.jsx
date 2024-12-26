@@ -1,7 +1,6 @@
-/* eslint-disable react/prop-types */
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
-import { Heart, Eye, ShoppingCart, Star } from "lucide-react";
+import { Heart, Eye, ShoppingCart } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardFooter } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
@@ -12,28 +11,61 @@ import {
   TooltipTrigger,
 } from "@/components/ui/tooltip";
 import ProductDetailsCard from "../ProductDetailsCard/ProductDetailsCard";
+import { useDispatch, useSelector } from "react-redux";
+import { addToWishlist, removeFromWishlist } from "@/redux/actions/wishlistActions";
+import { toast } from "sonner";
+import { addToCart } from "@/redux/actions/cartActions";
+import Ratings from "../products/Ratings";
 
-const ProductCard = ({ data }) => {
+const ProductCard = ({ data, isEvent }) => {
+  const { wishlist } = useSelector((state) => state.wishlist);
+  const { cart } = useSelector((state) => state.cart);
   const [isFavorite, setIsFavorite] = useState(false);
   const [isDetailsOpen, setIsDetailsOpen] = useState(false);
-  const productName = data.name.replace(/\s+/g, "-");
+  const dispatch = useDispatch();
 
-  const renderStars = () => {
-    return Array(5)
-      .fill()
-      .map((_, index) => (
-        <Star key={index} className="w-4 h-4 text-yellow-400 fill-current" />
-      ));
+  useEffect(() => {
+    if (wishlist && wishlist.find((i) => i._id === data._id)) {
+      setIsFavorite(true);
+    } else {
+      setIsFavorite(false);
+    }
+  }, [wishlist, data._id]);
+
+  const handleWishlistToggle = () => {
+    if (isFavorite) {
+      dispatch(removeFromWishlist(data));
+    } else {
+      dispatch(addToWishlist(data));
+    }
+    setIsFavorite(!isFavorite);
   };
+
+  const handleAddToCart = () => {
+    const isItemExists = cart && cart.find((i) => i._id === data._id);
+    if (isItemExists) {
+      toast.error("Item already in cart!");
+    } else {
+      if (data.stock < 1) {
+        toast.error("Product stock limited!");
+      } else {
+        const cartData = { ...data, qty: 1 };
+        dispatch(addToCart(cartData));
+        toast.success("Item added to cart successfully!");
+      }
+    }
+  };
+
+  const productPrice = data.originalPrice === 0 ? data.originalPrice : data.discountPrice;
+  const displayName = data.name.length > 30 ? `${data.name.slice(0, 30)}...` : data.name;
 
   return (
     <Card className="w-full max-w-sm mx-auto">
       <CardContent className="p-4">
         <div className="relative">
-          <Link to={`/product/${productName}`}>
+        <Link to={`${isEvent === true ? `/product/${data._id}?isEvent=true` : `/product/${data._id}`}`}>
             <img
-              src={data.image_Url[0]?.url}
-              alt={data.name}
+              src={data.images && data.images?.[0]?.url}
               className="object-cover w-full h-48 rounded-md"
             />
           </Link>
@@ -44,7 +76,7 @@ const ProductCard = ({ data }) => {
                   <Button
                     variant="secondary"
                     size="icon"
-                    onClick={() => setIsFavorite(!isFavorite)}
+                    onClick={handleWishlistToggle}
                   >
                     <Heart
                       className={`w-4 h-4 ${
@@ -66,7 +98,7 @@ const ProductCard = ({ data }) => {
                   <Button
                     variant="secondary"
                     size="icon"
-                    onClick={() => setIsDetailsOpen(!isDetailsOpen)}
+                    onClick={() => setIsDetailsOpen(true)}
                   >
                     <Eye className="w-4 h-4" />
                   </Button>
@@ -82,7 +114,7 @@ const ProductCard = ({ data }) => {
                   <Button
                     variant="secondary"
                     size="icon"
-                    onClick={() => setIsDetailsOpen(!isDetailsOpen)}
+                    onClick={handleAddToCart}
                   >
                     <ShoppingCart className="w-4 h-4" />
                   </Button>
@@ -96,33 +128,31 @@ const ProductCard = ({ data }) => {
         </div>
         <div className="mt-4">
           <Link
-            to={`/`}
-            className="text-sm text-muted-foreground hover:underline"
+            to={`/shop/preview/${data?.shop._id}`}
+            className="text-sm text-blue-400 lowercase hover:underline"
           >
             {data.shop.name}
           </Link>
-          <Link to={`/product/${productName}`} className="block mt-1">
-            <h3 className="text-lg font-semibold leading-tight">
-              {data.name.length > 30
-                ? `${data.name.slice(0, 30)}...`
-                : data.name}
+          <Link to={`${isEvent === true ? `/product/${data._id}?isEvent=true` : `/product/${data._id}`}`} className="block mt-1">
+            <h3 className="text-lg font-semibold leading-tight lowercase">
+              {displayName}
             </h3>
           </Link>
-          <div className="flex items-center mt-2">{renderStars()}</div>
+          <div className="flex items-center mt-2">
+            <Ratings rating={data?.ratings} />
+          </div>
         </div>
       </CardContent>
       <CardFooter className="flex items-center justify-between pt-0">
-        <div>
-          <span className="text-lg font-bold">
-            ${data.price === 0 ? data.price : data.discount_price}
-          </span>
-          {data.discount_price && (
-            <span className="ml-2 text-sm text-red-500 line-through text-muted-foreground">
-              ${data.discount_price}
+        <div className="flex gap-2">
+          {data.originalPrice !== data.discountPrice && (
+            <span className="text-sm text-red-500 line-through text-muted-foreground">
+              ${data.originalPrice}
             </span>
           )}
+          <span className="text-lg font-bold">${productPrice}</span>
         </div>
-        <Badge variant="secondary">{data.total_sell} sold</Badge>
+        <Badge variant="secondary">{data?.sold_out} sold</Badge>
       </CardFooter>
       {isDetailsOpen && (
         <ProductDetailsCard setOpen={setIsDetailsOpen} data={data} />
