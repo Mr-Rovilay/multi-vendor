@@ -129,7 +129,7 @@ const ProductCard = ({ data, isEvent }) => {
         <div className="mt-4">
           <Link
             to={`/shop/preview/${data?.shop._id}`}
-            className="text-sm text-blue-400 lowercase hover:underline"
+            className="text-sm font-bold hover:underline"
           >
             {data.shop.name}
           </Link>
@@ -138,7 +138,7 @@ const ProductCard = ({ data, isEvent }) => {
               {displayName}
             </h3>
           </Link>
-          <div className="flex items-center mt-2">
+          <div className="flex items-center mt-2 text-xs">
             <Ratings rating={data?.ratings} />
           </div>
         </div>
@@ -150,7 +150,7 @@ const ProductCard = ({ data, isEvent }) => {
               ${data.originalPrice}
             </span>
           )}
-          <span className="text-lg font-bold">${productPrice}</span>
+          <span className="text-sm font-bold">${productPrice}</span>
         </div>
         <Badge variant="secondary">{data?.sold_out} sold</Badge>
       </CardFooter>

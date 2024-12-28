@@ -3,7 +3,6 @@ import bcrypt from 'bcryptjs';
 import Shop from '../models/ShopModel.js';
 import cloudinary from '../middleware/cloudinary.js';
 
-
 const generateToken = (shop) => {
   return jwt.sign({ id: shop._id }, process.env.JWT_SECRET, {
     expiresIn: process.env.JWT_EXPIRES,
@@ -74,7 +73,6 @@ export const createShop = async (req, res) => {
     });
   }
 };
-
 
 // Login shop function
 export const loginShop = async (req, res) => {
@@ -165,4 +163,177 @@ export const logoutShop = (req, res) => {
   });
 };
 
+// Get shop info by ID
+export const getShopInfoById = async (req, res) => {
+  try {
+    const shop = await Shop.findById(req.params.id);
+    res.status(200).json({
+      success: true,
+      shop,
+    });
+  } catch (error) {
+    res.status(500).json({
+      success: false,
+      message: error.message,
+    });
+  }
+};
 
+// Update shop avatar
+export const updateShopAvatar = async (req, res) => {
+  try {
+    let existsSeller = await Shop.findById(req.seller._id);
+    const imageId = existsSeller.avatar.public_id;
+
+    await cloudinary.v2.uploader.destroy(imageId);
+
+    const myCloud = await cloudinary.v2.uploader.upload(req.body.avatar, {
+      folder: "avatars",
+      width: 150,
+    });
+
+    existsSeller.avatar = {
+      public_id: myCloud.public_id,
+      url: myCloud.secure_url,
+    };
+
+    await existsSeller.save();
+
+    res.status(200).json({
+      success: true,
+      seller: existsSeller,
+    });
+  } catch (error) {
+    res.status(500).json({
+      success: false,
+      message: error.message,
+    });
+  }
+};
+
+// Update seller info
+export const updateSellerInfo = async (req, res) => {
+  try {
+    const { name, description, address, phoneNumber, zipCode } = req.body;
+
+    const shop = await Shop.findById(req.seller._id);
+
+    if (!shop) {
+      return res.status(404).json({
+        success: false,
+        message: "Shop not found",
+      });
+    }
+
+    shop.name = name;
+    shop.description = description;
+    shop.address = address;
+    shop.phoneNumber = phoneNumber;
+    shop.zipCode = zipCode;
+
+    await shop.save();
+
+    res.status(200).json({
+      success: true,
+      shop,
+    });
+  } catch (error) {
+    res.status(500).json({
+      success: false,
+      message: error.message,
+    });
+  }
+};
+
+// Get all sellers for admin
+export const getAdminAllSellers = async (req, res) => {
+  try {
+    const sellers = await Shop.find().sort({
+      createdAt: -1,
+    });
+    res.status(200).json({
+      success: true,
+      sellers,
+    });
+  } catch (error) {
+    res.status(500).json({
+      success: false,
+      message: error.message,
+    });
+  }
+};
+
+// Delete seller by ID (Admin)
+export const deleteSellerById = async (req, res) => {
+  try {
+    const seller = await Shop.findById(req.params.id);
+
+    if (!seller) {
+      return res.status(404).json({
+        success: false,
+        message: "Seller not found",
+      });
+    }
+
+    await Shop.findByIdAndDelete(req.params.id);
+
+    res.status(200).json({
+      success: true,
+      message: "Seller deleted successfully!",
+    });
+  } catch (error) {
+    res.status(500).json({
+      success: false,
+      message: error.message,
+    });
+  }
+};
+
+// Update seller withdraw methods
+export const updateWithdrawMethod = async (req, res) => {
+  try {
+    const { withdrawMethod } = req.body;
+
+    const seller = await Shop.findByIdAndUpdate(req.seller._id, {
+      withdrawMethod,
+    });
+
+    res.status(200).json({
+      success: true,
+      seller,
+    });
+  } catch (error) {
+    res.status(500).json({
+      success: false,
+      message: error.message,
+    });
+  }
+};
+
+// Delete seller withdraw methods (Only for seller)
+export const deleteWithdrawMethod = async (req, res) => {
+  try {
+    const seller = await Shop.findById(req.seller._id);
+
+    if (!seller) {
+      return res.status(404).json({
+        success: false,
+        message: "Seller not found",
+      });
+    }
+
+    seller.withdrawMethod = null;
+
+    await seller.save();
+
+    res.status(200).json({
+      success: true,
+      seller,
+    });
+  } catch (error) {
+    res.status(500).json({
+      success: false,
+      message: error.message,
+    });
+  }
+};

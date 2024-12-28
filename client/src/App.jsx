@@ -28,6 +28,7 @@ import ShopAllProducts from "./pages/Shop/ShopAllProducts";
 import ShopDashBoardEventPage from "./pages/Shop/ShopDashBoardEventPage";
 import ShopAllEvents from "./pages/Shop/ShopAllEvents";
 import ShopAllCoupons from "./pages/Shop/ShopAllCoupons";
+import ShopPreviewPage from "./pages/Shop/ShopPreviewPage";
 
 export default function Home() {
   const [loading, setLoading] = useState(true);
@@ -59,10 +60,11 @@ export default function Home() {
           <Route path="/login" element={<LoginForm />} />
           <Route path="/signup" element={<SignupForm />} />
           <Route path="/products" element={<ProductsPage />} />
-          <Route path="/product/:name" element={<ProductDetailsPage />} />
+          <Route path="/product/:id" element={<ProductDetailsPage />} />
           <Route path="/order/success/:id" element={<OrderSuccessPage />} />
           <Route path="/faq" element={<FAQ />} />
           <Route path="/payment" element={<Payment />} />
+          <Route path="/shop/preview/:id" element={<ShopPreviewPage />} />
           <Route
             path="/checkout"
             element={

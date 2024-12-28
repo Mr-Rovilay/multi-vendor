@@ -68,6 +68,7 @@ export default function ShopInfo({ isOwner }) {
         // Fetching shop info
         const response = await api.get(`/shop/get-shop-info/${id}`);
         setData(response.data.shop);
+        console.log(response.data);
   
       } catch (error) {
         console.error("Error fetching shop info:", error);

@@ -2,31 +2,50 @@ import Footer from "@/components/footer/Footer";
 import Header from "@/components/layout/Header";
 import ProductDetails from "@/components/products/ProductDetails";
 import SuggestedProduct from "@/components/products/SuggestedProduct";
-import { productData } from "@/static/data";
+import { getAllProducts } from "@/redux/actions/productAction";
 import { useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
+import { useDispatch, useSelector } from "react-redux";
+import { useParams, useSearchParams } from "react-router-dom";
 
 const ProductDetailsPage = () => {
-  const { name } = useParams(); // Destructure `name` from the route parameters
-  const [data, setData] = useState(null);
+  // Add more detailed logging
+  const productState = useSelector((state) => state.products);
+  const eventState = useSelector((state) => state.events);
+  
+  console.log('Full product state:', productState);
+  console.log('Full event state:', eventState);
 
-  // Ensure `name` is properly accessed and manipulated
-  const productName = name ? name.replace(/-/g, " ") : "";
+  const { allProducts } = productState;
+  const { allEvents } = eventState;
+  const { id } = useParams();
+  const [data, setData] = useState(null);
+  const [searchParams] = useSearchParams();
+  const eventData = searchParams.get("isEvent");
+  const dispatch = useDispatch();
 
   useEffect(() => {
-    if (productName) {
-      const data = productData.find((item) => item.name === productName);
+    dispatch(getAllProducts());
+  }, [dispatch]);
+
+  useEffect(() => {
+    if (eventData !== null) {
+      const data = allEvents && allEvents.find((i) => i._id === id);
+      setData(data);
+    } else {
+      const data = allProducts && allProducts.find((i) => i._id === id);
+      console.log(data)
       setData(data);
     }
-  }, [productName]); // Add `productName` as a dependency to ensure the effect runs when it changes
+  }, [allProducts, allEvents, id, eventData]);
+
+  // Add data state logging
+  console.log('Current data state:', data);
 
   return (
     <>
       <Header />
       <ProductDetails data={data} />
-      {
-        data && <SuggestedProduct data={data}/>
-      }
+      {data && <SuggestedProduct data={data}/>}
       <Footer />
     </>
   );

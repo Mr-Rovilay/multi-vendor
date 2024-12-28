@@ -1,9 +1,10 @@
 /* eslint-disable react/prop-types */
-import { Star, StarHalf, StarOff,  } from "lucide-react";
+import { Star, StarHalf, StarOff } from "lucide-react";
 
 const Ratings = ({ rating }) => {
   const stars = [];
 
+  // Loop to create the star elements based on rating
   for (let i = 1; i <= 5; i++) {
     if (i <= rating) {
       stars.push(
@@ -11,7 +12,7 @@ const Ratings = ({ rating }) => {
           key={i}
           size={20}
           color="#f6b100"
-          className="mr-2 cursor-pointer"
+          className="mr-1 cursor-pointer transition-transform transform hover:scale-110"
         />
       );
     } else if (i === Math.ceil(rating) && !Number.isInteger(rating)) {
@@ -19,8 +20,8 @@ const Ratings = ({ rating }) => {
         <StarHalf
           key={i}
           size={20}
-          color="#f6ba00"
-          className="mr-2 cursor-pointer"
+          color="#f6b100"
+          className="mr-1 cursor-pointer transition-transform transform hover:scale-110"
         />
       );
     } else {
@@ -28,13 +29,18 @@ const Ratings = ({ rating }) => {
         <StarOff 
           key={i}
           size={20}
-          color="#f6ba00"
-          className="mr-2 cursor-pointer"
+          color="#dcdcdc"
+          className="mr-1 cursor-pointer transition-transform transform hover:scale-110"
         />
       );
     }
   }
-  return <div className="flex"> {stars} </div>;
+
+  return (
+    <div className="flex items-center">
+      {stars}
+    </div>
+  );
 };
 
 export default Ratings;

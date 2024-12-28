@@ -1,38 +1,12 @@
 import { useEffect, useState } from "react";
-import { Clock } from 'lucide-react';
+import { Clock } from "lucide-react";
 import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
+import api from "@/utils/server";
 
-const CountDown = ({ 
-  targetDate = "2024-12-11",
-  onCountdownEnd = () => {}
-}) => {
-  const [timeLeft, setTimeLeft] = useState(calculateTimeLeft());
-  const [isExpired, setIsExpired] = useState(false);
-
-  useEffect(() => {
-    if (Object.keys(timeLeft).length === 0) {
-      setIsExpired(true);
-      onCountdownEnd();
-      return;
-    }
-
-    const timer = setInterval(() => {
-      const newTimeLeft = calculateTimeLeft();
-      setTimeLeft(newTimeLeft);
-
-      if (Object.keys(newTimeLeft).length === 0) {
-        setIsExpired(true);
-        onCountdownEnd();
-        clearInterval(timer);
-      }
-    }, 1000);
-
-    return () => clearInterval(timer);
-  }, [onCountdownEnd]);
-
-  function calculateTimeLeft() {
-    const difference = +new Date(targetDate) - +new Date();
+const CountDown = ({ data }) => {
+  const calculateTimeLeft = () => {
+    const difference = +new Date(data.endDate) - +new Date();
     let timeLeft = {};
 
     if (difference > 0) {
@@ -45,36 +19,58 @@ const CountDown = ({
     }
 
     return timeLeft;
-  }
+  };
+
+  const [timeLeft, setTimeLeft] = useState(calculateTimeLeft());
+
+  useEffect(() => {
+    // Initial calculation
+    setTimeLeft(calculateTimeLeft());
+    
+    const timer = setInterval(() => {
+      const newTimeLeft = calculateTimeLeft();
+      setTimeLeft(newTimeLeft);
+
+      // If countdown is complete, make API call
+      if (Object.keys(newTimeLeft).length === 0) {
+        clearInterval(timer);
+        api
+          .delete(`/event/delete-shop-event/${data._id}`)
+          .then(() => console.log("Event deleted successfully"))
+          .catch((error) => console.error("Failed to delete event", error));
+      }
+    }, 1000);
+
+    return () => clearInterval(timer);
+  }, [data.endDate, data._id]); // Add data.endDate as dependency
+
+  const isExpired = Object.keys(timeLeft).length === 0;
 
   if (isExpired) {
     return (
       <Card className="p-4 text-center">
         <Badge variant="destructive" className="flex items-center justify-center">
-          <Clock className="mr-2" /> Time#&39;s Up!
+          <Clock className="mr-2" /> Time's Up!
         </Badge>
       </Card>
     );
   }
 
   return (
-    <Card className="p-4">
-      <div className="flex items-center justify-center space-x-4">
-        <Clock className="text-primary" />
-        <div className="flex space-x-2">
-          {Object.entries(timeLeft).map(([interval, value]) => (
-            <Badge 
-              key={interval} 
-              variant="outline" 
-              className="flex flex-col items-center p-2 min-w-[70px]"
-            >
-              <span className="text-xl font-bold">{value}</span>
-              <span className="text-xs uppercase">{interval}</span>
-            </Badge>
-          ))}
-        </div>
+    <div className="flex items-center justify-center">
+      <Clock className="text-primary" />
+      <div className="flex">
+        {Object.entries(timeLeft).map(([interval, value]) => (
+          <div
+            key={interval}
+            className="flex flex-col items-center p-2"
+          >
+            <span className="text-sm font-bold">{value}</span>
+            <span className="text-xs uppercase">{interval}</span>
+          </div>
+        ))}
       </div>
-    </Card>
+    </div>
   );
 };
 

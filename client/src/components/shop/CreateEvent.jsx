@@ -155,7 +155,7 @@ const CreateEvent = () => {
             value={formData.name}
             onChange={handleInputChange}
             placeholder="Enter event name"
-            required
+           
           />
         </div>
 
@@ -169,7 +169,7 @@ const CreateEvent = () => {
             onChange={handleInputChange}
             placeholder="Enter event description"
             rows={4}
-            required
+            
           />
         </div>
 
@@ -227,7 +227,7 @@ const CreateEvent = () => {
               value={formData.discountPrice}
               onChange={handleInputChange}
               placeholder="Enter discount price"
-              required
+             
             />
           </div>
         </div>
@@ -242,7 +242,7 @@ const CreateEvent = () => {
             value={formData.stock}
             onChange={handleInputChange}
             placeholder="Enter stock quantity"
-            required
+          
           />
         </div>
 
@@ -256,7 +256,7 @@ const CreateEvent = () => {
             value={formData.startDate}
             onChange={handleStartDateChange}
             min={today}
-            required
+         
           />
         </div>
 
@@ -269,7 +269,7 @@ const CreateEvent = () => {
             value={formData.endDate}
             onChange={handleEndDateChange}
             min={minEndDate}
-            required
+           
             disabled={!formData.startDate}
           />
         </div>

@@ -128,7 +128,7 @@ const CreateProduct = () => {
             value={formData.name}
             onChange={handleInputChange}
             placeholder="Enter product name"
-            required
+        
           />
         </div>
 
@@ -142,7 +142,7 @@ const CreateProduct = () => {
             onChange={handleInputChange}
             placeholder="Enter product description"
             rows={4}
-            required
+          
           />
         </div>
 
@@ -200,7 +200,7 @@ const CreateProduct = () => {
               value={formData.discountPrice}
               onChange={handleInputChange}
               placeholder="Enter discount price"
-              required
+             
             />
           </div>
         </div>
@@ -215,7 +215,7 @@ const CreateProduct = () => {
             value={formData.stock}
             onChange={handleInputChange}
             placeholder="Enter stock quantity"
-            required
+          
           />
         </div>
 
