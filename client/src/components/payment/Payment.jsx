@@ -27,7 +27,7 @@ const Payment = () => {
           {
             description: "Sunflower",
             amount: {
-              currency_code: "NGN",
+              currency_code: "USD",
               value: orderData?.totalPrice,
             },
           },

@@ -18,7 +18,7 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { categoriesData, productData } from "../../static/data";
 import { cn } from "@/lib/utils";
 import Dropdown from "./Dropdown";
-import { loadUser } from "@/redux/actions/user";
+import { loadSeller, loadUser } from "@/redux/actions/user";
 import CartSidebar from "../cart/CartSidebar";
 import WishlistSidebar from "../wishList/WishlistSidebar";
 import { DropdownMenu } from "../ui/dropdown-menu";
@@ -26,6 +26,7 @@ import { DropdownMenu } from "../ui/dropdown-menu";
 const Header = () => {
   const dispatch = useDispatch();
   const { isAuthenticated, user } = useSelector((state) => state.user);
+  const { authenticateShop } = useSelector((state) => state.seller);
   const [searchTerm, setSearchTerm] = useState("");
   const [searchData, setSearchData] = useState(null);
   const [active, setActive] = useState(false);
@@ -35,6 +36,7 @@ const Header = () => {
 
   useEffect(() => {
     dispatch(loadUser());
+    dispatch(loadSeller()); 
   }, [dispatch]);
 
   const handleSearchChange = (e) => {
@@ -204,7 +206,7 @@ const Header = () => {
                       to="/shop-create"
                       className="flex items-center justify-center"
                     >
-                      <Store className="mr-2" /> Become a Seller
+                      <Store className="mr-2" />{authenticateShop ? "Go To Dashboard" : "Become a Seller"}
                     </Link>
                   </Button>
 
@@ -253,7 +255,7 @@ const Header = () => {
               className="hidden md:ml-3 md:flex"
             >
               <Link  to="/shop-create" className="flex items-center">
-                <Store className="mr-2" /> Become a Seller
+              <Store className="mr-2" />{authenticateShop ? "Go To Dashboard" : "Become a Seller"}
               </Link>
             </Button>
 

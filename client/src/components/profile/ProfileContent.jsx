@@ -29,11 +29,11 @@ import { toast } from "sonner";
 import { profileSchema } from "@/zod-schema/auth";
 import AllOrders from "../products/AllOrders";
 import AllRefundOrders from "./AllRefundOrders";
-import TrackOrder from "./TrackOrder";
 import ChangePassword from "./ChangePassword";
 import Address from "./Address";
 import PaymentMethods from "./PaymentMethods";
 import { loadUser, updateUserInformation,  } from "@/redux/actions/user";
+import TrackUserOrder from "./TrackUserOrder";
 
 const ProfileContent = ({ active }) => {
   const { user, error, successMessage } = useSelector((state) => state.user);
@@ -322,7 +322,7 @@ const ProfileContent = ({ active }) => {
       case 3:
         return <AllRefundOrders />;
       case 5:
-        return <TrackOrder />;
+        return <TrackUserOrder />;
       case 6:
         return <ChangePassword />;
       case 7:

@@ -1,32 +1,24 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { RefreshCcw, DollarSign } from 'lucide-react';
 
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
+import { useDispatch, useSelector } from 'react-redux';
+import { getAllOrdersOfUser } from '@/redux/actions/orderActions';
 
 const AllRefundOrders = () => {
-  const [refundOrders] = useState([
-    {
-      id: 'RF001',
-      orderNumber: 'ORD123',
-      product: 'iPhone 14 Pro',
-      amount: 1200,
-      status: 'Pending',
-      reason: 'Damaged Product',
-      requestDate: '2024-02-15',
-    },
-    {
-      id: 'RF002',
-      orderNumber: 'ORD456',
-      product: 'Samsung Galaxy S23',
-      amount: 900,
-      status: 'Approved',
-      reason: 'Wrong Size',
-      requestDate: '2024-02-20',
-    },
-  ]);
+  const { user } = useSelector((state) => state.user);
+  const { orders } = useSelector((state) => state.order);
+  const dispatch = useDispatch();
+
+  useEffect(() => {
+    dispatch(getAllOrdersOfUser(user._id));
+  }, []);
+
+  const eligibleOrders =
+    orders && orders.filter((item) => item.status === "Processing refund");
 
   const getStatusVariant = (status) => {
     switch (status) {
@@ -52,27 +44,21 @@ const AllRefundOrders = () => {
             <thead>
               <tr className="bg-gray-100">
                 <th className="p-3 text-sm font-semibold text-left">Refund ID</th>
-                <th className="p-3 text-sm font-semibold text-left">Order Number</th>
-                <th className="p-3 text-sm font-semibold text-left">Product</th>
                 <th className="p-3 text-sm font-semibold text-left">Refund Amount</th>
                 <th className="p-3 text-sm font-semibold text-left">Status</th>
-                <th className="p-3 text-sm font-semibold text-left">Request Date</th>
                 <th className="p-3 text-sm font-semibold text-left">Actions</th>
               </tr>
             </thead>
             <tbody>
-              {refundOrders.map((refund) => (
+              {eligibleOrders.map((refund) => (
                 <tr key={refund.id} className="border-b hover:bg-gray-50">
-                  <td className="p-3">{refund.id}</td>
-                  <td className="p-3">{refund.orderNumber}</td>
-                  <td className="p-3">{refund.product}</td>
+                  <td className="p-3">{refund._id}</td>
                   <td className="flex items-center p-3">
-                    <DollarSign className="w-4 h-4 mr-1" /> ${refund.amount}
+                    ${refund.totalPrice}
                   </td>
                   <td className="p-3">
                     <Badge variant={getStatusVariant(refund.status)}>{refund.status}</Badge>
                   </td>
-                  <td className="p-3">{refund.requestDate}</td>
                   <td className="p-3">
                     <Dialog>
                       <DialogTrigger asChild>
@@ -85,10 +71,9 @@ const AllRefundOrders = () => {
                           <DialogTitle>Refund Details</DialogTitle>
                         </DialogHeader>
                         <div className="space-y-4">
-                          <div><strong>Refund ID:</strong> {refund.id}</div>
-                          <div><strong>Order Number:</strong> {refund.orderNumber}</div>
-                          <div><strong>Product:</strong> {refund.product}</div>
-                          <div><strong>Refund Amount:</strong> ${refund.amount}</div>
+                          <div><strong>Refund ID:</strong> {refund._id}</div>
+                          <div><strong>Product:</strong> {refund.cart.length}</div>
+                          <div><strong>Refund Amount:</strong> ${refund.totalPrice}</div>
                           <div><strong>Reason:</strong> {refund.reason}</div>
                           <div>
                             <strong>Status:</strong> 
@@ -106,33 +91,21 @@ const AllRefundOrders = () => {
 
         {/* Mobile-Friendly List */}
         <div className="block md:hidden">
-          {refundOrders.map((refund) => (
+          {eligibleOrders.map((refund) => (
             <div key={refund.id} className="p-4 mb-4 border rounded-lg shadow-sm">
               <div className="flex items-center justify-between mb-2">
                 <strong>Refund ID:</strong>
                 <span>{refund.id}</span>
               </div>
               <div className="flex items-center justify-between mb-2">
-                <strong>Order Number:</strong>
-                <span>{refund.orderNumber}</span>
-              </div>
-              <div className="flex items-center justify-between mb-2">
-                <strong>Product:</strong>
-                <span>{refund.product}</span>
-              </div>
-              <div className="flex items-center justify-between mb-2">
                 <strong>Refund Amount:</strong>
                 <div className="flex items-center">
-                  <DollarSign className="w-4 h-4 mr-1" /> ${refund.amount}
+                ${refund.totalPrice}
                 </div>
               </div>
               <div className="flex items-center justify-between mb-2">
                 <strong>Status:</strong>
                 <Badge variant={getStatusVariant(refund.status)}>{refund.status}</Badge>
-              </div>
-              <div className="flex items-center justify-between mb-2">
-                <strong>Request Date:</strong>
-                <span>{refund.requestDate}</span>
               </div>
               <Dialog>
                 <DialogTrigger asChild>
@@ -146,9 +119,8 @@ const AllRefundOrders = () => {
                   </DialogHeader>
                   <div className="space-y-4">
                     <div><strong>Refund ID:</strong> {refund.id}</div>
-                    <div><strong>Order Number:</strong> {refund.orderNumber}</div>
-                    <div><strong>Product:</strong> {refund.product}</div>
-                    <div><strong>Refund Amount:</strong> ${refund.amount}</div>
+                    <div><strong>Product:</strong> {refund.cart.length}</div>
+                    <div><strong>Refund Amount:</strong> ${refund.totalPrice}</div>
                     <div><strong>Reason:</strong> {refund.reason}</div>
                     <div>
                       <strong>Status:</strong> 

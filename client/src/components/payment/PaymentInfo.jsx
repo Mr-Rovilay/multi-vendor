@@ -130,7 +130,9 @@ export const PaymentInfo = ({
                 </DialogHeader>
                 <PayPalScriptProvider
                   options={{
-                    "client-id": "YOUR_PAYPAL_CLIENT_ID",
+                    "client-id": import.meta.env.PAYPAL_CLIENT_ID,
+                     components: "buttons",
+                   
                   }}
                 >
                   <PayPalButtons

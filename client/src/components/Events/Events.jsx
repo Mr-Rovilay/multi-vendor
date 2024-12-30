@@ -34,7 +34,7 @@ const Events = () => {
   }
 
   return (
-    <div className="py-8 max-pad-container bg-gradient-to-br from-blue-50 to-white">
+    <div className="max-pad-container bg-gradient-to-br from-blue-50 to-white">
       <CardHeader className="mb-8">
         <CardTitle className="text-3xl font-bold text-center">
           Popular Events

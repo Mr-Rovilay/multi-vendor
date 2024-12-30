@@ -1,148 +1,196 @@
-import { useState } from 'react';
-import { 
-  Package, 
-  Truck, 
-  MapPin, 
-  CheckCircle2, 
-  Clock, 
-} from 'lucide-react';
+import { useEffect } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { useParams } from "react-router-dom";
 
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Input } from "@/components/ui/input";
-import { Button } from "@/components/ui/button";
-import { 
-  Accordion, 
-  AccordionContent, 
-  AccordionItem, 
-  AccordionTrigger 
-} from "@/components/ui/accordion";
-import { Badge } from "@/components/ui/badge";
-import { Progress } from "@/components/ui/progress";
+import {
+  Package,
+  Truck,
+  CheckCircle2,
+  Clock,
+  MapPin,
+  RotateCcw,
+  CircleDollarSign,
+  AlertCircle
+} from "lucide-react";
+import {
+  Card,
+  CardContent,
+  CardHeader,
+  CardTitle,
+} from "../ui/card";
+import { getAllOrdersOfUser } from "@/redux/actions/orderActions";
 
 const TrackOrder = () => {
-  const [trackingNumber, setTrackingNumber] = useState('');
-  const [orderDetails, setOrderDetails] = useState(null);
+  const { orders } = useSelector((state) => state.order);
+  const { user } = useSelector((state) => state.user);
+  const dispatch = useDispatch();
+  const { id } = useParams();
 
-  const mockTrackingData = {
-    '123456': {
-      orderNumber: '123456',
-      status: 'In Transit',
-      estimatedDelivery: '2024-03-20',
-      items: [
-        { name: 'iPhone 15 Pro', quantity: 1 },
-        { name: 'Apple AirPods Pro', quantity: 1 }
-      ],
-      trackingSteps: [
-        { 
-          status: 'Order Placed', 
-          date: '2024-03-10', 
-          completed: true 
-        },
-        { 
-          status: 'Processed', 
-          date: '2024-03-12', 
-          completed: true 
-        },
-        { 
-          status: 'Shipped', 
-          date: '2024-03-15', 
-          completed: true 
-        },
-        { 
-          status: 'In Transit', 
-          date: '2024-03-16', 
-          completed: true 
-        },
-        { 
-          status: 'Out for Delivery', 
-          date: '2024-03-20', 
-          completed: false 
-        },
-        { 
-          status: 'Delivered', 
-          date: '', 
-          completed: false 
-        }
-      ]
-    }
+  useEffect(() => {
+    dispatch(getAllOrdersOfUser(user._id));
+  }, [dispatch]);
+
+  const data = orders && orders.find((item) => item._id === id);
+
+  const getStatusConfig = (status) => {
+    const configs = {
+      "Processing": {
+        icon: <Clock className="w-6 h-6" />,
+        color: "text-yellow-500",
+        bgColor: "bg-yellow-100",
+        borderColor: "border-yellow-500",
+        message: "Your order is being processed in the shop"
+      },
+      "Transferred to delivery partner": {
+        icon: <Package className="w-6 h-6" />,
+        color: "text-blue-500",
+        bgColor: "bg-blue-100",
+        borderColor: "border-blue-500",
+        message: "Order has been transferred to delivery partner"
+      },
+      "Shipping": {
+        icon: <Truck className="w-6 h-6" />,
+        color: "text-purple-500",
+        bgColor: "bg-purple-100",
+        borderColor: "border-purple-500",
+        message: "Your order is on the way with our delivery partner"
+      },
+      "Received": {
+        icon: <MapPin className="w-6 h-6" />,
+        color: "text-indigo-500",
+        bgColor: "bg-indigo-100",
+        borderColor: "border-indigo-500",
+        message: "Your order has reached your city"
+      },
+      "On the way": {
+        icon: <Truck className="w-6 h-6" />,
+        color: "text-orange-500",
+        bgColor: "bg-orange-100",
+        borderColor: "border-orange-500",
+        message: "Delivery person is on the way to deliver your order"
+      },
+      "Delivered": {
+        icon: <CheckCircle2 className="w-6 h-6" />,
+        color: "text-green-500",
+        bgColor: "bg-green-100",
+        borderColor: "border-green-500",
+        message: "Your order has been delivered successfully!"
+      },
+      "Processing refund": {
+        icon: <RotateCcw className="w-6 h-6" />,
+        color: "text-blue-500",
+        bgColor: "bg-blue-100",
+        borderColor: "border-blue-500",
+        message: "Your refund is being processed"
+      },
+      "Refund Success": {
+        icon: <CircleDollarSign className="w-6 h-6" />,
+        color: "text-green-500",
+        bgColor: "bg-green-100",
+        borderColor: "border-green-500",
+        message: "Refund has been processed successfully!"
+      }
+    };
+
+    return configs[status] || {
+      icon: <AlertCircle className="w-6 h-6" />,
+      color: "text-gray-500",
+      bgColor: "bg-gray-100",
+      borderColor: "border-gray-500",
+      message: "Status unknown"
+    };
   };
 
-  const handleTrackOrder = () => {
-    const orderInfo = mockTrackingData[trackingNumber];
-    setOrderDetails(orderInfo);
-  };
+  if (!data) {
+    return (
+      <div className="flex items-center justify-center h-[80vh]">
+        <Card className="w-full max-w-md">
+          <CardHeader>
+            <CardTitle className="text-center text-gray-500">
+              Order not found
+            </CardTitle>
+          </CardHeader>
+        </Card>
+      </div>
+    );
+  }
 
-  const getStatusIcon = (status) => {
-    switch(status) {
-      case 'Order Placed': return <Package className="w-4 h-4 mr-2" />;
-      case 'Processed': return <Clock className="w-4 h-4 mr-2" />;
-      case 'Shipped': return <Truck className="w-4 h-4 mr-2" />;
-      case 'In Transit': return <MapPin className="w-4 h-4 mr-2" />;
-      case 'Out for Delivery': return <Truck className="w-4 h-4 mr-2" />;
-      case 'Delivered': return <CheckCircle2 className="w-4 h-4 mr-2 text-green-500" />;
-      default: return null;
-    }
-  };
+  const statusConfig = getStatusConfig(data.status);
 
   return (
-    <Card>
-      <CardHeader>
-        <CardTitle>Track Your Order</CardTitle>
-      </CardHeader>
-      <CardContent>
-        <div className="flex mb-4 space-x-2">
-          <Input 
-            placeholder="Enter Tracking Number" 
-            value={trackingNumber}
-            onChange={(e) => setTrackingNumber(e.target.value)}
-          />
-          <Button onClick={handleTrackOrder}>Track</Button>
-        </div>
-
-        {orderDetails && (
-          <div>
-            <div className="mb-4">
-              <h3 className="text-lg font-semibold">Order #{orderDetails.orderNumber}</h3>
-              <Badge variant="outline">
-                {orderDetails.status}
-              </Badge>
+    <div className="flex items-center justify-center min-h-[80vh] p-4">
+      <Card className="w-full max-w-2xl">
+        <CardHeader>
+          <CardTitle className="flex items-center justify-center space-x-2">
+            <span>Order Tracking</span>
+          </CardTitle>
+        </CardHeader>
+        <CardContent>
+          <div className="flex flex-col items-center space-y-6">
+            {/* Status Icon */}
+            <div className={`p-4 rounded-full ${statusConfig.bgColor}`}>
+              <div className={`${statusConfig.color}`}>
+                {statusConfig.icon}
+              </div>
             </div>
 
-            <div className="mb-4">
-              <h4 className="font-medium text-md">Items</h4>
-              {orderDetails.items.map((item, index) => (
-                <div key={index} className="flex justify-between">
-                  <span>{item.name}</span>
-                  <span>Quantity: {item.quantity}</span>
-                </div>
-              ))}
+            {/* Status Message */}
+            <div className="space-y-2 text-center">
+              <h2 className={`text-xl font-semibold ${statusConfig.color}`}>
+                {data.status}
+              </h2>
+              <p className="text-gray-600">
+                {statusConfig.message}
+              </p>
             </div>
 
-            <Progress value={orderDetails.trackingSteps.filter(step => step.completed).length / orderDetails.trackingSteps.length * 100} />
-
-            <Accordion type="single" collapsible>
-              <AccordionItem value="tracking-details">
-                <AccordionTrigger>Tracking Details</AccordionTrigger>
-                <AccordionContent>
-                  {orderDetails.trackingSteps.map((step, index) => (
-                    <div 
-                      key={index} 
-                      className={`flex items-center mb-2 ${step.completed ? 'text-green-600' : 'text-gray-400'}`}
-                    >
-                      {getStatusIcon(step.status)}
-                      <div>
-                        <span className="font-medium">{step.status}</span>
-                        {step.date && <span className="ml-2 text-sm">{step.date}</span>}
+            {/* Timeline */}
+            <div className="w-full max-w-md mt-8">
+              <div className="relative">
+                <div className="absolute left-1/2 transform -translate-x-1/2 h-full w-0.5 bg-gray-200"></div>
+                {[
+                  "Processing",
+                  "Transferred to delivery partner",
+                  "Shipping",
+                  "Received",
+                  "On the way",
+                  "Delivered",
+                  "Processing refund",
+                  "Refund Success"
+                ].map((step, index) => {
+                  const isCompleted = getStatusConfig(data.status).message.includes(getStatusConfig(step).message);
+                  const isCurrent = data.status === step;
+                  
+                  return (
+                    <div key={index} className="relative mb-8">
+                      <div className="flex items-center">
+                        <div className="flex-1 pr-4 text-right">
+                          <div className={`text-sm ${isCompleted || isCurrent ? statusConfig.color : 'text-gray-400'}`}>
+                            {step}
+                          </div>
+                        </div>
+                        <div 
+                          className={`w-4 h-4 rounded-full border-2 flex items-center justify-center
+                            ${isCompleted ? 'bg-green-500 border-green-500' : 
+                              isCurrent ? statusConfig.bgColor + ' ' + statusConfig.borderColor : 
+                              'bg-gray-200 border-gray-300'}`}
+                        >
+                        </div>
+                        <div className="flex-1 pl-4">
+                          <div className={`text-sm ${isCompleted || isCurrent ? 'text-gray-600' : 'text-gray-400'}`}>
+                            {getStatusConfig(step).message}
+                          </div>
+                        </div>
                       </div>
                     </div>
-                  ))}
-                </AccordionContent>
-              </AccordionItem>
-            </Accordion>
+                  );
+                })}
+              </div>
+            </div>
           </div>
-        )}
-      </CardContent>
-    </Card>
+        </CardContent>
+      </Card>
+    </div>
   );
 };
 

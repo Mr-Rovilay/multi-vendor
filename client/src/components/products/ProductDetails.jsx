@@ -8,7 +8,6 @@ import {
   Heart,
   ShoppingCart,
   MessageSquare,
-  Star,
   ChevronLeft,
   ChevronRight,
 } from "lucide-react";
@@ -220,13 +219,13 @@ const ProductDetails = ({ data }) => {
 
           <p className="mb-4 text-gray-600">{data.description}</p>
 
-          <div className="flex items-center mb-4 space-x-4">
-            <span className="text-3xl font-bold text-primary">
-              ${data.discount_price}
+          <div className="flex items-center mb-4 space-x-2">
+            <span className="font-bold text-xm text-primary">
+              ${data.discountPrice}
             </span>
-            {data.price > data.discount_price && (
-              <span className="text-xl text-gray-400 line-through">
-                ${data.price}
+            {data.originalPrice > data.discountPrice && (
+              <span className="text-red-400 line-through text-xm">
+                ${data.originalPrice}
               </span>
             )}
           </div>
@@ -321,7 +320,7 @@ const ProductDetails = ({ data }) => {
         <TabsContent value="reviews">
           <Card>
             <CardContent className="p-6">
-              {data.reviews && data.reviews.length > 0 ? (
+              {data && data.reviews.length > 0 ? (
                 <div className="space-y-4">
                   {data.reviews.map((review, index) => (
                     <div
@@ -330,17 +329,17 @@ const ProductDetails = ({ data }) => {
                     >
                       <Avatar>
                         <AvatarImage
-                          src={review.user?.avatar?.url}
+                          src={user.avatar?.url}
                           className="object-cover rounded-full"
                         />
                         <AvatarFallback>
-                          {review.user?.name?.charAt(0)}
+                          {user?.name?.charAt(0)}
                         </AvatarFallback>
                       </Avatar>
                       <div>
                         <div className="flex items-center space-x-2">
                           <span className="font-semibold">
-                            {review.user?.name}
+                            {user?.name}
                           </span>
                           <Ratings rating={review.rating} />
                         </div>

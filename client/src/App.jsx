@@ -34,6 +34,11 @@ import api from "./utils/server";
 import { Elements } from "@stripe/react-stripe-js";
 import { loadStripe } from "@stripe/stripe-js";
 import PaymentPage from "./pages/PaymentPage";
+import ShopAllOrders from "./pages/Shop/ShopAllOrders";
+import ShopOrderDetails from "./pages/Shop/ShopOrderDetails";
+import OrderDetailsPage from "./pages/OrderDetailsPage";
+import TrackOrderPage from "./pages/TrackOrderPage";
+import ShopAllRefund from "./pages/Shop/ShopAllRefund";
 
 export default function Home() {
   const [loading, setLoading] = useState(true);
@@ -77,7 +82,7 @@ export default function Home() {
               path="/payment"
               element={
                 <Elements stripe={loadStripe(stripeApikey)}>
-                    <ProtectedRoute isAuthenticated={isAuthenticated}>
+                  <ProtectedRoute isAuthenticated={isAuthenticated}>
                     <PaymentPage />
                   </ProtectedRoute>
                 </Elements>
@@ -91,7 +96,15 @@ export default function Home() {
           <Route path="/signup" element={<SignupForm />} />
           <Route path="/products" element={<ProductsPage />} />
           <Route path="/product/:id" element={<ProductDetailsPage />} />
-          <Route path="/order/success/:id" element={<OrderSuccessPage />} />
+
+          <Route path="/order/success" element={
+             <ProtectedRoute isAuthenticated={isAuthenticated}>
+
+               <OrderSuccessPage />
+
+             </ProtectedRoute>
+            } />
+
           <Route path="/faq" element={<FAQ />} />
           <Route path="/shop/preview/:id" element={<ShopPreviewPage />} />
           <Route
@@ -110,6 +123,24 @@ export default function Home() {
               </ProtectedRoute>
             }
           />
+
+<Route
+            path="/user/order/:id"
+            element={
+              <ProtectedRoute isAuthenticated={isAuthenticated}>
+                <OrderDetailsPage />
+                </ProtectedRoute>
+            }
+          />
+
+<Route
+            path="/user/track/order/:id"
+            element={
+              <ProtectedRoute isAuthenticated={isAuthenticated}>
+                <TrackOrderPage />
+                </ProtectedRoute>
+            }
+          />
           <Route path="/about-us" element={<AboutUs />} />
           <Route path="/shop-create" element={<ShopCreate />} />
           <Route path="/shop-login" element={<ShopLogin />} />
@@ -121,11 +152,38 @@ export default function Home() {
               </SellerProtectedRoute>
             }
           />
+
+<Route
+            path="/dashboard-refunds"
+            element={
+              <SellerProtectedRoute authenticateShop={authenticateShop}>
+                <ShopAllRefund />
+              </SellerProtectedRoute>
+            }
+          />
+
           <Route
             path="/dashboard-create-product"
             element={
               <SellerProtectedRoute authenticateShop={authenticateShop}>
                 <ShopCreateProduct />
+              </SellerProtectedRoute>
+            }
+          />
+            <Route
+            path="/shop/order/:id"
+            element={
+              <SellerProtectedRoute authenticateShop={authenticateShop}>
+                <ShopOrderDetails />
+              </SellerProtectedRoute>
+            }
+          />
+
+          <Route
+            path="/dashboard-orders"
+            element={
+              <SellerProtectedRoute authenticateShop={authenticateShop}>
+                <ShopAllOrders />
               </SellerProtectedRoute>
             }
           />

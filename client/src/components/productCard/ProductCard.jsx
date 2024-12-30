@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { Heart, Eye, ShoppingCart } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardFooter } from "@/components/ui/card";
+import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import {
   Tooltip,
@@ -143,7 +143,7 @@ const ProductCard = ({ data, isEvent }) => {
           </div>
         </div>
       </CardContent>
-      <CardFooter className="flex items-center justify-between pt-0">
+      <div className="flex items-center justify-between px-4 pb-2">
         <div className="flex gap-2">
           {data.originalPrice !== data.discountPrice && (
             <span className="text-sm text-red-500 line-through text-muted-foreground">
@@ -153,7 +153,7 @@ const ProductCard = ({ data, isEvent }) => {
           <span className="text-sm font-bold">${productPrice}</span>
         </div>
         <Badge variant="secondary">{data?.sold_out} sold</Badge>
-      </CardFooter>
+      </div>
       {isDetailsOpen && (
         <ProductDetailsCard setOpen={setIsDetailsOpen} data={data} />
       )}

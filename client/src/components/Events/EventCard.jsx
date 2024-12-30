@@ -126,7 +126,7 @@ const EventCard = ({ data }) => {
 
       <CardFooter className="gap-2 p-4 pt-0">
         <Button variant="outline" className="w-full" asChild>
-          <Link to={`/product-details/${data._id}`}>
+          <Link to={`/product/${data._id}?isEvent=true`}>
             <Eye className="w-4 h-4 mr-2" /> Details
           </Link>
         </Button>

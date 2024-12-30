@@ -53,7 +53,7 @@ const AllEvents = () => {
   }
 
   return (
-    <Card className="w-full mx-auto ">
+    <div className="w-full mx-auto ">
       <CardHeader>
         <CardTitle className="font-bold">All Events</CardTitle>
       </CardHeader>
@@ -106,7 +106,7 @@ const AllEvents = () => {
           </div>
         )}
       </CardContent>
-    </Card>
+    </div>
   );
 };
 

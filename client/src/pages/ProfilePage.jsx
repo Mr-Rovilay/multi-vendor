@@ -9,8 +9,8 @@ const ProfilePage = () => {
   return (
     <div>
       <Header/>
-      <div className="flex py-10 mx-auto max-pad-container sm:px-6 lg:px-8">
-        <div className="w-[80px] md:w-[335px] mr-4">
+      <div className="flex py-10 mx-auto sm:px-6 lg:px-8">
+        <div className="w-[60px] md:w-[335px] mr-2">
           <ProfileSidebar active={active} setActive={setActive} />
         </div>
         <div className="flex-1">

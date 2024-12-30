@@ -12,7 +12,7 @@ const Ratings = ({ rating }) => {
           key={i}
           size={20}
           color="#f6b100"
-          className="mr-1 cursor-pointer transition-transform transform hover:scale-110"
+          className="mr-1 text-yellow-400 transition-transform transform cursor-pointer fill-current hover:scale-110"
         />
       );
     } else if (i === Math.ceil(rating) && !Number.isInteger(rating)) {
@@ -21,7 +21,7 @@ const Ratings = ({ rating }) => {
           key={i}
           size={20}
           color="#f6b100"
-          className="mr-1 cursor-pointer transition-transform transform hover:scale-110"
+          className="mr-1 transition-transform transform cursor-pointer hover:scale-110"
         />
       );
     } else {
@@ -30,7 +30,7 @@ const Ratings = ({ rating }) => {
           key={i}
           size={20}
           color="#dcdcdc"
-          className="mr-1 cursor-pointer transition-transform transform hover:scale-110"
+          className="mr-1 transition-transform transform cursor-pointer hover:scale-110"
         />
       );
     }
