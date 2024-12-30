@@ -131,8 +131,6 @@ const CreateEvent = () => {
         shopId: seller._id,
         images,
       };
-
-      console.log("Submitting event data:", eventData);
       await dispatch(createEvent(eventData));
     } catch (error) {
       toast.error(error.message || "Failed to create event");

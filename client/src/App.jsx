@@ -16,7 +16,6 @@ import ProfilePage from "./pages/ProfilePage";
 import { useSelector } from "react-redux";
 import ProtectedRoute from "./routes/ProtectedRoute";
 import PageNotFound from "./pages/PageNotFound";
-import Payment from "./pages/Payment";
 import CheckOutPage from "./pages/CheckOutPage";
 import ShopCreate from "./components/shop/ShopCreate";
 import ShopLogin from "./components/shop/ShopLogin";
@@ -29,17 +28,33 @@ import ShopDashBoardEventPage from "./pages/Shop/ShopDashBoardEventPage";
 import ShopAllEvents from "./pages/Shop/ShopAllEvents";
 import ShopAllCoupons from "./pages/Shop/ShopAllCoupons";
 import ShopPreviewPage from "./pages/Shop/ShopPreviewPage";
+import { getAllEvents } from "./redux/actions/eventAction";
+import { getAllProducts } from "./redux/actions/productAction";
+import api from "./utils/server";
+import { Elements } from "@stripe/react-stripe-js";
+import { loadStripe } from "@stripe/stripe-js";
+import PaymentPage from "./pages/PaymentPage";
 
 export default function Home() {
   const [loading, setLoading] = useState(true);
   const { isAuthenticated } = useSelector((state) => state.user);
   const { authenticateShop } = useSelector((state) => state.seller);
 
+  const [stripeApikey, setStripeApiKey] = useState("");
+
+  async function getStripeApikey() {
+    const { data } = await api.get(`/payment/stripeapikey`);
+    setStripeApiKey(data.stripeApikey);
+  }
+
   useEffect(() => {
     const fetchUser = async () => {
       try {
         await Store.dispatch(loadUser());
         await Store.dispatch(loadSeller());
+        await Store.dispatch(getAllEvents());
+        await Store.dispatch(getAllProducts());
+        getStripeApikey();
       } catch (error) {
         console.error("Failed to load user", error);
       } finally {
@@ -56,6 +71,21 @@ export default function Home() {
         <Loader />
       ) : (
         <Routes>
+          {/* Payment Route wrapped with Elements */}
+          {stripeApikey && (
+            <Route
+              path="/payment"
+              element={
+                <Elements stripe={loadStripe(stripeApikey)}>
+                    <ProtectedRoute isAuthenticated={isAuthenticated}>
+                    <PaymentPage />
+                  </ProtectedRoute>
+                </Elements>
+              }
+            />
+          )}
+
+          {/* Other Routes */}
           <Route path="/" element={<HomePage />} />
           <Route path="/login" element={<LoginForm />} />
           <Route path="/signup" element={<SignupForm />} />
@@ -63,7 +93,6 @@ export default function Home() {
           <Route path="/product/:id" element={<ProductDetailsPage />} />
           <Route path="/order/success/:id" element={<OrderSuccessPage />} />
           <Route path="/faq" element={<FAQ />} />
-          <Route path="/payment" element={<Payment />} />
           <Route path="/shop/preview/:id" element={<ShopPreviewPage />} />
           <Route
             path="/checkout"
@@ -82,7 +111,6 @@ export default function Home() {
             }
           />
           <Route path="/about-us" element={<AboutUs />} />
-
           <Route path="/shop-create" element={<ShopCreate />} />
           <Route path="/shop-login" element={<ShopLogin />} />
           <Route
@@ -93,7 +121,7 @@ export default function Home() {
               </SellerProtectedRoute>
             }
           />
-            <Route
+          <Route
             path="/dashboard-create-product"
             element={
               <SellerProtectedRoute authenticateShop={authenticateShop}>
@@ -101,7 +129,7 @@ export default function Home() {
               </SellerProtectedRoute>
             }
           />
-            <Route
+          <Route
             path="/dashboard-products"
             element={
               <SellerProtectedRoute authenticateShop={authenticateShop}>
@@ -117,7 +145,7 @@ export default function Home() {
               </SellerProtectedRoute>
             }
           />
-            <Route
+          <Route
             path="/dashboard-create-event"
             element={
               <SellerProtectedRoute authenticateShop={authenticateShop}>
@@ -125,7 +153,7 @@ export default function Home() {
               </SellerProtectedRoute>
             }
           />
-             <Route
+          <Route
             path="/dashboard-events"
             element={
               <SellerProtectedRoute authenticateShop={authenticateShop}>
@@ -133,7 +161,7 @@ export default function Home() {
               </SellerProtectedRoute>
             }
           />
-               <Route
+          <Route
             path="/dashboard-coupons"
             element={
               <SellerProtectedRoute authenticateShop={authenticateShop}>

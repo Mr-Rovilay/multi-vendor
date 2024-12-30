@@ -21,8 +21,7 @@ export const signupSchema = z.object({
   password: z.string()
     .min(8, "Password must be at least 8 characters")
     .regex(strongPasswordRegex, 'Password must include at least one uppercase letter, one lowercase letter, one number, and one special character'),
-  role: z.enum(["customer", "vendor", "admin"]),
-  contact: z.string()
+  phoneNumber: z.string()
   .regex(/^\d{11}$/, { message: "Phone number must be 11 Nigerian digits" })
     .optional(),
   avatar: z
@@ -41,10 +40,10 @@ export const profileSchema = z.object({
   email: z.string().email({ message: "Invalid email address" }),
   phoneNumber: z.string()
     .regex(/^\d{11}$/, { message: "Phone number must be 11 Nigerian digits" }),
-  password: z.string()
-    .min(8, { message: "Password must be at least 8 characters" })
-    .optional()
-    .or(z.literal(''))
+  // password: z.string()
+  //   .min(8, { message: "Password must be at least 8 characters" })
+  //   .optional()
+  //   .or(z.literal(''))
 });
 
 export const shopCreateSchema = z.object({
@@ -63,4 +62,22 @@ export const shopCreateSchema = z.object({
       message: "Please upload a valid file",
     }),
 });
+// Zod Schema for Password Validation
+export const passwordSchema = z.object({
+    oldPassword: z
+      .string()
+      .min(6, "Old password must be at least 6 characters."),
+    newPassword: z
+      .string()
+      .min(6, "New password must be at least 6 characters.")
+      .regex(
+        /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{6,}$/,
+        "Password must include uppercase, lowercase, number, and special character."
+      ),
+    confirmPassword: z.string(),
+  })
+  .refine((data) => data.newPassword === data.confirmPassword, {
+    message: "Passwords do not match.",
+    path: ["confirmPassword"], // Error is shown on confirmPassword field
+  });
 

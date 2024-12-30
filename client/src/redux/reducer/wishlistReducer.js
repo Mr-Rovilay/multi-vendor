@@ -1,35 +1,36 @@
-import { createSlice } from "@reduxjs/toolkit";
+import { createReducer } from "@reduxjs/toolkit";
 
 const initialState = {
   wishlist: JSON.parse(localStorage.getItem("wishlistItems")) || [],
 };
 
-const wishlistSlice = createSlice({
-  name: "wishlist",
-  initialState,
-  reducers: {
-    addToWishlist: (state, action) => {
-      const newItem = action.payload;
-      const existingItem = state.wishlist.find((item) => item._id === newItem._id);
+export const wishlistReducer = createReducer(initialState, (builder) => {
+  builder
+    // Add to cart
+    .addCase("addToWishlist", (state, action) => {
+      const newItemWishlist = action.payload;
 
-      if (existingItem) {
-        state.wishlist = state.wishlist.map((item) =>
-          item._id === existingItem._id ? newItem : item
-        );
+      // Find index of the item in the cart
+      const existingItemIndex = state.wishlist.findIndex((item) => item._id === newItemWishlist._id);
+
+      if (existingItemIndex !== -1) {
+        // Replace existing item with new item
+        state.wishlist[existingItemIndex] = newItemWishlist;
       } else {
-        state.wishlist.push(newItem);
+        // Add new item to the cart
+        state.wishlist.push(newItemWishlist);
       }
 
+      // Save updated cart to localStorage
       localStorage.setItem("wishlistItems", JSON.stringify(state.wishlist));
-    },
+    })
 
-    removeFromWishlist: (state, action) => {
+    // Remove from cart
+    .addCase("removeFromWishlist", (state, action) => {
+      // Filter out the item to be removed
       state.wishlist = state.wishlist.filter((item) => item._id !== action.payload);
+
+      // Save updated cart to localStorage
       localStorage.setItem("wishlistItems", JSON.stringify(state.wishlist));
-    },
-  },
+    });
 });
-
-export const { addToWishlist, removeFromWishlist } = wishlistSlice.actions;
-
-export default wishlistSlice.reducer;

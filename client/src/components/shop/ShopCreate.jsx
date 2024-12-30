@@ -72,10 +72,6 @@ const ShopCreate = () => {
       formData.append("address", data.address);
       formData.append("zipCode", data.zipCode);
   
-      // for (let pair of formData.entries()) {
-      //   console.log(pair[0], pair[1]);
-      // }
-  
       if (!data.avatar) {
         toast.error("Please upload an avatar");
         return;
@@ -85,16 +81,12 @@ const ShopCreate = () => {
         formData.append("avatar", data.avatar);
       }
   
-      const response = await api.post('/shop/create-shop', formData, {
-        headers: {
-          'Content-Type': 'multipart/form-data',
-        },
-      });
+      const response = await api.post('/shop/create-shop', formData);
   
       toast.success(response.data.message);
-      form.reset();
-      setAvatar(null);
-      navigate('');
+      // form.reset();
+      // setAvatar(null);
+      navigate('/shop-login');
     } catch (error) {
       toast.error(error.response?.data?.message || "An error occurred");
     } finally {

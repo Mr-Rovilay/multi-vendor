@@ -12,10 +12,10 @@ import {
 } from "@/components/ui/tooltip";
 import ProductDetailsCard from "../ProductDetailsCard/ProductDetailsCard";
 import { useDispatch, useSelector } from "react-redux";
-import { addToWishlist, removeFromWishlist } from "@/redux/actions/wishlistActions";
 import { toast } from "sonner";
 import { addToCart } from "@/redux/actions/cartActions";
 import Ratings from "../products/Ratings";
+import { addToWishlist, removeFromWishlist } from "@/redux/actions/wishlistActions";
 
 const ProductCard = ({ data, isEvent }) => {
   const { wishlist } = useSelector((state) => state.wishlist);

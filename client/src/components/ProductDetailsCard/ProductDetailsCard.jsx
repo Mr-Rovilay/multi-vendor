@@ -7,6 +7,7 @@ import { toast } from "sonner"
 import { addToCart } from "@/redux/actions/cartActions"
 import { addToWishlist, removeFromWishlist } from "@/redux/actions/wishlistActions"
 import { useDispatch, useSelector } from "react-redux"
+import { Link } from "react-router-dom"
 
 const ProductDetailsCard = ({ setOpen, data }) => {
   const { cart } = useSelector((state) => state.cart);
@@ -79,8 +80,8 @@ const ProductDetailsCard = ({ setOpen, data }) => {
               alt={data.name} 
               className="object-cover w-full rounded-lg h-96"
             />
-            
-            <div className="flex items-center space-x-4">
+             <Link to={`/shop/preview/${data.shop._id}`}>
+            <div className="flex items-center mt-4 space-x-4">
               <Avatar>
                 <AvatarImage src={data.shop?.shop_avatar?.url} alt={data.shop?.name} />
                 <AvatarFallback>{data.shop?.name?.charAt(0)}</AvatarFallback>
@@ -92,6 +93,8 @@ const ProductDetailsCard = ({ setOpen, data }) => {
                 </p>
               </div>
             </div>
+             
+             </Link>
 
             <Button 
               variant="default" 

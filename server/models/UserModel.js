@@ -1,46 +1,75 @@
-import mongoose from 'mongoose';        
+import mongoose from "mongoose";
+import bcrypt from 'bcryptjs';
 
 const userSchema = new mongoose.Schema({
   name: {
     type: String,
-    required: true,
-    trim: true
+    required: [true, "Please enter your name!"],
   },
   email: {
     type: String,
-    required: true,
+    required: [true, "Please enter your email!"],
     unique: true,
-    lowercase: true,
-    trim: true
+    lowercase: true
   },
   password: {
     type: String,
-    required: true,
-    minlength: 6
+    required: [true, "Please enter your password"],
+    minLength: [6, "Password should be greater than 6 characters"],
+    select: false
   },
+  phoneNumber: {
+    type: String,
+    required: [true, "Please enter your phone number"]
+  },
+  addresses: [
+    {
+      country: {
+        type: String,
+      },
+      city: {
+        type: String,
+      },
+      address1: {
+        type: String,
+      },
+      address2: {
+        type: String,
+      },
+      zipCode: {
+        type: Number,
+      },
+      addressType: {
+        type: String,
+      },
+    },
+  ],
   role: {
     type: String,
-    enum: ['customer', 'vendor', 'admin'],
-    default: 'customer'
+    default: "User",
   },
-  profile: {
-    avatar: {
+  avatar: {
+    public_id: {
       type: String,
-      default: ''
+      required: true,
     },
-    contact: {
+    url: {
       type: String,
-      trim: true
-    }
+      required: true,
+    },
   },
   createdAt: {
     type: Date,
-    default: Date.now
-  }
-}, {
-  timestamps: true
+    default: Date.now(),
+  },
+  resetPasswordToken: String,
+  resetPasswordTime: Date,
 });
 
-// Create and export the User model
-const User = mongoose.model('User', userSchema);
-export default User; 
+
+userSchema.methods.comparePassword = async function(enteredPassword) {
+  return await bcrypt.compare(enteredPassword, this.password);
+};
+
+export default mongoose.model("User", userSchema);
+

@@ -19,10 +19,10 @@ const Footer = () => {
   return (
     <footer className="text-white bg-black">
       {/* Newsletter Section */}
-      <div className="py-12 bg-primary max-pad-container">
+      <div className="py-5 bg-primary max-pad-container">
         <div className="flex flex-col items-center justify-between mx-auto space-y-6 md:flex-row md:space-y-0">
           <div className="md:w-2/5">
-            <h2 className="text-2xl font-bold md:text-3xl">
+            <h2 className="text-2xl font-bold md:text-2xl">
               <span className="text-green-400">Subscribe</span> to Our Newsletter
             </h2>
             <p className="mt-2 text-gray-200">
@@ -34,9 +34,9 @@ const Footer = () => {
             <Input 
               type="email" 
               placeholder="Enter your email" 
-              className="flex-grow mr-2"
+              className="flex-grow mr-2 text-black"
             />
-            <Button>
+            <Button type="submit">
               <Send className="mr-2" size={20} /> Subscribe
             </Button>
           </div>
@@ -45,7 +45,7 @@ const Footer = () => {
 
       {/* Main Footer Content */}
       <div className="max-pad-container">
-        <div className="grid grid-cols-1 gap-8 md:grid-cols-4">
+        <div className="grid grid-cols-1 gap-8 mt-5 md:grid-cols-4">
           {/* Company Info Column */}
           <div className="flex flex-col items-center md:items-start">
           <Link to="/" className="text-xl font-bold sm:text-2xl">
@@ -123,8 +123,8 @@ const Footer = () => {
         </div>
 
         {/* Footer Bottom */}
-        <div className="pt-8 mt-12 border-t border-gray-800">
-          <div className="flex flex-col items-center justify-between space-y-4 md:flex-row md:space-y-0">
+        <div className="mt-5 border-t border-gray-800 ">
+          <div className="flex flex-col items-center justify-between space-y-2 md:flex-row md:space-y-0">
             <div className="flex items-center text-gray-400">
               <Copyright size={16} className="mr-2" />
               <span>© {new Date().getFullYear()} Multi Vendor. All rights reserved.</span>

@@ -8,7 +8,7 @@ import {
   acceptRefund,
   getAllOrdersForAdmin
 } from "../controllers/orderControllers.js";
-import { authenticateShop, isAdmin } from "../middleware/authMiddleware.js";
+import { authenticateShop, isAdmin, verifyToken } from "../middleware/authMiddleware.js";
 
 const router = express.Router();
 
@@ -31,6 +31,6 @@ router.put("/order-refund/:id", requestRefund);
 router.put("/order-refund-success/:id", authenticateShop,  acceptRefund);
 
 // Route for admin to get all orders
-router.get("/admin-all-orders", authenticateShop, isAdmin("Admin"), getAllOrdersForAdmin);
+router.get("/admin-all-orders", verifyToken, isAdmin("Admin"), getAllOrdersForAdmin);
 
 export default router;

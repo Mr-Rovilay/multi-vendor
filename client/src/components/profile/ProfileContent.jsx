@@ -1,87 +1,169 @@
-import { useState } from 'react';
-import { useSelector } from 'react-redux';
+import { useEffect, useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useForm } from 'react-hook-form';
-import { Camera, Loader2 } from 'lucide-react';
+import { useForm } from "react-hook-form";
+import { Camera, Loader2 } from "lucide-react";
 
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
-import { 
-  Form, 
-  FormControl, 
-  FormField, 
-  FormItem, 
-  FormLabel, 
-  FormMessage 
+import {
+  Form,
+  FormControl,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { 
-  Dialog, 
-  DialogContent, 
-  DialogHeader, 
-  DialogTitle, 
-  DialogTrigger 
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
 } from "@/components/ui/dialog";
 
-import { backend_url } from "@/utils/server";
+import api from "@/utils/server";
 import { toast } from "sonner";
-import { profileSchema } from '@/zod-schema/auth';
-import AllOrders from '../products/AllOrders';
-import AllRefundOrders from './AllRefundOrders';
-import TrackOrder from './TrackOrder';
-import ChangePassword from './ChangePassword';
-import Address from './Address';
-import PaymentMethods from './PaymentMethods';
+import { profileSchema } from "@/zod-schema/auth";
+import AllOrders from "../products/AllOrders";
+import AllRefundOrders from "./AllRefundOrders";
+import TrackOrder from "./TrackOrder";
+import ChangePassword from "./ChangePassword";
+import Address from "./Address";
+import PaymentMethods from "./PaymentMethods";
+import { loadUser, updateUserInformation,  } from "@/redux/actions/user";
 
 const ProfileContent = ({ active }) => {
-  const { user } = useSelector((state) => state.user);
-  const [isLoading, setIsLoading] = useState(false);
+  const { user, error, successMessage } = useSelector((state) => state.user);
+  const dispatch = useDispatch();
+  
+  // State management
+  const [avatar, setAvatar] = useState(null);
   const [avatarPreview, setAvatarPreview] = useState(null);
+  const [isLoading, setIsLoading] = useState(false);
+  const [isUpdatingAvatar, setIsUpdatingAvatar] = useState(false);
+  const [isLoadingUser, setIsLoadingUser] = useState(true);
+  const [isDialogOpen, setIsDialogOpen] = useState(false);
 
-  // Initialize form with default values
+  // Form initialization
   const form = useForm({
     resolver: zodResolver(profileSchema),
     defaultValues: {
-      name: user?.name || '',
-      email: user?.email || '',
-      phoneNumber: user?.profile?.contact || '',
-      password: '',
+      name: user?.name || "",
+      email: user?.email || "",
+      phoneNumber: user?.phoneNumber || "",
+      // password: "",
     },
   });
 
+  // Load user data on mount
+  useEffect(() => {
+    const loadUserData = async () => {
+      try {
+        await dispatch(loadUser());
+      } finally {
+        setIsLoadingUser(false);
+      }
+    };
+    loadUserData();
+  }, [dispatch]);
+
+  // Update form when user data changes
+  useEffect(() => {
+    if (user) {
+      form.reset({
+        name: user.name || "",
+        email: user.email || "",
+        phoneNumber: user.phoneNumber || "",
+        // password: "",
+      });
+    }
+  }, [user, form]);
+
+  // Handle errors and success messages
+  useEffect(() => {
+    if (error) {
+      toast.error(error);
+      dispatch({ type: "clearErrors" });
+    }
+    if (successMessage) {
+      toast.success(successMessage);
+      dispatch({ type: "clearMessages" });
+    }
+  }, [error, successMessage, dispatch]);
+
+  // Handle image upload preview
   const handleImageUpload = (e) => {
-    const file = e.target.files[0];
+    const file = e.target.files?.[0];
+    
     if (file) {
       const reader = new FileReader();
       reader.onloadend = () => {
         setAvatarPreview(reader.result);
+        setAvatar(file);
       };
       reader.readAsDataURL(file);
     }
   };
 
-  const onSubmit = async (data) => {
+  // Handle avatar update
+  const handleAvatarUpdate = async () => {
+    if (!avatar) return;
+    
+    setIsUpdatingAvatar(true);
+    try {
+      const formData = new FormData();
+      formData.append('avatar', avatar);
+      
+      await api.put('/auth/update-avatar', formData);
+      
+      await dispatch(loadUser());
+      toast.success("Avatar updated successfully!");
+      setIsDialogOpen(false);
+    } catch (error) {
+      console.error("Avatar update error:", error);
+      toast.error(error.response?.data?.message || "Failed to update avatar");
+    } finally {
+      setIsUpdatingAvatar(false);
+    }
+  };
+
+  // Handle form submission
+  const onSubmit = async (formData) => {
     setIsLoading(true);
     try {
-      // Implement your update logic here
-      console.log('Profile Update Data:', data);
-      
-      // Simulated API call
-      await new Promise(resolve => setTimeout(resolve, 1500));
-      
-      toast.success('Profile updated successfully');
+      await dispatch(updateUserInformation(
+        formData.name,
+        formData.email,
+        formData.phoneNumber
+        // formData.password
+      ));
+      toast.success("Profile updated successfully!");
     } catch (error) {
-      toast.error('Failed to update profile');
-      console.error('Profile update error:', error);
+      console.error("Update error:", error);
+      if (error.response?.status === 401) {
+        toast.error("Session expired. Please login again.");
+        // navigate('/login');
+      } else {
+        toast.error(error.response?.data?.message || "Failed to update profile");
+      }
     } finally {
       setIsLoading(false);
     }
   };
 
-  // Render different sections based on active state
+  if (isLoadingUser) {
+    return (
+      <div className="flex justify-center items-center min-h-[400px]">
+        <Loader2 className="w-8 h-8 animate-spin" />
+      </div>
+    );
+  }
+
   const renderActiveContent = () => {
-    switch(active) {
+    switch (active) {
       case 1:
         return (
           <Card className="w-full max-w-2xl mx-auto">
@@ -90,13 +172,14 @@ const ProfileContent = ({ active }) => {
             </CardHeader>
             <CardContent>
               <div className="flex flex-col items-center mb-6 space-y-4">
-                <Dialog>
+                <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
                   <DialogTrigger asChild>
                     <div className="relative cursor-pointer group">
                       <Avatar className="w-[150px] h-[150px] border-4 border-primary/50 group-hover:opacity-70 transition-opacity">
-                        <AvatarImage 
-                          src={avatarPreview || `${backend_url}${user.profile.avatar}`} 
-                          alt="Profile avatar" 
+                        <AvatarImage
+                          src={user?.avatar?.url}
+                          alt="Profile avatar"
+                          className="object-cover rounded-full"
                         />
                         <AvatarFallback>{user?.name?.charAt(0)}</AvatarFallback>
                       </Avatar>
@@ -110,18 +193,33 @@ const ProfileContent = ({ active }) => {
                       <DialogTitle>Update Profile Picture</DialogTitle>
                     </DialogHeader>
                     <div className="space-y-4">
-                      <Input 
-                        type="file" 
+                      <Input
+                        type="file"
                         accept="image/*"
                         onChange={handleImageUpload}
                       />
                       {avatarPreview && (
-                        <div className="flex justify-center">
-                          <img 
-                            src={avatarPreview} 
-                            alt="Avatar Preview" 
-                            className="max-w-[300px] max-h-[300px] object-contain"
-                          />
+                        <div className="flex flex-col gap-4">
+                          <div className="flex justify-center">
+                            <img
+                              src={avatarPreview}
+                              alt="Avatar Preview"
+                              className="max-w-[300px] max-h-[300px] object-contain"
+                            />
+                          </div>
+                          <Button 
+                            onClick={handleAvatarUpdate}
+                            disabled={isUpdatingAvatar || !avatar}
+                          >
+                            {isUpdatingAvatar ? (
+                              <>
+                                <Loader2 className="w-4 h-4 mr-2 animate-spin" />
+                                Updating...
+                              </>
+                            ) : (
+                              "Save Avatar"
+                            )}
+                          </Button>
                         </div>
                       )}
                     </div>
@@ -139,7 +237,10 @@ const ProfileContent = ({ active }) => {
                         <FormItem>
                           <FormLabel>Full Name</FormLabel>
                           <FormControl>
-                            <Input placeholder="Enter your full name" {...field} />
+                            <Input
+                              placeholder="Enter your full name"
+                              {...field}
+                            />
                           </FormControl>
                           <FormMessage />
                         </FormItem>
@@ -152,10 +253,10 @@ const ProfileContent = ({ active }) => {
                         <FormItem>
                           <FormLabel>Email Address</FormLabel>
                           <FormControl>
-                            <Input 
-                              placeholder="Enter your email" 
+                            <Input
+                              placeholder="Enter your email"
                               type="email"
-                              {...field} 
+                              {...field}
                             />
                           </FormControl>
                           <FormMessage />
@@ -172,47 +273,43 @@ const ProfileContent = ({ active }) => {
                         <FormItem>
                           <FormLabel>Phone Number</FormLabel>
                           <FormControl>
-                            <Input 
-                              placeholder="Enter 10-digit phone number" 
+                            <Input
+                              placeholder="Enter phone number"
                               type="tel"
-                              {...field} 
+                              {...field}
                             />
                           </FormControl>
                           <FormMessage />
                         </FormItem>
                       )}
                     />
-                    <FormField
+                    {/* <FormField
                       control={form.control}
                       name="password"
                       render={({ field }) => (
                         <FormItem>
                           <FormLabel>Password</FormLabel>
                           <FormControl>
-                            <Input 
-                              placeholder="Enter new password" 
+                            <Input
+                              placeholder="Enter new password"
                               type="password"
-                              {...field} 
+                              {...field}
                             />
                           </FormControl>
                           <FormMessage />
                         </FormItem>
                       )}
-                    />
+                    /> */}
                   </div>
 
-                  <Button 
-                    type="submit" 
-                    className="w-full" 
-                    disabled={isLoading}
-                  >
+                  <Button type="submit" className="w-full" disabled={isLoading}>
                     {isLoading ? (
                       <>
                         <Loader2 className="w-4 h-4 mr-2 animate-spin" />
                         Updating...
                       </>
                     ) : (
-                      'Update Profile'
+                      "Update Profile"
                     )}
                   </Button>
                 </form>
@@ -230,18 +327,14 @@ const ProfileContent = ({ active }) => {
         return <ChangePassword />;
       case 7:
         return <Address />;
-        case 8:
-          return <PaymentMethods />;
+      case 8:
+        return <PaymentMethods />;
       default:
         return null;
     }
   };
 
-  return (
-    <div className="w-full">
-      {renderActiveContent()}
-    </div>
-  );
+  return <div className="w-full">{renderActiveContent()}</div>;
 };
 
 export default ProfileContent;

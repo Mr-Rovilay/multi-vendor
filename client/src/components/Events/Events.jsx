@@ -1,17 +1,29 @@
+/* eslint-disable no-unused-vars */
 import { CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import EventCard from "./EventCard";
 import { useSelector, useDispatch } from "react-redux";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { getAllEvents } from "@/redux/actions/eventAction";
-import { Loader } from "../layout/Loader";
+import { Loader2 } from "lucide-react";
 
 const Events = () => {
   const dispatch = useDispatch();
+  const [popularEvents, setPopularEvents] = useState([]);
   const { allEvents, isLoading, error } = useSelector((state) => state.events);
 
   useEffect(() => {
     dispatch(getAllEvents());
   }, [dispatch]);
+
+  useEffect(() => {
+    if (allEvents && allEvents.length > 0) {
+      const sortedData = [...allEvents].sort(
+        (a, b) => b.sold_out - a.sold_out
+      );
+      const firstFive = sortedData.slice(0, 3);
+      setPopularEvents(firstFive);
+    }
+  }, [allEvents]);
 
   if (error) {
     return (
@@ -33,16 +45,16 @@ const Events = () => {
       </CardHeader>
 
       {isLoading ? (
-        <div className="flex justify-center items-center min-h-[200px]">
-       <Loader/>
+        <div className="flex items-center justify-center">
+          <Loader2/>
         </div>
       ) : (
         <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
           {allEvents && allEvents.length > 0 ? (
             allEvents.map((event) => (
-              <EventCard data={allEvents && allEvents[0]}
+              <EventCard 
                 key={event._id}
-                {...event}
+                data={event}
               />
             ))
           ) : (

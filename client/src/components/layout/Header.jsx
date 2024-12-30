@@ -266,7 +266,7 @@ const Header = () => {
                     <NavigationMenuItem>
                       <NavigationMenuTrigger>
                         <Avatar>
-                          {/* <AvatarImage src={user.profile?.avatar} /> */}
+                          <AvatarImage src={user?.avatar.url} className="object-cover"/>
                           <AvatarFallback>{user?.name?.charAt(0)}</AvatarFallback>
                         </Avatar>
                       </NavigationMenuTrigger>

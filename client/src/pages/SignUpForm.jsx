@@ -18,13 +18,6 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
 import { signupSchema } from "../zod-schema/auth";
 import { Link, useNavigate } from "react-router-dom";
 import { toast } from "sonner";
@@ -55,8 +48,7 @@ export default function Signup() {
       name: "",
       email: "",
       password: "",
-      role: "customer",
-      contact: "",
+      phoneNumber: "",
       avatar: undefined,
     },
   });
@@ -76,8 +68,7 @@ export default function Signup() {
       formData.append("name", data.name);
       formData.append("email", data.email);
       formData.append("password", data.password);
-      formData.append("role", data.role);
-      formData.append("contact", data.contact);
+      formData.append("phoneNumber", data.phoneNumber);
 
 
       if (data.avatar && data.avatar.length > 0) {
@@ -91,7 +82,7 @@ export default function Signup() {
       // Check if the action was successful
       if (result?.type === "SignupSuccess") {
         toast.success("Signup successful! Please log in.");
-        navigate("/login");
+        navigate("/login");  
       } else {
         throw new Error(result?.payload || "Signup failed!");
       }
@@ -203,32 +194,7 @@ export default function Signup() {
               />
               <FormField
                 control={form.control}
-                name="role"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Role</FormLabel>
-                    <Select
-                      onValueChange={field.onChange}
-                      defaultValue={field.value}
-                    >
-                      <FormControl>
-                        <SelectTrigger>
-                          <SelectValue placeholder="Select your role" />
-                        </SelectTrigger>
-                      </FormControl>
-                      <SelectContent>
-                        <SelectItem value="customer">Customer</SelectItem>
-                        <SelectItem value="vendor">Vendor</SelectItem>
-                        <SelectItem value="admin">Admin</SelectItem>
-                      </SelectContent>
-                    </Select>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-              <FormField
-                control={form.control}
-                name="contact"
+                name="phoneNumber"
                 render={({ field }) => (
                   <FormItem>
                     <FormLabel>Contact Number</FormLabel>

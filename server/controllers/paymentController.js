@@ -7,7 +7,7 @@ export const processPayment = async (req, res) => {
   try {
     const myPayment = await stripeInstance.paymentIntents.create({
       amount: req.body.amount,
-      currency: "inr",
+      currency: "ngn",  
       metadata: {
         company: "Multi vendor",
       },

@@ -26,7 +26,6 @@ import { CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 
 const AllProducts = () => {
   const { products, isLoading } = useSelector((state) => state.products);
-  console.log(products)
   const { seller } = useSelector((state) => state.seller);
   const dispatch = useDispatch();
 

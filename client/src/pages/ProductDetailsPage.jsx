@@ -11,9 +11,6 @@ const ProductDetailsPage = () => {
   // Add more detailed logging
   const productState = useSelector((state) => state.products);
   const eventState = useSelector((state) => state.events);
-  
-  console.log('Full product state:', productState);
-  console.log('Full event state:', eventState);
 
   const { allProducts } = productState;
   const { allEvents } = eventState;
@@ -33,13 +30,9 @@ const ProductDetailsPage = () => {
       setData(data);
     } else {
       const data = allProducts && allProducts.find((i) => i._id === id);
-      console.log(data)
       setData(data);
     }
   }, [allProducts, allEvents, id, eventData]);
-
-  // Add data state logging
-  console.log('Current data state:', data);
 
   return (
     <>

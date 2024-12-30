@@ -41,7 +41,6 @@ const AllCoupons = () => {
 
   const { seller } = useSelector((state) => state.seller);
   const { products } = useSelector((state) => state.products);
-  console.log(products)
   const dispatch = useDispatch();
 
   useEffect(() => {

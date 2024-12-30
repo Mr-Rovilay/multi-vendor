@@ -48,11 +48,11 @@ const CountDown = ({ data }) => {
 
   if (isExpired) {
     return (
-      <Card className="p-4 text-center">
+    
         <Badge variant="destructive" className="flex items-center justify-center">
           <Clock className="mr-2" /> Time's Up!
         </Badge>
-      </Card>
+    
     );
   }
 

@@ -12,50 +12,38 @@ import {
   TableRow 
 } from '@/components/ui/table';
 import { Link } from 'react-router-dom';
+import { useSelector, useDispatch } from 'react-redux';
+import { addToCart, removeFromCart } from '@/redux/actions/cartActions';
+import { toast } from 'sonner';
 
 const CartSidebar = () => {
   const [openCart, setOpenCart] = useState(false);
-  const [cartItems, setCartItems] = useState([
-    {
-      id: 1,
-      name: "Classic White T-Shirt",
-      price: 29.99,
-      quantity: 2,
-      image: "https://hips.hearstapps.com/hmg-prod/images/copycat-hamburger-helper1-1659463591.jpg?crop=0.668xw:1.00xh;0.176xw,0&resize=640:*"
-    },
-    {
-      id: 2,
-      name: "Denim Jeans",
-      price: 79.99,
-      quantity: 1,
-      image: "https://hips.hearstapps.com/hmg-prod/images/copycat-hamburger-helper1-1659463591.jpg?crop=0.668xw:1.00xh;0.176xw,0&resize=640:*"
+  const { cart } = useSelector((state) => state.cart);
+  const dispatch = useDispatch();
+
+  const removeFromCartHandler = (item) => {
+    dispatch(removeFromCart(item));
+  };
+
+  const totalPrice = cart.reduce(
+    (acc, item) => acc + item.qty * item.discountPrice,
+    0
+  );
+
+  const increment = (item) => {
+    if (item.stock <= item.qty) {
+      toast.error("Product stock limited!");
+    } else {
+      const updateCartData = { ...item, qty: item.qty + 1 };
+      dispatch(addToCart(updateCartData));
     }
-  ]);
-
-  const calculateTotal = () => {
-    return cartItems.reduce((total, item) => total + (item.price * item.quantity), 0).toFixed(2);
   };
 
-  const removeItem = (id) => {
-    setCartItems(cartItems.filter((item) => item.id !== id));
-  };
-
-  const incrementQuantity = (id) => {
-    setCartItems((prevItems) =>
-      prevItems.map((item) =>
-        item.id === id ? { ...item, quantity: item.quantity + 1 } : item
-      )
-    );
-  };
-
-  const decrementQuantity = (id) => {
-    setCartItems((prevItems) =>
-      prevItems.map((item) =>
-        item.id === id && item.quantity > 1
-          ? { ...item, quantity: item.quantity - 1 }
-          : item
-      )
-    );
+  const decrement = (item) => {
+    if (item.qty > 1) {
+      const updateCartData = { ...item, qty: item.qty - 1 };
+      dispatch(addToCart(updateCartData));
+    }
   };
 
   return (
@@ -72,7 +60,7 @@ const CartSidebar = () => {
           className="absolute bg-green-500 -top-2 -right-2"
           variant="secondary"
         >
-          {cartItems.length}
+          {cart && cart.length}
         </Badge>
       </Button>
 
@@ -97,6 +85,7 @@ const CartSidebar = () => {
               {/* Cart Header */}
               <div className="flex items-center justify-between p-4 border-b">
                 <h2 className="text-xl font-bold">Your Cart</h2>
+                <span>{cart && cart.length} items</span>
                 <Button 
                   variant="ghost" 
                   size="icon" 
@@ -108,7 +97,7 @@ const CartSidebar = () => {
 
               {/* Cart Items */}
               <div className="p-4 overflow-y-auto h-[calc(100%-200px)]">
-                {cartItems.length === 0 ? (
+                {cart.length === 0 ? (
                   <p className="text-center text-gray-500">Your cart is empty</p>
                 ) : (
                   <Table>
@@ -120,11 +109,11 @@ const CartSidebar = () => {
                       </TableRow>
                     </TableHeader>
                     <TableBody>
-                      {cartItems.map((item) => (
-                        <TableRow key={item.id}>
+                      {cart.map((item) => (
+                        <TableRow key={item._id}>
                           <TableCell>
                             <img 
-                              src={item.image} 
+                              src={item.images[0]?.url} 
                               alt={item.name} 
                               className="object-cover w-16 h-16 rounded"
                             />
@@ -133,7 +122,7 @@ const CartSidebar = () => {
                             <div>
                               <div className="font-medium line-clamp-1">{item.name}</div>
                               <div className="text-sm text-gray-500">
-                                ${item.price} x {item.quantity}
+                                ${item.discountPrice} x {item.qty}
                               </div>
                             </div>
                           </TableCell>
@@ -142,23 +131,23 @@ const CartSidebar = () => {
                               <Button
                                 variant="outline"
                                 size="icon"
-                                onClick={() => decrementQuantity(item.id)}
-                                disabled={item.quantity <= 1}
+                                onClick={() => decrement(item)}
+                                disabled={item.qty <= 1}
                               >
                                 <Minus className="w-4 h-4" />
                               </Button>
-                              <span>{item.quantity}</span>
+                              <span>{item.qty}</span>
                               <Button
                                 variant="outline"
                                 size="icon"
-                                onClick={() => incrementQuantity(item.id)}
+                                onClick={() => increment(item)}
                               >
                                 <Plus className="w-4 h-4" />
                               </Button>
                               <Button 
                                 variant="destructive" 
                                 size="icon"
-                                onClick={() => removeItem(item.id)}
+                                onClick={() => removeFromCartHandler(item)}
                               >
                                 <Trash2 className="w-4 h-4" />
                               </Button>
@@ -175,12 +164,11 @@ const CartSidebar = () => {
               <div className="absolute bottom-0 left-0 right-0 p-4 border-t bg-gray-50">
                 <div className="flex justify-between mb-4">
                   <span className="font-bold">Total:</span>
-                  <span className="font-bold">${calculateTotal()}</span>
+                  <span className="font-bold">US${totalPrice}</span>
                 </div>
-                <Button  className="w-full" disabled={cartItems.length === 0}>
-                  <Link to={"/checkout"}>
-                  
-                  Proceed to Checkout
+                <Button className="w-full" disabled={cart.length === 0}>
+                  <Link to="/checkout" className="w-full">
+                    Proceed to Checkout
                   </Link>
                 </Button>
               </div>
