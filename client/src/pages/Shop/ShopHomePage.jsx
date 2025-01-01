@@ -1,6 +1,6 @@
+import ShopInfo from "@/components/Shop/ShopInfo";
+import ShopProfileData from "@/components/Shop/ShopProfileData";
 import { ScrollArea } from "@/components/ui/scroll-area";
-import ShopInfo from "../../components/Shop/ShopInfo";
-import ShopProfileData from "../../components/Shop/ShopProfileData";
 
 export default function ShopHomePage() {  
   return (
