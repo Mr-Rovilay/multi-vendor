@@ -1,8 +1,8 @@
-import ShopInfo from "@/components/Shop/ShopInfo.jsx";
+import ShopInfo from "@/components/Shop/ShopInfo";
 import ShopProfileData from "@/components/Shop/ShopProfileData";
 import { ScrollArea } from "@/components/ui/scroll-area";
 
-const ShopPreviewPage = () => {  
+export default function ShopPreviewPage() {  
   return (
     <div className="min-h-screen bg-muted/30">
       <div className="py-8 max-pad-container">
@@ -27,4 +27,3 @@ const ShopPreviewPage = () => {
     </div>
   );
 }
-export default ShopPreviewPage
