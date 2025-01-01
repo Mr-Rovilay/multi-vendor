@@ -1,48 +1,49 @@
-import { Route, Routes } from "react-router-dom";
 import { useEffect, useState } from "react";
-import LoginForm from "./pages/LoginForm";
-import SignupForm from "./pages/SignUpForm";
-import Store from "./redux/store";
+import { useSelector } from "react-redux";
+import api from "./utils/server";
 import { loadSeller, loadUser } from "./redux/actions/user";
-import HomePage from "./pages/HomePage";
-import ProductsPage from "./pages/ProductsPage";
-import BestSellingPage from "./pages/BestSellingPage";
-import FAQ from "./pages/FAQ";
-import AboutUs from "./pages/AboutUs";
+import { getAllEvents } from "./redux/actions/eventAction";
+import { getAllProducts } from "./redux/actions/productAction";
 import { Loader } from "./components/layout/Loader";
+import { Route, Routes } from "react-router-dom";
+import { Elements } from "@stripe/react-stripe-js";
+import { loadStripe } from "@stripe/stripe-js";
+import ProtectedRoute from "./routes/ProtectedRoute";
+import PaymentPage from "./pages/PaymentPage";
+import HomePage from "./pages/HomePage";
+import LoginForm from "./pages/LoginForm";
+import ProductsPage from "./pages/ProductsPage";
+import SignUpForm from "./pages/SignUpForm";
 import ProductDetailsPage from "./pages/ProductDetailsPage";
 import OrderSuccessPage from "./pages/OrderSuccessPage";
-import ProfilePage from "./pages/ProfilePage";
-import { useSelector } from "react-redux";
-import ProtectedRoute from "./routes/ProtectedRoute";
-import PageNotFound from "./pages/PageNotFound";
+import UserInbox from "./pages/UserInbox";
+import FAQ from "./pages/FAQ";
+import ShopPreviewPage from "./pages/Shop/ShopPreviewPage";
 import CheckOutPage from "./pages/CheckOutPage";
+import ProfilePage from "./pages/ProfilePage";
+import OrderDetailsPage from "./pages/OrderDetailsPage";
+import TrackOrderPage from "./pages/TrackOrderPage";
+import AboutUs from "./pages/AboutUs";
+import ShopCreate from "./components/Shop/ShopCreate";
 import ShopLogin from "./components/Shop/ShopLogin";
-import ShopHomePage from "./pages/Shop/ShopHomePage";
 import SellerProtectedRoute from "./routes/SellerProtectedRoute";
-import ShopDashBoardPage from "./pages/Shop/ShopDashBoardPage";
+import ShopHomePage from "./pages/Shop/ShopHomePage";
+import ShopAllRefund from "./pages/Shop/ShopAllRefund";
 import ShopCreateProduct from "./pages/Shop/ShopCreateProduct";
+import ShopOrderDetails from "./pages/Shop/ShopOrderDetails";
+import ShopAllOrders from "./pages/Shop/ShopAllOrders";
 import ShopAllProducts from "./pages/Shop/ShopAllProducts";
+import { ShopInBoxPage } from "./pages/Shop/ShopInBoxPage";
+import ShopDashBoardPage from "./pages/Shop/ShopDashBoardPage";
+import DashBoardWithdrawPage from "./pages/Shop/DashBoardWithdrawPage";
+import ShopSettingsPage from "./pages/Shop/ShopSettingsPage";
 import ShopDashBoardEventPage from "./pages/Shop/ShopDashBoardEventPage";
 import ShopAllEvents from "./pages/Shop/ShopAllEvents";
 import ShopAllCoupons from "./pages/Shop/ShopAllCoupons";
-import ShopPreviewPage from "./pages/Shop/ShopPreviewPage";
-import { getAllEvents } from "./redux/actions/eventAction";
-import { getAllProducts } from "./redux/actions/productAction";
-import api from "./utils/server";
-import { Elements } from "@stripe/react-stripe-js";
-import { loadStripe } from "@stripe/stripe-js";
-import PaymentPage from "./pages/PaymentPage";
-import ShopAllOrders from "./pages/Shop/ShopAllOrders";
-import ShopOrderDetails from "./pages/Shop/ShopOrderDetails";
-import OrderDetailsPage from "./pages/OrderDetailsPage";
-import TrackOrderPage from "./pages/TrackOrderPage";
-import ShopAllRefund from "./pages/Shop/ShopAllRefund";
-import ShopSettingsPage from "./pages/Shop/ShopSettingsPage";
-import DashBoardWithdrawPage from "./pages/Shop/DashBoardWithdrawPage";
-import { ShopInBoxPage } from "./pages/Shop/ShopInBoxPage";
-import UserInbox from "./pages/UserInbox";
-import ShopCreate from "./components/Shop/ShopCreate";
+import BestSellingPage from "./pages/BestSellingPage";
+import Store from "./redux/store";
+import PageNotFound from "./pages/PageNotFound";
+
 
 export default function Home() {
   const [loading, setLoading] = useState(true);
@@ -97,7 +98,7 @@ export default function Home() {
           {/* Other Routes */}
           <Route path="/" element={<HomePage />} />
           <Route path="/login" element={<LoginForm />} />
-          <Route path="/signup" element={<SignupForm />} />
+          <Route path="/signup" element={<SignUpForm />} />
           <Route path="/products" element={<ProductsPage />} />
           <Route path="/product/:id" element={<ProductDetailsPage />} />
           <Route

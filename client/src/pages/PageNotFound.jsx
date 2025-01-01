@@ -3,7 +3,7 @@ import { AlertTriangle, Home, RefreshCw } from 'lucide-react';
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardFooter, CardHeader } from "@/components/ui/card";
 
-const NotFoundPage = () => {
+const PageNotFound = () => {
   return (
     <div className="flex items-center justify-center min-h-screen bg-gradient-to-b from-gray-100 to-gray-300">
       <Card className="w-full max-w-lg overflow-hidden bg-white shadow-lg rounded-xl">
@@ -51,4 +51,4 @@ const NotFoundPage = () => {
   );
 };
 
-export default NotFoundPage;
+export default PageNotFound;

@@ -25,7 +25,7 @@ import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { signup } from "@/redux/actions/authActions";
 
-export default function Signup() {
+export default function SignUpForm() {
   const [avatarPreview, setAvatarPreview] = useState(null);
   const [showPassword, setShowPassword] = useState(false);
   const dispatch = useDispatch();
