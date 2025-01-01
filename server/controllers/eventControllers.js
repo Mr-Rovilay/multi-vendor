@@ -1,5 +1,5 @@
 import cloudinary from "../middleware/cloudinary.js";
-import Event from "../models/EventModel.js";
+import Event from "../models/eventModel.js";
 import Shop from "../models/ShopModel.js";
 
 // Create Product
