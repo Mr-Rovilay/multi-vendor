@@ -24,8 +24,6 @@ import ProfilePage from "./pages/ProfilePage";
 import OrderDetailsPage from "./pages/OrderDetailsPage";
 import TrackOrderPage from "./pages/TrackOrderPage";
 import AboutUs from "./pages/AboutUs";
-import ShopCreate from "@/components/Shop/ShopCreate";
-import ShopLogin from "@/components/Shop/ShopLogin";
 import SellerProtectedRoute from "./routes/SellerProtectedRoute";
 import ShopHomePage from "./pages/Shop/ShopHomePage";
 import ShopAllRefund from "./pages/Shop/ShopAllRefund";
@@ -43,6 +41,8 @@ import ShopAllCoupons from "./pages/Shop/ShopAllCoupons";
 import BestSellingPage from "./pages/BestSellingPage";
 import Store from "./redux/store";
 import PageNotFound from "./pages/PageNotFound";
+import ShopCreate from "./pages/Shop/ShopCreate";
+import ShopLogin from "./pages/Shop/ShopLogin";
 
 export default function Home() {
   const [loading, setLoading] = useState(true);
