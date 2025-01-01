@@ -24,7 +24,7 @@ import ProfilePage from "./pages/ProfilePage";
 import OrderDetailsPage from "./pages/OrderDetailsPage";
 import TrackOrderPage from "./pages/TrackOrderPage";
 import AboutUs from "./pages/AboutUs";
-import ShopCreate from "./components/Shop/ShopCreate";
+import ShopCreate from "@/components/Shop/ShopCreate";
 import ShopLogin from "./components/Shop/ShopLogin";
 import SellerProtectedRoute from "./routes/SellerProtectedRoute";
 import ShopHomePage from "./pages/Shop/ShopHomePage";
@@ -43,7 +43,6 @@ import ShopAllCoupons from "./pages/Shop/ShopAllCoupons";
 import BestSellingPage from "./pages/BestSellingPage";
 import Store from "./redux/store";
 import PageNotFound from "./pages/PageNotFound";
-
 
 export default function Home() {
   const [loading, setLoading] = useState(true);
@@ -110,7 +109,7 @@ export default function Home() {
             }
           />
 
-<Route
+          <Route
             path="/inbox"
             element={
               <ProtectedRoute isAuthenticated={isAuthenticated}>
@@ -210,7 +209,7 @@ export default function Home() {
             }
           />
 
-<Route
+          <Route
             path="/dashboard-messages"
             element={
               <SellerProtectedRoute authenticateShop={authenticateShop}>
