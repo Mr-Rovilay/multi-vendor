@@ -1,6 +1,6 @@
-import DashboardSidebar from '@/components/shop/layout/DashBoardSideBar'
-import ShopDashBoardHeader from '@/components/shop/layout/ShopDashBoardHeader'
-import WithDrawMoney from '@/components/shop/WithDrawMoney'
+import DashboardSidebar from '@/components/Shop/layout/DashBoardSideBar'
+import ShopDashBoardHeader from '@/components/Shop/layout/ShopDashBoardHeader'
+import WithDrawMoney from '@/components/Shop/WithDrawMoney'
 
 const DashBoardWithdrawPage = () => {
   return (

@@ -1,6 +1,6 @@
 import Footer from "@/components/footer/Footer"
-import ShopDashBoardHeader from "@/components/shop/layout/ShopDashBoardHeader"
-import OrderDetails from "@/components/shop/OrderDetails/OrderDetails"
+import ShopDashBoardHeader from "@/components/Shop/layout/ShopDashBoardHeader"
+import OrderDetails from "@/components/Shop/OrderDetails/OrderDetails"
 
 const ShopOrderDetails = () => {
   return (

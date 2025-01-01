@@ -1,6 +1,6 @@
-import AllEvents from "@/components/shop/AllEvents"
-import DashboardSidebar from "@/components/shop/layout/DashBoardSideBar"
-import ShopDashBoardHeader from "@/components/shop/layout/ShopDashBoardHeader"
+import AllEvents from "@/components/Shop/AllEvents"
+import DashboardSidebar from "@/components/Shop/layout/DashBoardSideBar"
+import ShopDashBoardHeader from "@/components/Shop/layout/ShopDashBoardHeader"
 
 
 const ShopAllEvents = () => {

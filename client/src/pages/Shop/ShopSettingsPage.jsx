@@ -1,6 +1,6 @@
-import DashboardSidebar from "@/components/shop/layout/DashBoardSideBar";
-import ShopDashBoardHeader from "@/components/shop/layout/ShopDashBoardHeader";
-import ShopSettings from "@/components/shop/ShopSettings";
+import DashboardSidebar from "@/components/Shop/layout/DashBoardSideBar";
+import ShopDashBoardHeader from "@/components/Shop/layout/ShopDashBoardHeader";
+import ShopSettings from "@/components/Shop/ShopSettings";
 
 const ShopSettingsPage = () => {
   return (

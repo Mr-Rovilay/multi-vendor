@@ -1,6 +1,6 @@
-import CreateProduct from "@/components/shop/CreateProduct"
-import DashboardSidebar from "@/components/shop/layout/DashBoardSideBar"
-import ShopDashBoardHeader from "@/components/shop/layout/ShopDashBoardHeader"
+import CreateProduct from "@/components/Shop/CreateProduct"
+import DashboardSidebar from "@/components/Shop/layout/DashBoardSideBar"
+import ShopDashBoardHeader from "@/components/Shop/layout/ShopDashBoardHeader"
 
 const ShopCreateProduct = () => {
   return (

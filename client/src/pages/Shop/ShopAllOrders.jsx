@@ -1,6 +1,6 @@
-import AllOrders from "@/components/shop/AllOrders";
-import DashboardSidebar from "@/components/shop/layout/DashBoardSideBar";
-import ShopDashBoardHeader from "@/components/shop/layout/ShopDashBoardHeader";
+import AllOrders from "@/components/Shop/AllOrders";
+import DashboardSidebar from "@/components/Shop/layout/DashBoardSideBar";
+import ShopDashBoardHeader from "@/components/Shop/layout/ShopDashBoardHeader";
 
 const ShopAllOrders = () => {
   return (

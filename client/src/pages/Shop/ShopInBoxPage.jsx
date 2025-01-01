@@ -1,6 +1,6 @@
-import DashboardMessages from "@/components/shop/DashboardMessages";
-import DashboardSidebar from "@/components/shop/layout/DashBoardSideBar";
-import ShopDashBoardHeader from "@/components/shop/layout/ShopDashBoardHeader";
+import DashboardMessages from "@/components/Shop/DashboardMessages";
+import DashboardSidebar from "@/components/Shop/layout/DashBoardSideBar";
+import ShopDashBoardHeader from "@/components/Shop/layout/ShopDashBoardHeader";
 
 
 

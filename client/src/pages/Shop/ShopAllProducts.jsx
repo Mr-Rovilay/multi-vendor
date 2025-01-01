@@ -1,6 +1,6 @@
-import AllProducts from "@/components/shop/AllProducts"
-import DashboardSidebar from "@/components/shop/layout/DashBoardSideBar"
-import ShopDashBoardHeader from "@/components/shop/layout/ShopDashBoardHeader"
+import AllProducts from "@/components/Shop/AllProducts"
+import DashboardSidebar from "@/components/Shop/layout/DashBoardSideBar"
+import ShopDashBoardHeader from "@/components/Shop/layout/ShopDashBoardHeader"
 
 
 const ShopAllProducts = () => {

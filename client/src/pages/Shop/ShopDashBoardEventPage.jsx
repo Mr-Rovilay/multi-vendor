@@ -1,6 +1,6 @@
-import CreateEvent from "@/components/shop/CreateEvent";
-import DashboardSidebar from "@/components/shop/layout/DashBoardSideBar";
-import ShopDashBoardHeader from "@/components/shop/layout/ShopDashBoardHeader";
+import CreateEvent from "@/components/Shop/CreateEvent";
+import DashboardSidebar from "@/components/Shop/layout/DashBoardSideBar";
+import ShopDashBoardHeader from "@/components/Shop/layout/ShopDashBoardHeader";
 
 const ShopDashBoardEventPage = () => {
   return (

@@ -1,6 +1,6 @@
-import DashBoardSideBar from "@/components/shop/layout/DashBoardSideBar"
-import ShopDashBoardHeader from "@/components/shop/layout/ShopDashBoardHeader"
-import ShopDashboardHero from "@/components/shop/ShopDashboardHero"
+import DashBoardSideBar from "@/components/Shop/layout/DashBoardSideBar"
+import ShopDashBoardHeader from "@/components/Shop/layout/ShopDashBoardHeader"
+import ShopDashboardHero from "@/components/Shop/ShopDashboardHero"
 
 
 const ShopDashBoardPage = () => {

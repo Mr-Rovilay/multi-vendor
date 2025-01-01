@@ -1,6 +1,6 @@
-import AllCoupons from "@/components/shop/AllCoupons"
-import DashboardSidebar from "@/components/shop/layout/DashBoardSideBar"
-import ShopDashBoardHeader from "@/components/shop/layout/ShopDashBoardHeader"
+import AllCoupons from "@/components/Shop/AllCoupons"
+import DashboardSidebar from "@/components/Shop/layout/DashBoardSideBar"
+import ShopDashBoardHeader from "@/components/Shop/layout/ShopDashBoardHeader"
 
 
 const ShopAllCoupons = () => {
