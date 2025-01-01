@@ -1,5 +1,6 @@
 import api from "@/utils/server";
 
+
 // create event
 export const createEvent = (eventData) => async (dispatch) => {
   try {

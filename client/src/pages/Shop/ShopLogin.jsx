@@ -3,8 +3,6 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Mail, Lock, Eye, EyeOff, Loader2 } from "lucide-react";
 import { Link, useNavigate } from "react-router-dom";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
 import {
   Form,
   FormControl,
@@ -24,6 +22,8 @@ import { toast } from "sonner";
 import api from "@/utils/server";
 import { loginSchema } from "@/zod-schema/auth";
 import { useSelector } from "react-redux";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
 
 export default function ShopLogin() {
   const [showPassword, setShowPassword] = useState(false);
