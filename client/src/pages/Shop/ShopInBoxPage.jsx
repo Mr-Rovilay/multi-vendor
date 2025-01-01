@@ -10,15 +10,11 @@ export const ShopInBoxPage = () => {
     <div>
       {/* Header */}
       <ShopDashBoardHeader />
-
-      {/* Main layout */}
       <div className="flex">
         {/* Fixed Sidebar */}
         <div className="w-[60px] md:w-[300px] fixed top-16 bottom-0">
           <DashboardSidebar active={8} />
         </div>
-
-        {/* Scrollable Content */}
         <div className="flex-1 ml-[60px] md:ml-[300px] pt-4 overflow-y-auto">
           <DashboardMessages />
         </div>

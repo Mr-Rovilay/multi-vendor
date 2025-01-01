@@ -22,7 +22,7 @@ import Header from "@/components/layout/Header";
 import api from "@/utils/server";
 import { useNavigate, useSearchParams } from "react-router-dom";
 
-const ENDPOINT = "http://localhost:4000/";
+const ENDPOINT = "https://multi-vendor-ys5e.onrender.com/";
 const socketId = socketIO(ENDPOINT, { transports: ["websocket"] });
 
 const MessageBubble = ({ message, isSender, userData, time }) => {
