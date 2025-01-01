@@ -1,6 +1,6 @@
-import ProductCard from "../ProductCard/ProductCard";
 import { CardHeader, CardTitle } from "@/components/ui/card";
 import { useSelector } from "react-redux";
+import ProductCard from "../productCard/ProductCard";
 
 const FeaturedProduct = () => {
   const {allProducts} = useSelector((state) => state.products);
