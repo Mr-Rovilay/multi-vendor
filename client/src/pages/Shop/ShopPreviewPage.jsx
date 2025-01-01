@@ -1,4 +1,4 @@
-import ShopInfo from "@/components/Shop/ShopInfo";
+import ShopInfo from "@/components/Shop/ShopInfo.jsx";
 import ShopProfileData from "@/components/Shop/ShopProfileData";
 import { ScrollArea } from "@/components/ui/scroll-area";
 
