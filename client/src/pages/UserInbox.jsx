@@ -1,7 +1,11 @@
-import React, { useEffect, useRef, useState } from "react";
-import { useSelector } from "react-redux";
-import socketIO from "socket.io-client";
-import { format } from "timeago.js";
+import Header from "@/components/layout/Header";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { Button } from "@/components/ui/button";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Input } from "@/components/ui/input";
+import { ScrollArea, ScrollBar } from "@/components/ui/scroll-area";
+import { Separator } from "@/components/ui/separator";
+import api from "@/utils/server";
 import {
   ArrowLeft,
   Send,
@@ -9,18 +13,10 @@ import {
   Circle,
   ChevronDown
 } from "lucide-react";
-import {
-  ScrollArea,
-  ScrollBar
-} from "@/components/ui/scroll-area";
-import { Input } from "@/components/ui/input";
-import { Button } from "@/components/ui/button";
-import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
-import { Separator } from "@/components/ui/separator";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import Header from "@/components/layout/Header";
-import api from "@/utils/server";
-import { useNavigate, useSearchParams } from "react-router-dom";
+import React from "react";
+import { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
+import  socketIO  from "socket.io-client";
 
 const ENDPOINT = "https://multi-vendor-ys5e.onrender.com/";
 const socketId = socketIO(ENDPOINT, { transports: ["websocket"] });
