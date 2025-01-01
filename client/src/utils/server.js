@@ -1,7 +1,7 @@
 import axios from "axios";
 
 // Get the backend URL from environment variables or use a default
-const baseURL = "http://localhost:5000";
+const baseURL = "https://multi-vendor-ys5e.onrender.com";
 
 // Create an Axios instance
 const api = axios.create({
