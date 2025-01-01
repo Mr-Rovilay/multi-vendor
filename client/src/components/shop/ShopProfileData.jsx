@@ -6,6 +6,7 @@ import ProductCard from "../productCard/ProductCard";
 import { useDispatch, useSelector } from "react-redux";
 import { getAllProductsShop } from "@/redux/actions/productAction";
 import { getAllEventsShop } from "@/redux/actions/eventAction";
+import Ratings from "../products/Ratings";
 
 const ShopProfileData = ({ isOwner }) => {
   const { products } = useSelector((state) => state.products);
@@ -74,11 +75,11 @@ const ShopProfileData = ({ isOwner }) => {
                 />
                 <div>
                   <div className="flex items-center">
-                    <h4 className="font-medium">{item.user?.name}</h4>
-                    {/* <Ratings rating={item.rating} className="ml-2" /> */}
+                    <h4 className="font-medium">{item?.user.name}</h4>
+                    <Ratings rating={item.rating} className="ml-2" />
                   </div>
                   <p className="text-sm text-gray-600">{item.comment}</p>
-                  <p className="text-xs text-gray-400">2 days ago</p>
+                  <p className="text-xs text-gray-400">{new Date(item.createdAt).toLocaleDateString("en-US")}</p>
                 </div>
               </div>
             ))

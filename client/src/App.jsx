@@ -39,6 +39,10 @@ import ShopOrderDetails from "./pages/Shop/ShopOrderDetails";
 import OrderDetailsPage from "./pages/OrderDetailsPage";
 import TrackOrderPage from "./pages/TrackOrderPage";
 import ShopAllRefund from "./pages/Shop/ShopAllRefund";
+import ShopSettingsPage from "./pages/Shop/ShopSettingsPage";
+import DashBoardWithdrawPage from "./pages/Shop/DashBoardWithdrawPage";
+import { ShopInBoxPage } from "./pages/Shop/ShopInBoxPage";
+import UserInbox from "./pages/UserInbox";
 
 export default function Home() {
   const [loading, setLoading] = useState(true);
@@ -97,13 +101,23 @@ export default function Home() {
           <Route path="/products" element={<ProductsPage />} />
           <Route path="/product/:id" element={<ProductDetailsPage />} />
 
-          <Route path="/order/success" element={
-             <ProtectedRoute isAuthenticated={isAuthenticated}>
+          <Route
+            path="/order/success"
+            element={
+              <ProtectedRoute isAuthenticated={isAuthenticated}>
+                <OrderSuccessPage />
+              </ProtectedRoute>
+            }
+          />
 
-               <OrderSuccessPage />
-
-             </ProtectedRoute>
-            } />
+<Route
+            path="/inbox"
+            element={
+              <ProtectedRoute isAuthenticated={isAuthenticated}>
+                <UserInbox />
+              </ProtectedRoute>
+            }
+          />
 
           <Route path="/faq" element={<FAQ />} />
           <Route path="/shop/preview/:id" element={<ShopPreviewPage />} />
@@ -124,21 +138,21 @@ export default function Home() {
             }
           />
 
-<Route
+          <Route
             path="/user/order/:id"
             element={
               <ProtectedRoute isAuthenticated={isAuthenticated}>
                 <OrderDetailsPage />
-                </ProtectedRoute>
+              </ProtectedRoute>
             }
           />
 
-<Route
+          <Route
             path="/user/track/order/:id"
             element={
               <ProtectedRoute isAuthenticated={isAuthenticated}>
                 <TrackOrderPage />
-                </ProtectedRoute>
+              </ProtectedRoute>
             }
           />
           <Route path="/about-us" element={<AboutUs />} />
@@ -153,7 +167,7 @@ export default function Home() {
             }
           />
 
-<Route
+          <Route
             path="/dashboard-refunds"
             element={
               <SellerProtectedRoute authenticateShop={authenticateShop}>
@@ -170,7 +184,7 @@ export default function Home() {
               </SellerProtectedRoute>
             }
           />
-            <Route
+          <Route
             path="/shop/order/:id"
             element={
               <SellerProtectedRoute authenticateShop={authenticateShop}>
@@ -195,11 +209,37 @@ export default function Home() {
               </SellerProtectedRoute>
             }
           />
+
+<Route
+            path="/dashboard-messages"
+            element={
+              <SellerProtectedRoute authenticateShop={authenticateShop}>
+                <ShopInBoxPage />
+              </SellerProtectedRoute>
+            }
+          />
           <Route
             path="/dashboard"
             element={
               <SellerProtectedRoute authenticateShop={authenticateShop}>
                 <ShopDashBoardPage />
+              </SellerProtectedRoute>
+            }
+          />
+          <Route
+            path="/dashboard-withdraw-money"
+            element={
+              <SellerProtectedRoute authenticateShop={authenticateShop}>
+                <DashBoardWithdrawPage />
+              </SellerProtectedRoute>
+            }
+          />
+
+          <Route
+            path="/settings"
+            element={
+              <SellerProtectedRoute authenticateShop={authenticateShop}>
+                <ShopSettingsPage />
               </SellerProtectedRoute>
             }
           />

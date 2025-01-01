@@ -1,5 +1,6 @@
 import DashBoardSideBar from "@/components/shop/layout/DashBoardSideBar"
 import ShopDashBoardHeader from "@/components/shop/layout/ShopDashBoardHeader"
+import ShopDashboardHero from "@/components/shop/ShopDashboardHero"
 
 
 const ShopDashBoardPage = () => {
@@ -8,8 +9,11 @@ const ShopDashBoardPage = () => {
     <div>
     <ShopDashBoardHeader/>
     <div className="flex">
-    <div className="w-[60px] md:w-[330px] fixed top-16 bottom-0">
+    <div className="w-[60px] md:w-[300px] fixed top-16 bottom-0">
         <DashBoardSideBar active={1}/>
+      </div>
+      <div className="flex-1 ml-[60px] md:ml-[300px] pt-4 overflow-y-auto">
+        <ShopDashboardHero />
       </div>
     </div>
     </div>

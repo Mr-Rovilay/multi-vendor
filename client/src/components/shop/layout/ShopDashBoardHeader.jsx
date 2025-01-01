@@ -34,7 +34,7 @@ import { toast } from "sonner";
 
 // Navigation items
 const navItems = [
-  { icon: Gift, label: "Coupons", path: "/dashboard/coupons" },
+  { icon: Gift, label: "Coupons", path: "/dashboard-coupons" },
   { icon: Tag, label: "Events", path: "/dashboard-events" },
   { icon: ShoppingBag, label: "Products", path: "/dashboard-products" },
   { icon: Package, label: "Orders", path: "/dashboard-orders" },
