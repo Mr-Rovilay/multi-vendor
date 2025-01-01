@@ -30,10 +30,7 @@ export default function SignUpForm() {
   const [showPassword, setShowPassword] = useState(false);
   const dispatch = useDispatch();
   const [isLoading, setIsLoading] = useState(false);
-
   const navigate = useNavigate();
-
-
   const { isAuthenticated } = useSelector((state) => state.user);
 
   useEffect(() => {
@@ -72,13 +69,10 @@ export default function SignUpForm() {
 
 
       if (data.avatar && data.avatar.length > 0) {
-        formData.append("avatar", data.avatar[0]);
-     
-      }
-  
+        formData.append("avatar", data.avatar[0]);   
+      } 
       // Wait for the signup action to complete
       const result = await dispatch(signup(formData)); 
-  
       // Check if the action was successful
       if (result?.type === "SignupSuccess") {
         toast.success("Signup successful! Please log in.");
@@ -93,8 +87,6 @@ export default function SignUpForm() {
       setIsLoading(false);
     }
   };
-  
-
   const togglePasswordVisibility = () => setShowPassword(!showPassword);
 
   return (
