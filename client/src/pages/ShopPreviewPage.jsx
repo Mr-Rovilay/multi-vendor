@@ -1,8 +1,8 @@
-import ShopInfo from "@/components/Shop/ShopInfo";
+import ShopInfo from "@/components/ShopInfo";
 import ShopProfileData from "@/components/Shop/ShopProfileData";
 import { ScrollArea } from "@/components/ui/scroll-area";
 
-export default function ShopHomePage() {  
+export default function ShopPreviewPage() {  
   return (
     <div className="min-h-screen bg-muted/30">
       <div className="py-8 max-pad-container">
@@ -11,7 +11,7 @@ export default function ShopHomePage() {
           <div className="w-full lg:w-1/4">
             <div className="sticky top-0">
               <ScrollArea className="h-[calc(100vh-8rem)] rounded-lg border bg-card">
-                <ShopInfo isOwner={true} />
+                <ShopInfo isOwner={false} />
               </ScrollArea>
             </div>
           </div>
@@ -19,7 +19,7 @@ export default function ShopHomePage() {
           {/* Main Content Area */}
           <div className="flex-1 lg:w-3/4">
             <div className="rounded-lg bg-card">
-              <ShopProfileData isOwner={true} />
+              <ShopProfileData isOwner={false} />
             </div>
           </div>
         </div>

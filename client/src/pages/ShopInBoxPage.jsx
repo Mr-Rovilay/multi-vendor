@@ -1,4 +1,4 @@
-import DashboardMessages from "@/components/Shop/DashboardMessages";
+import DashboardMessages from "@/components/DashboardMessages";
 import DashboardSidebar from "@/components/Shop/layout/DashBoardSideBar";
 import ShopDashBoardHeader from "@/components/Shop/layout/ShopDashBoardHeader";
 
