@@ -33,11 +33,6 @@ const HeroSection = () => {
                 <ShoppingCart className="w-5 h-5 mr-2" /> Shop Now
               </Link>
             </Button>
-            <Button asChild variant="outline" size="lg">
-              <Link to="/sell" className="flex items-center">
-                <Store className="w-5 h-5 mr-2" /> Become a Seller
-              </Link>
-            </Button>
           </div>
         </div>
         
