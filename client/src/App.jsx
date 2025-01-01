@@ -25,7 +25,7 @@ import OrderDetailsPage from "./pages/OrderDetailsPage";
 import TrackOrderPage from "./pages/TrackOrderPage";
 import AboutUs from "./pages/AboutUs";
 import ShopCreate from "@/components/Shop/ShopCreate";
-import ShopLogin from "./components/Shop/ShopLogin";
+import ShopLogin from "@/components/Shop/ShopLogin";
 import SellerProtectedRoute from "./routes/SellerProtectedRoute";
 import ShopHomePage from "./pages/Shop/ShopHomePage";
 import ShopAllRefund from "./pages/Shop/ShopAllRefund";
