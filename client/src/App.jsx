@@ -17,7 +17,6 @@ import { useSelector } from "react-redux";
 import ProtectedRoute from "./routes/ProtectedRoute";
 import PageNotFound from "./pages/PageNotFound";
 import CheckOutPage from "./pages/CheckOutPage";
-import ShopCreate from "./components/Shop/ShopCreate";
 import ShopLogin from "./components/Shop/ShopLogin";
 import ShopHomePage from "./pages/Shop/ShopHomePage";
 import SellerProtectedRoute from "./routes/SellerProtectedRoute";
@@ -43,6 +42,7 @@ import ShopSettingsPage from "./pages/Shop/ShopSettingsPage";
 import DashBoardWithdrawPage from "./pages/Shop/DashBoardWithdrawPage";
 import { ShopInBoxPage } from "./pages/Shop/ShopInBoxPage";
 import UserInbox from "./pages/UserInbox";
+import ShopCreate from "./components/Shop/ShopCreate";
 
 export default function Home() {
   const [loading, setLoading] = useState(true);
