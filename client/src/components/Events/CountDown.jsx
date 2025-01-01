@@ -36,7 +36,6 @@ const CountDown = ({ data }) => {
         clearInterval(timer);
         api
           .delete(`/event/delete-shop-event/${data._id}`)
-          .then(() => console.log("Event deleted successfully"))
           .catch((error) => console.error("Failed to delete event", error));
       }
     }, 1000);

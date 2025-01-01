@@ -41,7 +41,7 @@ const HeroSection = () => {
           {/* Hero Image */}
           <div className="relative w-full max-w-xl mx-auto overflow-hidden transition-transform duration-300 transform bg-blue-100 shadow-2xl rounded-xl lg:rotate-3 hover:rotate-0">
             <img 
-              src="https://img.freepik.com/free-photo/happy-young-girl-white-t-shirt-holding-paper-bags-looking-camera-with-smile-face_141793-108867.jpg?t=st=1733497939~exp=1733501539~hmac=dd5c35536884057496014802d6c84ce160a1ccca521363ea32bb63f3794ba950&w=1480" 
+              src="/green-girl.avif" 
               alt="Marketplace Hero" 
               className="object-cover w-full h-auto"
             />

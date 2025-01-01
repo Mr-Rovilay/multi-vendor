@@ -67,7 +67,6 @@ const Checkout = () => {
       const res = await api.get(`/coupon/get-coupon-value/${name}`);
       const shopId = res.data.couponCode?.shopId;
       const couponCodeValue = res.data.couponCode?.value;
-      console.log(res.data, shopId,couponCodeValue)
 
       if (res.data.couponCode !== null) {
         const isCouponValid = cart && cart.filter((item) => item.shopId === shopId);

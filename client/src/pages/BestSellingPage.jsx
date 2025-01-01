@@ -79,7 +79,7 @@ const BestSellingPage = () => {
       <main className="flex-grow">
         <Card>
           <CardHeader className="max-pad-container">
-            <CardTitle className="text-3xl font-bold">
+            <CardTitle className="text-2xl font-semibold">
               Best Selling Products
             </CardTitle>
             <p className="text-muted-foreground">

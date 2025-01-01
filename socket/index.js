@@ -52,7 +52,7 @@ const createMessage = ({ senderId, receiverId, text, images }) => ({
 });
 
 io.on("connection", (socket) => {
-  console.log(`A user connected: ${socket.id}`);
+  // console.log(`A user connected: ${socket.id}`);
 
   // Handle user addition
   socket.on("addUser", (userId) => {
@@ -109,7 +109,7 @@ io.on("connection", (socket) => {
 
   // Handle user disconnection
   socket.on("disconnect", () => {
-    console.log(`A user disconnected: ${socket.id}`);
+    // console.log(`A user disconnected: ${socket.id}`);
     removeUser(socket.id);
     io.emit("getUsers", users);
   });

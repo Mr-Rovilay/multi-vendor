@@ -57,16 +57,16 @@ const Footer = () => {
             
             {/* Social Icons */}
             <div className="flex space-x-4">
-              <Link to="#" className="transition-colors hover:text-primary">
+              <Link to="#" className="transition-colors hover:text-green-500">
                 <Facebook size={24} />
               </Link>
-              <Link to="#" className="transition-colors hover:text-primary">
+              <Link to="#" className="transition-colors hover:text-green-500">
                 <Twitter size={24} />
               </Link>
-              <Link to="#" className="transition-colors hover:text-primary">
+              <Link to="#" className="transition-colors hover:text-green-500">
                 <Instagram size={24} />
               </Link>
-              <Link to="#" className="transition-colors hover:text-primary">
+              <Link to="#" className="transition-colors hover:text-green-500">
                 <Youtube size={24} />
               </Link>
             </div>
@@ -80,7 +80,7 @@ const Footer = () => {
                 <li key={index}>
                   <Link 
                     to={link.link} 
-                    className="text-gray-300 transition-colors hover:text-primary"
+                    className="text-gray-300 transition-colors hover:text-green-500"
                   >
                     {link.name}
                   </Link>
@@ -96,7 +96,7 @@ const Footer = () => {
                 <li key={index}>
                   <Link 
                     to={link.link} 
-                    className="text-gray-300 transition-colors hover:text-primary"
+                    className="text-gray-300 transition-colors hover:text-green-500"
                   >
                     {link.name}
                   </Link>
@@ -112,7 +112,7 @@ const Footer = () => {
                 <li key={index}>
                   <Link 
                     to={link.link} 
-                    className="text-gray-300 transition-colors hover:text-primary"
+                    className="text-gray-300 transition-colors hover:text-green-500"
                   >
                     {link.name}
                   </Link>

@@ -123,7 +123,6 @@ const ProfileContent = ({ active }) => {
       toast.success("Avatar updated successfully!");
       setIsDialogOpen(false);
     } catch (error) {
-      console.error("Avatar update error:", error);
       toast.error(error.response?.data?.message || "Failed to update avatar");
     } finally {
       setIsUpdatingAvatar(false);
@@ -142,7 +141,6 @@ const ProfileContent = ({ active }) => {
       ));
       toast.success("Profile updated successfully!");
     } catch (error) {
-      console.error("Update error:", error);
       if (error.response?.status === 401) {
         toast.error("Session expired. Please login again.");
         // navigate('/login');
