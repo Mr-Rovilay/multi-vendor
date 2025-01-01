@@ -5,7 +5,7 @@ import FeaturedProduct from "@/components/featuredProuct/featuredProuct";
 import Footer from "@/components/footer/Footer";
 import Header from "@/components/layout/Header";
 import Hero from "@/components/layout/Hero";
-import SponsoredPage from "@/components/sponsored/Sponsored";
+import TestimonialPage from "./TestimonialPage";
 
 const HomePage = () => {
   return (
@@ -16,7 +16,7 @@ const HomePage = () => {
       <BestDeals/>
       <Events/>
       <FeaturedProduct/>
-      <SponsoredPage/>
+      <TestimonialPage/>
       <Footer/>
     </>
   );

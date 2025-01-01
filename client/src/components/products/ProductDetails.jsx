@@ -329,17 +329,19 @@ const ProductDetails = ({ data }) => {
                     >
                       <Avatar>
                         <AvatarImage
-                          src={user.avatar?.url}
+                          src={
+                            data?.shop?.avatar?.url ||
+                            "/path-to-default-avatar.png"
+                          }
                           className="object-cover rounded-full"
                         />
-                        <AvatarFallback>
-                          {user?.name?.charAt(0)}
-                        </AvatarFallback>
+
+                        <AvatarFallback>{user?.name?.charAt(0)}</AvatarFallback>
                       </Avatar>
                       <div>
                         <div className="flex items-center space-x-2">
                           <span className="font-semibold">
-                            {user?.name}
+                            {user?.name || "Guest"}
                           </span>
                           <Ratings rating={review.rating} />
                         </div>
@@ -385,9 +387,7 @@ const ProductDetails = ({ data }) => {
               <div className="grid gap-4 md:grid-cols-2">
                 <div>
                   <p className="mb-4 text-gray-600">{data.shop.description}</p>
-                  <p className="text-sm text-gray-600">
-                     { data.shop.email}
-                    </p>
+                  <p className="text-sm text-gray-600">{data.shop.email}</p>
                   <div className="space-y-2">
                     <p>
                       <strong>Joined:</strong>{" "}

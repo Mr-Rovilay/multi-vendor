@@ -203,7 +203,7 @@ const Header = () => {
                     onClick={() => setMobileMenuOpen(false)}
                   >
                     <Link
-                      to="/shop-create"
+                      to={`${authenticateShop ? "/dashboard" : "/shop-create"}`}
                       className="flex items-center justify-center"
                     >
                       <Store className="mr-2" />{authenticateShop ? "Go To Dashboard" : "Become a Seller"}
@@ -219,7 +219,7 @@ const Header = () => {
                           <NavigationMenuItem>
                             <NavigationMenuTrigger>
                               <Avatar>
-                                {/* <AvatarImage src={user.profile?.avatar} /> */}
+                              <AvatarImage src={user?.avatar.url} className="object-cover"/>
                                 <AvatarFallback>{user?.name?.charAt(0)}</AvatarFallback>
                               </Avatar>
                             </NavigationMenuTrigger>
@@ -254,7 +254,8 @@ const Header = () => {
               size="lg"
               className="hidden md:ml-3 md:flex"
             >
-              <Link  to="/shop-create" className="flex items-center">
+              
+              <Link  to={`${authenticateShop ? "/dashboard" : "/shop-create"}`} className="flex items-center">
               <Store className="mr-2" />{authenticateShop ? "Go To Dashboard" : "Become a Seller"}
               </Link>
             </Button>

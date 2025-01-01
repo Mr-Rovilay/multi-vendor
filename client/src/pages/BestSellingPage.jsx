@@ -12,21 +12,23 @@ import { Badge } from "@/components/ui/badge";
 import Footer from "@/components/footer/Footer";
 import Header from "@/components/layout/Header";
 import ProductCard from "@/components/productCard/ProductCard";
+import { useSelector } from "react-redux";
 
 const BestSellingPage = () => {
   const [data, setData] = useState([]);
-  const [isLoading, setIsLoading] = useState(true);
+  const {allProducts,isLoading} = useSelector((state) => state.products);
+
 
   useEffect(() => {
     // Simulate loading and sorting
     const timer = setTimeout(() => {
       // Ensure we have productData and sort by total_sell
-      const sortedData = productData 
-        ? [...productData].sort((a, b) => b.total_sell - a.total_sell)
+      const sortedData = allProducts 
+        ? [...allProducts].sort((a, b) => b.total_sell - a.total_sell)
         : [];
       
       setData(sortedData);
-      setIsLoading(false);
+    
     }, 500);
 
     return () => clearTimeout(timer);
@@ -55,7 +57,7 @@ const BestSellingPage = () => {
       <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5">
         {data.map((product, index) => (
           <div key={product.id || index} className="relative">
-            <ProductCard data={product} />
+            <ProductCard data={product} key={index} />
             {index < 5 && (
               <Badge 
                 variant="destructive" 

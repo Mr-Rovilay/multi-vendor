@@ -151,7 +151,7 @@ const DashboardHero = () => {
                       </TableCell>
                       <TableCell>US$ {order.totalPrice || 0}</TableCell>
                       <TableCell className="text-right">
-                        <Link to={`/dashboard/order/${order._id}`}>
+                        <Link to={`/shop/order/${order._id}`}>
                           <Button
                             variant="ghost"
                             size="icon"

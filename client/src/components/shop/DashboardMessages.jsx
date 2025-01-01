@@ -69,7 +69,7 @@ const ChatHeader = ({ userData, activeStatus, onBack }) => {
             {activeStatus && (
               <>
                 <Circle className="w-3 h-3 mr-1 text-green-500 fill-green-500" />
-                <span>Active now</span>
+                <span className="text-xs">Active now</span>
               </>
             )}
           </div>

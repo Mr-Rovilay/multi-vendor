@@ -100,7 +100,6 @@ export default function Home() {
           <Route path="/signup" element={<SignupForm />} />
           <Route path="/products" element={<ProductsPage />} />
           <Route path="/product/:id" element={<ProductDetailsPage />} />
-
           <Route
             path="/order/success"
             element={

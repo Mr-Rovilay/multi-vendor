@@ -129,7 +129,7 @@ const ProductCard = ({ data, isEvent }) => {
         <div className="mt-4">
           <Link
             to={`/shop/preview/${data?.shop._id}`}
-            className="text-sm font-bold hover:underline"
+            className="text-sm font-bold text-green-400 hover:underline"
           >
             {data.shop.name}
           </Link>
