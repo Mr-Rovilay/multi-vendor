@@ -113,8 +113,8 @@ export const loginShop = async (req, res) => {
     // Set the token in an HTTP-only cookie
     res.cookie("token", token, {
       httpOnly: true,
-      secure: process.env.NODE_ENV === "production", // Ensure cookies are secure in production
-      sameSite: "strict", // Prevent CSRF
+      secure: process.env.NODE_ENV === "production",
+      sameSite: process.env.NODE_ENV === "production" ? "none" : "lax",
       maxAge: 24 * 60 * 60 * 1000, // 1 day
     });
 
