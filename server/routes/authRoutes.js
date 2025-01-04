@@ -23,7 +23,7 @@ router.get("/admin-all-users", verifyToken,  adminGetAllUsers);
 router.delete("/delete-user/:id", verifyToken,  adminDeleteUser);
 
 router.get("/logout", verifyToken, (req, res) => {
-    res.clearCookie("token", { httpOnly: true, secure: true, sameSite: "Strict" });
+    res.clearCookie("token", { httpOnly: true, secure: true, sameSite: process.env.NODE_ENV === "production" ? "none" : "lax", });
     res.status(201).json({ message: "Logged out successfully" });
   });
 
