@@ -25,8 +25,8 @@ app.use(express.json());
 
 app.use(
   cors({
-    // origin: "https://vendor-l0ew.onrender.com",
-    origin:"http://localhost:5173",
+    origin: "https://vendor-l0ew.onrender.com",
+    // origin:"http://localhost:5173",
     withCredentials: true,
     methods: ["GET", "POST", "PUT", "DELETE"],
     allowedHeaders: ["Content-Type", "Authorization", "Cookie"],
