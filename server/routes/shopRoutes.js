@@ -18,7 +18,7 @@ router.put('/update-seller-info',authenticateShop, updateSellerInfo); // Update 
 router.put('/withdraw-method',authenticateShop, updateWithdrawMethod); // Update seller withdraw method
 router.delete('/withdraw-method', authenticateShop, deleteWithdrawMethod);
 router.get("/logout", authenticateShop, (req, res) => {
-    res.clearCookie("token", { httpOnly: true, secure: true, sameSite: "Strict" });
+    res.clearCookie("token", { httpOnly: true, secure: true, sameSite: process.env.NODE_ENV === "production" ? "none" : "lax", });
     res.status(201).json({ message: "Logged out successfully" });
   });
 
