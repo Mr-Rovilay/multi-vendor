@@ -1,5 +1,5 @@
 import express from 'express';
-import { createShop, deleteWithdrawMethod, getShop, getShopInfoById, loginShop, logoutShop, updateSellerInfo, updateShopAvatar, updateWithdrawMethod } from '../controllers/shopController.js';
+import { createShop, deleteWithdrawMethod, getShop, getShopInfoById, loginShop, updateSellerInfo, updateShopAvatar, updateWithdrawMethod } from '../controllers/shopController.js';
 import {upload} from '../middleware/uploadMiddleware.js';
 import { authenticateShop} from '../middleware/authMiddleware.js';
 
